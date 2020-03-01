@@ -1,0 +1,18 @@
+# This .gitignore is intended to be a minimal template for a project.
+# The items included are those that the build scripts make use of,
+# where any output within these folders should not be committed.
+
+# Python cache files created when using this build system.
+__pycache__
+
+# "Scratch" folder where the compilation of projects takes place.
+build
+
+# Folder where toolchain executables are downloaded.
+buildsystem/bin
+
+# Visual Studio code config files.
+# These may not be present in every repository, but I personally make
+# extensive use of VS Code, and it's unlikely that any legitimate files
+# would be stored in a .vscode directory.
+.vscode
