@@ -10,6 +10,15 @@ class ProjectConfig():
 		self.warningLevel = "all"
 		self.fqbn = ""
 
+	def toDict(self):
+		return \
+		{
+			"name": self.name,
+			"modules": self.modules,
+			"warnings": self.warningLevel,
+			"fqbn": self.fqbn
+		}
+
 def __errorString(error : str):
 	return f"Project '{Globals.invokedArgs.project}': {error}"
 
@@ -38,11 +47,11 @@ def __getConfigItemMonomorphicContainer(configObj : dict, key : str, desiredType
 
 	return data
 
-def __createProjectConfigFromData(configObj : dict):
+def __createProjectConfigFromData(configObj : dict, projectName):
 	config = ProjectConfig()
 
 	# Required:
-	config.name = Globals.invokedArgs.project
+	config.name = projectName if projectName is not None else __getConfigItemOfType(configObj, "name", str)
 	config.modules = __getConfigItemMonomorphicContainer(configObj, "modules", list, str)
 	config.fqbn = __getConfigItemOfType(configObj, "fqbn", str)
 
@@ -53,17 +62,27 @@ def __createProjectConfigFromData(configObj : dict):
 
 	return config
 
-def loadProjectConfig():
-	projName = Globals.invokedArgs.project
+# TODO: Make this process nicer.
+def loadProjectConfig(overridePath=None):
+	pathToConfig = ""
+	projectName = None
 
-	if not isValidProject(projName):
-		raise ValueError(f"Unrecognised project '{projName}'.")
+	if overridePath is None:
+		projectName = Globals.invokedArgs.project
 
-	configFileName = f"{projName}_config.json"
-	pathToConfig = os.path.join(Globals.rootPath, "projects", projName, configFileName)
+		if projectName is None:
+			raise ValueError("No project specified - use the --project switch.")
+
+		if not isValidProject(projectName):
+			raise ValueError(f"Unrecognised project '{projectName}'.")
+
+		configFileName = f"{projectName}_config.json"
+		pathToConfig = os.path.join(Globals.rootPath, "projects", projectName, configFileName)
+	else:
+		pathToConfig = overridePath
 
 	if not os.path.isfile(pathToConfig):
-		raise OSError(__errorString(f"Config file {configFileName} was not found."))
+		raise OSError(__errorString(f"Config file {pathToConfig} was not found."))
 
 	configObj = None
 
@@ -71,9 +90,9 @@ def loadProjectConfig():
 		configObj = json.load(inFile)
 
 	if type(configObj) is not dict:
-		raise ValueError(__errorString(f"Config {configFileName} was not specified as a JSON object."))
+		raise ValueError(__errorString(f"Config {pathToConfig} was not specified as a JSON object."))
 
-	return __createProjectConfigFromData(configObj)
+	return __createProjectConfigFromData(configObj, projectName)
 
 def isValidProject(projName : str):
 	return os.path.isdir(os.path.join(Globals.rootPath, "projects", projName))

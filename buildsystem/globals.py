@@ -1,4 +1,4 @@
 class Globals():
 	rootPath : str = ""
-	invokedArgs: None
-	projectConfig : None
+	invokedArgs = None
+	debugBuild : bool = False

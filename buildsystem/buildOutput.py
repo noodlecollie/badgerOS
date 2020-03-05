@@ -2,6 +2,7 @@ import sys
 import os
 import glob
 import shutil
+import json
 
 from . import buildDir
 from . import projects
@@ -24,11 +25,11 @@ class FileCopyMapping():
 	def __repr__(self):
 		return f"(src={self.src}, dest={self.dest})"
 
-def __createSearchPaths():
+def __createSearchPaths(projectConfig):
 	buildRootPath = buildDir.buildDirPath()
 
-	projectRootSrcPath = os.path.join(Globals.rootPath, "projects", Globals.projectConfig.name)
-	projectRootDestPath = os.path.join(buildRootPath, Globals.projectConfig.name)
+	projectRootSrcPath = os.path.join(Globals.rootPath, "projects", projectConfig.name)
+	projectRootDestPath = os.path.join(buildRootPath, projectConfig.name)
 
 	modulesRootSrcPath = os.path.join(Globals.rootPath, "modules")
 	modulesRootDestPath = os.path.join(projectRootDestPath, "src")
@@ -40,7 +41,7 @@ def __createSearchPaths():
 	projectSearchPath.destRoot = projectRootDestPath
 	searchPaths.append(projectSearchPath)
 
-	for module in Globals.projectConfig.modules:
+	for module in projectConfig.modules:
 		searchPath = SearchPath()
 
 		searchPath.srcRoot = os.path.join(modulesRootSrcPath, module)
@@ -114,19 +115,29 @@ def __createIno(path : str):
 
 	print("Auto-generated .ino:", path)
 
+def __writeProjectConfigToBuildDir(projectConfig):
+	outPath = buildDir.buildDirProjectConfigPath()
+	print("Caching project config as:", outPath)
+
+	with open(outPath, "w") as outFile:
+		json.dump(projectConfig.toDict(), outFile)
+
 def updateFilesInBuildFolder():
+	projectConfig = projects.loadProjectConfig()
 	buildPath = buildDir.buildDirPath()
-	projectBuildRootDir = buildDir.projectBuildDirPath()
+	projectBuildRootDir = buildDir.projectBuildDirPath(projectConfig.name)
 
 	if not os.path.isdir(projectBuildRootDir):
 		# We were not previously configured for this project, so wipe and recreate.
-		buildDir.recreateProjectBuildDir()
+		buildDir.recreateProjectBuildDir(projectConfig.name)
+
+	__writeProjectConfigToBuildDir(projectConfig)
 
 	projectInoPath = os.path.join(projectBuildRootDir, f"{Globals.invokedArgs.project}.ino")
 	if not os.path.isfile(projectInoPath):
 		__createIno(projectInoPath)
 
-	searchPaths = __createSearchPaths()
+	searchPaths = __createSearchPaths(projectConfig)
 	foundFiles = __findSourcesRecursively(searchPaths)
 	filesRequiredToCopy = __calcFilesNeedingCopy(foundFiles)
 	__copyFiles(buildPath, filesRequiredToCopy)

@@ -6,8 +6,11 @@ from .globals import Globals
 def buildDirPath():
 	return os.path.join(Globals.rootPath, "build")
 
-def projectBuildDirPath():
-	return os.path.join(buildDirPath(), Globals.invokedArgs.project)
+def buildDirProjectConfigPath():
+	return os.path.join(buildDirPath(), "projectConfig.json")
+
+def projectBuildDirPath(project : str):
+	return os.path.join(buildDirPath(), project)
 
 def buildOutputPath() :
 	return os.path.join(buildDirPath(), "_output")
@@ -31,6 +34,9 @@ def recreateBuildDir():
 	shutil.rmtree(path, ignore_errors=True)
 	ensureBuildDirExists()
 
-def recreateProjectBuildDir():
+def recreateProjectBuildDir(project : str):
 	recreateBuildDir()
-	os.makedirs(projectBuildDirPath())
+	os.makedirs(projectBuildDirPath(project))
+
+def buildDirProjectConfigExists():
+	return os.path.isfile(buildDirProjectConfigPath())
