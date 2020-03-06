@@ -1,0 +1,8 @@
+{
+	"dependencies":
+	[
+		{
+			"name": "Heltec ESP32 Dev-Boards"
+		}
+	]
+}
