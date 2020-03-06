@@ -1,8 +1,7 @@
-#include "WiFiKit32.h"
-#include "heltec.h"
-#include "ESP.h"
+#include "HeltecESP32WiFiKit32.h"
+#include <ESP.h>
 
-namespace WifiKit32
+namespace HeltecESP32WiFiKit32
 {
 	// Most of these helper functions were taken from the Heltec library begin() function,
 	// and modified so as not to include the unnecessary Chinese-English log messages.

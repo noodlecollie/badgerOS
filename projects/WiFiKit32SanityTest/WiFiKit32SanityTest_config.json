@@ -1,9 +1,0 @@
-{
-	"modules":
-	[
-		"HeltecESP32WiFiKit32",
-		"SSD1306Images"
-	],
-
-	"fqbn": "Heltec-esp32:esp32:wifi_kit_32"
-}

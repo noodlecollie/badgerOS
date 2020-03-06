@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Arduino.h>
-#include "heltec.h"
+#include <heltec.h>
 
-namespace WifiKit32
+namespace HeltecESP32WiFiKit32
 {
 	void initialiseHardware();
 	void reset();
