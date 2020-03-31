@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Assert.h"
+#include "BgrsAssert.h"
 
 #define ASSERT_LED_ITERATIONS_PER_FLASH 2
 #define ASSERT_LED_FLASHES_PER_SEC 8
