@@ -1,9 +1,16 @@
 #include <Arduino.h>
+#include <Esp.h>
 #include "BgrsAssert.h"
 
 #define ASSERT_LED_ITERATIONS_PER_FLASH 2
 #define ASSERT_LED_FLASHES_PER_SEC 8
 #define ASSERT_LED_ITERATIONS_PER_SEC (ASSERT_LED_ITERATIONS_PER_FLASH * ASSERT_LED_FLASHES_PER_SEC)
+
+#ifdef HAS_DEBUG_LED
+#define SET_DEBUG_LED(on) digitalWrite(LED, (on) ? HIGH : LOW)
+#else
+#define SET_DEBUG_LED(...)
+#endif
 
 #ifdef DEBUG
 // Flash indefinitely
@@ -27,7 +34,7 @@ namespace CoreUtil
 			for ( int iteration = 0; ASSERT_LED_FLASH_COND(iteration); ++iteration )
 			{
 				ledOn = !ledOn;
-				digitalWrite(LED, ledOn ? HIGH : LOW);
+				SET_DEBUG_LED(ledOn);
 
 				delay(1000 / ASSERT_LED_ITERATIONS_PER_SEC);
 			}
