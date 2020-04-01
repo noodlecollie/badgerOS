@@ -45,11 +45,11 @@ extern uint8_t color_byte[2],color_fill_byte[2];
 #define SSD1351_CMD_STOPSCROLL      0x9E
 #define SSD1351_CMD_STARTSCROLL     0x9F
 
-#define oled_cs   5//10
-#define oled_rst  36//8
-#define oled_dc   17//7
-#define oled_sck  18//13
-#define oled_din  23//11
+#define oled_cs   5
+#define oled_rst  27
+#define oled_dc   16
+#define oled_sck  18
+#define oled_din  17
 
 #define BLACK   0x0000
 #define BLUE    0x001F

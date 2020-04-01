@@ -31,7 +31,7 @@ Requirements
 
 1.  ESP32 board - exact model TBD, depends on eventual requirements. Will require LiPoly battery connector + charging capability. For example: https://www.olimex.com/Products/IoT/ESP32/ESP32-DevKit-LiPo/open-source-hardware
 2.  Battery - for example, https://www.amazon.co.uk/gp/product/B07CYMYMS9. mAh is TBD, depending on power requirements.
-3. Waveshare 1.5inch RGB OLED Display Module (128x128) - https://www.amazon.co.uk/Waveshare-1-5inch-RGB-OLED-Module/dp/B07DB5YFGW
+3.  Waveshare 1.5inch RGB OLED Display Module (128x128) - https://www.amazon.co.uk/Waveshare-1-5inch-RGB-OLED-Module/dp/B07DB5YFGW
 4.  2x push buttons - main and secondary, which could have different coloured caps to distinguish them. For example, buttons similar to https://coolcomponents.co.uk/collections/component-buttons/products/tactile-buttons-x4.
 5.  NFC reader - TBD
 6.  RFID to be read by other badges - TBD
