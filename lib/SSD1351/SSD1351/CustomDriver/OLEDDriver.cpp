@@ -148,6 +148,11 @@ namespace SSD1351
 
 	void OLEDDriver::clearScreen(uint16_t colour)
 	{
+		if ( !m_HasConfig )
+		{
+			return;
+		}
+
 		ramAddress();
 		writeCommand(Command::WriteRam);
 
