@@ -18,6 +18,7 @@ namespace SSD1351
 		m_Config = cfg;
 		m_HasConfig = true;
 
+		setUpPins();
 		defaultDeviceInit();
 	}
 
@@ -163,6 +164,13 @@ namespace SSD1351
 				writeData(colour);
 			}
 		}
+	}
+
+	void OLEDDriver::setUpPins()
+	{
+		pinMode(m_Config.chipSelectPin, OUTPUT);
+		pinMode(m_Config.resetPin, OUTPUT);
+		pinMode(m_Config.dataCommandPin, OUTPUT);
 	}
 
 	void OLEDDriver::defaultDeviceInit()

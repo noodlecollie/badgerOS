@@ -13,13 +13,11 @@ namespace SSD1351
 	public:
 		struct Config
 		{
-			uint8_t chipSelectPin = 0;
-			uint8_t resetPin = 0;
-			uint8_t dataCommandPin = 0;
-			uint8_t clockPin = 0;
-			uint8_t dataInPin = 0;
-
-			inline Config& operator =(const Config& other) = default;
+			uint8_t chipSelectPin;
+			uint8_t resetPin;
+			uint8_t dataCommandPin;
+			uint8_t clockPin;
+			uint8_t dataInPin;
 		};
 
 		OLEDDriver();
@@ -43,6 +41,7 @@ namespace SSD1351
 		void clearScreen(uint16_t colour = 0x0000);
 
 	private:
+		void setUpPins();
 		void defaultDeviceInit();
 		void ramAddress();
 
