@@ -3,11 +3,14 @@
 #include <Wire.h>
 #include <Esp.h>
 #include <SSD1351/CustomDriver/OLEDDriver.h>
+#include <BadgerGL/BitmapSurface.h>
 
 #include "SanityTest.h"
 
 namespace SanityTest
 {
+	static BadgerGL::StaticBitmapSurface16<SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT> ScreenBufferSurface;
+
 	void setup(PlatformConfig::ConfigFactoryFunc configFunc)
 	{
 		BGRS_ASSERT(configFunc, "Config factory function is required.");
@@ -18,11 +21,16 @@ namespace SanityTest
 		BGRS_ASSERT(config.ssd1351Config, "SSD1351 config is required.");
 		BGRS_ASSERT(config.serialConfig, "Serial config is required.");
 		BGRS_ASSERT(config.spiConfig, "SPI config is required.");
-		BGRS_ASSERT(config.spiPinConfig, "SPI ping config is required.");
+		BGRS_ASSERT(config.spiPinConfig, "SPI pin config is required.");
+		BGRS_ASSERT(config.chipSelectConfig, "Chip select config is required.");
 
 		Serial.begin(config.serialConfig->baudRate);
 
 		Serial.printf("Sanity test initialising...\n");
+		Serial.printf("\n");
+
+		Serial.printf("=== Chip select configuration ===\n");
+		Serial.printf("              OLED: %u\n", config.chipSelectConfig->oledScreenCSPin);
 		Serial.printf("\n");
 
 		Serial.printf("=== Serial configuration ===\n");
@@ -30,7 +38,6 @@ namespace SanityTest
 		Serial.printf("\n");
 
 		Serial.printf("=== SSD1351 configuration ===\n");
-		Serial.printf("       Chip select: %u\n", config.ssd1351Config->chipSelectPin);
 		Serial.printf("             Reset: %u\n", config.ssd1351Config->resetPin);
 		Serial.printf("      Data/command: %u\n", config.ssd1351Config->dataCommandPin);
 		Serial.printf("\n");
@@ -46,9 +53,10 @@ namespace SanityTest
 		Serial.printf("          Hold pin: %u\n", config.spiPinConfig->holdPin);
 		Serial.printf("\n");
 
+		PlatformConfig::chipSelectSetup(*config.chipSelectConfig);
 		PlatformConfig::spiSetup(*config.spiConfig);
 
-		SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.ssd1351Config->chipSelectPin);
+		SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->oledScreenCSPin);
 
 		SSD1351::Driver.initialise(*config.ssd1351Config);
 		Serial.println("Sanity test initialised.");

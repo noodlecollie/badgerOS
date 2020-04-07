@@ -6,25 +6,23 @@
 
 namespace SSD1351
 {
-	// Base driver for SSD1351 OLED screen.
-	// Assumes 4-wire SPI communications.
+	// Base driver for SSD1351 OLED screen. Assumes 4-wire SPI communications.
+	// All commands that communicate with the OLED screen assume that the chip
+	// select line is active - this driver does not manage this line.
 	class OLEDDriver
 	{
 	public:
 		struct Config
 		{
-			uint8_t chipSelectPin;
 			uint8_t resetPin;
 			uint8_t dataCommandPin;
 		};
 
 		OLEDDriver();
 
-		// These functions assume that the chip select pin is low.
-
-		// This function uses blocking waits to reset the OLED,
-		// and assumes that the pin modes have already been set up.
+		// This function uses blocking waits to reset the OLED.
 		void initialise(const Config& cfg);
+
 		void writeCommand(Command cmd);
 		void writeCommand(Command cmd, uint8_t data);
 		void writeCommand(Command cmd, uint8_t data1, uint8_t data2);

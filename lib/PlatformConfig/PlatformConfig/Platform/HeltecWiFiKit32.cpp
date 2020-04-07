@@ -17,9 +17,13 @@ namespace PlatformConfig
 
 	static constexpr SSD1351::OLEDDriver::Config SSD1351_CONFIG =
 	{
-		.chipSelectPin = 5,
 		.resetPin = 36,
 		.dataCommandPin = 17
+	};
+
+	static constexpr ChipSelectConfig CHIP_SELECT_CONFIG =
+	{
+		.oledScreenCSPin = 5
 	};
 
 	namespace HeltecWiFiKit32
@@ -31,6 +35,7 @@ namespace PlatformConfig
 			config.ssd1351Config = &SSD1351_CONFIG;
 			config.serialConfig = &SERIAL_CONFIG;
 			config.spiConfig = &SPI_CONFIG;
+			config.chipSelectConfig = &CHIP_SELECT_CONFIG;
 		}
 	}
 }

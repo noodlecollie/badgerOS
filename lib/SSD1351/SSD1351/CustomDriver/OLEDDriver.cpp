@@ -172,7 +172,6 @@ namespace SSD1351
 
 	void OLEDDriver::setUpPins()
 	{
-		pinMode(m_Config.chipSelectPin, OUTPUT);
 		pinMode(m_Config.resetPin, OUTPUT);
 		pinMode(m_Config.dataCommandPin, OUTPUT);
 	}

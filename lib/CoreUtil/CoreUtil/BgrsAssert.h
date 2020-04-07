@@ -6,3 +6,9 @@ namespace CoreUtil
 }
 
 #define BGRS_ASSERT(cond, desc) ::CoreUtil::assertFunc(cond, #cond, desc, __FILE__, __LINE__)
+
+#ifdef DEBUG
+#define BGRS_ASSERTD(cond, desc) BGRS_ASSERT(cond, desc)
+#else
+#define BGRS_ASSERTD(...)
+#endif

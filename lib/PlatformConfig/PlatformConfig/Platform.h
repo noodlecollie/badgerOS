@@ -3,6 +3,7 @@
 #include "SSD1351/CustomDriver/OLEDDriver.h"
 #include "Serial.h"
 #include "SPI.h"
+#include "ChipSelect.h"
 
 namespace PlatformConfig
 {
@@ -12,6 +13,7 @@ namespace PlatformConfig
 		const SerialConfig* serialConfig;
 		const SPIConfig* spiConfig;
 		const SPIPinConfig* spiPinConfig;
+		const ChipSelectConfig* chipSelectConfig;
 	};
 
 	using ConfigFactoryFunc = void (*)(Config&);

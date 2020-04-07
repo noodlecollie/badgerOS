@@ -17,9 +17,13 @@ namespace PlatformConfig
 
 	static constexpr SSD1351::OLEDDriver::Config SSD1351_CONFIG =
 	{
-		.chipSelectPin = 5,
 		.resetPin = 27,
 		.dataCommandPin = 16
+	};
+
+	static constexpr ChipSelectConfig CHIP_SELECT_CONFIG =
+	{
+		.oledScreenCSPin = 5
 	};
 
 	namespace OlimexESP32
@@ -32,6 +36,7 @@ namespace PlatformConfig
 			config.serialConfig = &SERIAL_CONFIG;
 			config.spiConfig = &SPI_CONFIG;
 			config.spiPinConfig = &SPI_PIN_CONFIG_VSPI;
+			config.chipSelectConfig = &CHIP_SELECT_CONFIG;
 		}
 	}
 }
