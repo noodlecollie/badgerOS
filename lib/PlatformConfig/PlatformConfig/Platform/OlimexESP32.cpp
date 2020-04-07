@@ -9,7 +9,7 @@ namespace PlatformConfig
 		.resetPin = 27,
 		.dataCommandPin = 16,
 		.clockPin = 18,
-		.dataInPin = 17,
+		.dataInPin = 23,
 	};
 
 	static constexpr SerialConfig SERIAL_CONFIG = SERIAL_CONFIG_DEFAULT;
