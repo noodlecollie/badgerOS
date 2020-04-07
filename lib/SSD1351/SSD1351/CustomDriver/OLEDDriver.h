@@ -16,8 +16,6 @@ namespace SSD1351
 			uint8_t chipSelectPin;
 			uint8_t resetPin;
 			uint8_t dataCommandPin;
-			uint8_t clockPin;
-			uint8_t dataInPin;
 		};
 
 		OLEDDriver();
@@ -48,4 +46,6 @@ namespace SSD1351
 		Config m_Config;
 		bool m_HasConfig = false;
 	};
+
+	extern OLEDDriver Driver;
 }

@@ -11,6 +11,7 @@ namespace PlatformConfig
 		const SSD1351::OLEDDriver::Config* ssd1351Config;
 		const SerialConfig* serialConfig;
 		const SPIConfig* spiConfig;
+		const SPIPinConfig* spiPinConfig;
 	};
 
 	using ConfigFactoryFunc = void (*)(Config&);

@@ -9,6 +9,8 @@
 
 namespace SSD1351
 {
+	OLEDDriver Driver;
+
 	OLEDDriver::OLEDDriver()
 	{
 	}
