@@ -30,9 +30,7 @@ namespace SSD1351
 		}
 
 		digitalWrite(m_Config.dataCommandPin, LOW);
-
 		SPI.transfer(static_cast<uint8_t>(cmd));
-
 		digitalWrite(m_Config.dataCommandPin, HIGH);
 	}
 
@@ -149,20 +147,24 @@ namespace SSD1351
 
 	void OLEDDriver::clearScreen(uint16_t colour)
 	{
+		static uint16_t clearLine[OLED_WIDTH];
+
 		if ( !m_HasConfig )
 		{
 			return;
 		}
 
+		for ( uint32_t x = 0; x < OLED_WIDTH; ++x )
+		{
+			clearLine[x] = colour;
+		}
+
 		ramAddress();
 		writeCommand(Command::WriteRam);
 
-		for ( uint32_t x = 0; x < OLED_WIDTH; ++x )
+		for ( uint32_t y = 0; y < OLED_HEIGHT; ++y )
 		{
-			for ( uint32_t y = 0; y < OLED_HEIGHT; ++y )
-			{
-				writeData(colour);
-			}
+			writeDataBytes(reinterpret_cast<const uint8_t*>(clearLine), sizeof(clearLine));
 		}
 	}
 

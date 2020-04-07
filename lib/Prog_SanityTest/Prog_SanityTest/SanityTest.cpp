@@ -47,7 +47,7 @@ namespace SanityTest
 		SPI.setDataMode(config.spiConfig->dataMode);
 		SPI.setBitOrder(config.spiConfig->bitOrder);
 		SPI.setClockDivider(config.spiConfig->clockDivider);
-		SPI.begin();
+		SPI.begin(config.ssd1351Config->clockPin, -1, config.ssd1351Config->dataInPin, -1);
 
 		digitalWrite(config.ssd1351Config->chipSelectPin, LOW);
 		driver.initialise(*config.ssd1351Config);
