@@ -57,8 +57,10 @@ namespace SanityTest
 		PlatformConfig::spiSetup(*config.spiConfig);
 
 		SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->oledScreenCSPin);
-
 		SSD1351::Driver.initialise(*config.ssd1351Config);
+
+		ScreenBufferSurface.fill(0xF0F0);
+
 		Serial.println("Sanity test initialised.");
 	}
 
@@ -69,6 +71,8 @@ namespace SanityTest
 		SSD1351::Driver.clearScreen(0xFF00);
 		delay(500);
 		SSD1351::Driver.clearScreen(0x00FF);
+		delay(500);
+		SSD1351::Driver.clearScreenToImage(static_cast<const uint8_t*>(ScreenBufferSurface.rawPixelData()));
 		delay(500);
 	}
 }

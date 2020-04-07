@@ -36,6 +36,10 @@ namespace SSD1351
 
 		void clearScreen(uint16_t colour = 0x0000);
 
+		// For now, assumes dimensions of data are OLED_WIDTH * OLED_HEIGHT * sizeof(uint16_t);
+		// Really we need some kind of blob wrapper class to use with this.
+		void clearScreenToImage(const uint8_t* data);
+
 	private:
 		void setUpPins();
 		void defaultDeviceInit();

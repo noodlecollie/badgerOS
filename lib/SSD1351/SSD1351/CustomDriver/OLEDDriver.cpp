@@ -170,6 +170,18 @@ namespace SSD1351
 		}
 	}
 
+	void OLEDDriver::clearScreenToImage(const uint8_t* data)
+	{
+		if ( !data || !m_HasConfig )
+		{
+			return;
+		}
+
+		ramAddress();
+		writeCommand(Command::WriteRam);
+		writeDataBytes(data, OLED_WIDTH * OLED_HEIGHT * sizeof(uint16_t));
+	}
+
 	void OLEDDriver::setUpPins()
 	{
 		pinMode(m_Config.resetPin, OUTPUT);
