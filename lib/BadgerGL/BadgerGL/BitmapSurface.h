@@ -57,8 +57,6 @@ namespace BadgerGL
 		// Returns the number of bytes on the specified dimension: width, height, or depth.
 		inline uint16_t dimension(uint8_t axis) const
 		{
-			BGRS_ASSERTD(axis < 3, "Axis was not valid.");
-
 			switch ( axis )
 			{
 				case 0:
@@ -78,6 +76,7 @@ namespace BadgerGL
 
 				default:
 				{
+					BGRS_ASSERTD(false, "Axis was not valid.");
 					return 0;
 				}
 			}
@@ -86,8 +85,17 @@ namespace BadgerGL
 		template<typename T>
 		inline T* pixelData(uint16_t x = 0, uint16_t y = 0)
 		{
-			BGRS_ASSERTD(isValid(), "Bitmap was not valid.");
-			BGRS_ASSERTD(sizeof(T) == byteDepth(), "Size of pixel type did not match pixel depth.");
+			if ( !isValid() )
+			{
+				BGRS_ASSERTD(false, "Bitmap was not valid.");
+				return nullptr;
+			}
+
+			if ( sizeof(T) != byteDepth() )
+			{
+				BGRS_ASSERTD(false, "Size of pixel type did not match pixel depth.");
+				return nullptr;
+			}
 
 			return static_cast<T*>(m_Pixels) + (y * m_Width) + x;
 		}
@@ -95,32 +103,48 @@ namespace BadgerGL
 		template<typename T>
 		inline const T* pixelData(uint16_t x = 0, uint16_t y = 0) const
 		{
-			BGRS_ASSERTD(isValid(), "Bitmap was not valid.");
-			BGRS_ASSERTD(sizeof(T) == byteDepth(), "Size of pixel type did not match pixel depth.");
+			if ( !isValid() )
+			{
+				BGRS_ASSERTD(false, "Bitmap was not valid.");
+				return nullptr;
+			}
+
+			if ( sizeof(T) != byteDepth() )
+			{
+				BGRS_ASSERTD(false, "Size of pixel type did not match pixel depth.");
+				return nullptr;
+			}
 
 			return static_cast<const T*>(m_Pixels) + (y * m_Width) + x;
 		}
 
 		inline void* rawPixelData(uint16_t x = 0, uint16_t y = 0)
 		{
-			BGRS_ASSERTD(isValid(), "Bitmap was not valid.");
+			if ( !isValid() )
+			{
+				BGRS_ASSERTD(false, "Bitmap was not valid.");
+				return nullptr;
+			}
 
 			return static_cast<void*>(static_cast<uint8_t*>(m_Pixels) + (y * m_Width) + x);
 		}
 
 		inline const void* rawPixelData(uint16_t x = 0, uint16_t y = 0) const
 		{
-			BGRS_ASSERTD(isValid(), "Bitmap was not valid.");
+			if ( !isValid() )
+			{
+				BGRS_ASSERTD(false, "Bitmap was not valid.");
+				return nullptr;
+			}
 
 			return static_cast<void*>(static_cast<uint8_t*>(m_Pixels) + (y * m_Width) + x);
 		}
 
 		inline void fill(uint32_t data)
 		{
-			BGRS_ASSERTD(isValid(), "Bitmap was not valid.");
-
 			if ( !isValid() )
 			{
+				BGRS_ASSERTD(false, "Bitmap was not valid.");
 				return;
 			}
 
@@ -131,7 +155,7 @@ namespace BadgerGL
 			{
 				memset(m_Pixels, data, size);
 			}
-			else
+			else if ( bDepth <= 4 )
 			{
 				uint8_t* cursor = static_cast<uint8_t*>(m_Pixels);
 				uint8_t* const end = cursor + size;
@@ -144,6 +168,10 @@ namespace BadgerGL
 					// Rotate the bytes down.
 					data = (data >> 8) | ((data & 0x000000FF) << (8 * (bDepth - 1)));
 				}
+			}
+			else
+			{
+				BGRS_ASSERT(false, "Unsupported depth.");
 			}
 		}
 
