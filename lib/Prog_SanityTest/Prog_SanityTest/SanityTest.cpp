@@ -4,6 +4,7 @@
 #include <Esp.h>
 #include <SSD1351/CustomDriver/OLEDDriver.h>
 #include <BadgerGL/BitmapSurface.h>
+#include <BadgerGL/BitmapRenderer.h>
 
 #include "SanityTest.h"
 
@@ -53,6 +54,9 @@ namespace SanityTest
 		Serial.printf("          Hold pin: %u\n", config.spiPinConfig->holdPin);
 		Serial.printf("\n");
 
+		Serial.printf("Screen buffer dimensions: %ux%u, bit depth %u.\n", ScreenBufferSurface.width(), ScreenBufferSurface.height(), ScreenBufferSurface.bitDepth());
+		Serial.printf("Screen buffer size: %u bytes.\n", ScreenBufferSurface.dataSize());
+
 		PlatformConfig::chipSelectSetup(*config.chipSelectConfig);
 		PlatformConfig::spiSetup(*config.spiConfig);
 
@@ -60,6 +64,22 @@ namespace SanityTest
 		SSD1351::Driver.initialise(*config.ssd1351Config);
 
 		ScreenBufferSurface.fill(0xF0F0);
+		ScreenBufferSurface.fillRect(BadgerGL::BitmapSurface::SurfaceRect(8, 64, 120, 120), 0xFF00);
+
+		BadgerGL::BitmapRenderer renderer(ScreenBufferSurface);
+		renderer.setPrimaryColour(0xFF00);
+		renderer.setSecondaryColour(0x00FF);
+
+		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
+		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(8, 8), 32, 32));
+
+		renderer.setLineWidth(4);
+		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Outline);
+		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(48, 8), 32, 32));
+
+		renderer.setLineWidth(1);
+		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::FilledOutline);
+		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(88, 8), 32, 32));
 
 		Serial.println("Sanity test initialised.");
 	}
