@@ -93,7 +93,7 @@ namespace BadgerMath
 
 		// Swaps values if required, so that p0 represents the minimum point of the rect,
 		// and p1 represents tha maximum point.
-		inline Point ensureMinMaxOrdered()
+		inline void ensureMinMaxOrdered()
 		{
 			if ( m_P0[0] > m_P1[0] )
 			{
