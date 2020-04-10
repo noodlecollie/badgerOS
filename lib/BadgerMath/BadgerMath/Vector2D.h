@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cmath>
+#include <algorithm>
 #include <CoreUtil/BgrsAssert.h>
 
 namespace BadgerMath

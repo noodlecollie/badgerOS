@@ -6,6 +6,11 @@
 
 namespace BadgerGL
 {
+	// Class for rendering graphics to a provided bitmap.
+	// The bitmap is expected to exist for the lifetime of the class instance.
+	// Rendering to bitmaps which use palettes is not supported right now,
+	// and will yield undefined behaviour.
+	// This class is not thread-safe.
 	class BitmapRenderer
 	{
 	public:
@@ -25,9 +30,20 @@ namespace BadgerGL
 
 		void draw(const Rect16& rect);
 
+		// If sourceRect is not null, it defines the portion of the source bitmap that will be blitted.
+		// This function supports source bitmaps that use palettes.
+		void blit(const BitmapSurface& source,
+				  const Point16& pos,
+				  const BitmapSurface::SurfaceRect& sourceRect = BitmapSurface::SurfaceRect());
+
 	private:
 		void drawOutline(const Rect16& rect);
 		void drawFilled(const Rect16& rect, uint32_t colour);
+
+		// Assumes that the source rect has been adjusted to remain inside the surface bounds.
+		void blitInternal(const BitmapSurface& source,
+						  const BitmapSurface::SurfaceVector& pos,
+						  const BitmapSurface::SurfaceRect& sourceRect);
 
 		BitmapSurface* m_Surface = nullptr;
 		Rect16 m_DirtyArea;

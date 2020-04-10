@@ -39,4 +39,12 @@ namespace BadgerMath
 		rect.setP0(min);
 		rect.setP1(max);
 	}
+
+	// Adjusts the rect so that its top left corner is located at pos.
+	// The dimensions of the rect remain the same.
+	template<typename T>
+	inline void translateToPosition(Rect2D<T>& rect, const typename Rect2D<T>::Point& pos)
+	{
+		rect = Rect2D<T>(pos, rect.width(), rect.height());
+	}
 }

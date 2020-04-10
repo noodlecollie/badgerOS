@@ -1,11 +1,16 @@
 #include <BadgerMath/Rect2DOperations.h>
 #include "BitmapRenderer.h"
+#include"BitmapBlitOperations.h"
 
 namespace BadgerGL
 {
+	using SurfaceVector = BitmapSurface::SurfaceVector;
+	using SurfaceRect = BitmapSurface::SurfaceRect;
+
 	BitmapRenderer::BitmapRenderer(BitmapSurface& surface) :
 		m_Surface(&surface)
 	{
+		BGRS_ASSERTD(!m_Surface->hasPalette(), "Rendering to bitmaps with palettes is not supported.");
 	}
 
 	ShapeDrawStyle BitmapRenderer::shapeDrawStyle() const
@@ -64,6 +69,42 @@ namespace BadgerGL
 		}
 	}
 
+	// TOOD: Maybe factor out the rect clipping logic here one day, so that it can be used for other things too?
+	void BitmapRenderer::blit(const BitmapSurface& source,
+							  const Point16& pos,
+							  const SurfaceRect& sourceRect)
+	{
+		Rect16 workingRect((sourceRect.isNull() ? source.bounds() : sourceRect).rect2DCast<Rect16>());
+		workingRect.ensureMinMaxOrdered();
+
+		// Locate the rect at the target position and keep a copy,
+		// so that we can compare how much it was clipped by later.
+		BadgerMath::translateToPosition(workingRect, pos);
+		const Rect16 preClipRect = workingRect.asBounds();
+
+		// Clip the rect to the bounds of the screen.
+		BadgerMath::trimToBounds(workingRect, m_Surface->bounds().rect2DCast<Rect16>());
+
+		if ( workingRect.isEmpty() )
+		{
+			// Nothing to draw.
+			return;
+		}
+
+		// Work out the deltas for each point.
+		const Point16 delta0 = workingRect.p0() - preClipRect.p0();
+		const Point16 delta1 = workingRect.p1() - preClipRect.p1();
+
+		// Create a new pos and source rect from these deltas.
+		const Point16 newPos = pos + delta0;
+		const SurfaceVector newSourceMin = (sourceRect.min().vector2DCast<Point16>() + delta0).vector2DCast<SurfaceVector>();
+		const SurfaceVector newSourceMax = (sourceRect.max().vector2DCast<Point16>() + delta1).vector2DCast<SurfaceVector>();
+
+		blitInternal(source,
+					 newPos.vector2DCast<SurfaceVector>(),
+					 SurfaceRect(newSourceMin, newSourceMax));
+	}
+
 	void BitmapRenderer::drawOutline(const Rect16& rect)
 	{
 		if ( m_LineWidth < 1 )
@@ -117,5 +158,34 @@ namespace BadgerGL
 
 		const bool success = m_Surface->fillRect(localRect.rect2DCast<URect16>(), colour);
 		BGRS_ASSERTD(success, "Failed to draw filled rect into bitmap.");
+	}
+
+	void BitmapRenderer::blitInternal(const BitmapSurface& source,
+									  const SurfaceVector& pos,
+									  const SurfaceRect& sourceRect)
+	{
+		const size_t sourceWidth = sourceRect.width();
+		const size_t sourceHeight = sourceRect.height();
+		const bool sourceHasPalette = source.hasPalette();
+		const bool depthsMatch = source.byteDepth() == m_Surface->byteDepth();
+
+		for ( uint32_t y = 0; y < sourceHeight; ++y )
+		{
+			const SurfaceVector offsetVec(0, y);
+			const SurfaceRect rowRect(sourceRect.p0() + offsetVec, sourceWidth, 1);
+
+			if ( sourceHasPalette )
+			{
+				BitmapBlit::blitRowViaPalette(*m_Surface, pos + offsetVec, source, rowRect);
+			}
+			else if ( depthsMatch )
+			{
+				BitmapBlit::blitRowMatchingDepth(*m_Surface, pos + offsetVec, BitmapBlit::BlitSourceParameters(source, rowRect));
+			}
+			else
+			{
+				BitmapBlit::blitRowNonMatchingDepth(*m_Surface, pos + offsetVec, BitmapBlit::BlitSourceParameters(source, rowRect));
+			}
+		}
 	}
 }

@@ -55,7 +55,7 @@ namespace SanityTest
 		Serial.printf("\n");
 
 		Serial.printf("Screen buffer dimensions: %ux%u, bit depth %u.\n", ScreenBufferSurface.width(), ScreenBufferSurface.height(), ScreenBufferSurface.bitDepth());
-		Serial.printf("Screen buffer size: %u bytes.\n", ScreenBufferSurface.dataSize());
+		Serial.printf("Screen buffer size: %u bytes.\n", ScreenBufferSurface.pixelDataSize());
 
 		PlatformConfig::chipSelectSetup(*config.chipSelectConfig);
 		PlatformConfig::spiSetup(*config.spiConfig);
