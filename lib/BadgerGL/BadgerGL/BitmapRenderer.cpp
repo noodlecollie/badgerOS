@@ -74,8 +74,10 @@ namespace BadgerGL
 							  const Point16& pos,
 							  const SurfaceRect& sourceRect)
 	{
-		Rect16 workingRect((sourceRect.isNull() ? source.bounds() : sourceRect).rect2DCast<Rect16>());
-		workingRect.ensureMinMaxOrdered();
+		Rect16 chosenSourceRect((sourceRect.isNull() ? source.bounds() : sourceRect).rect2DCast<Rect16>());
+		chosenSourceRect.ensureMinMaxOrdered();
+
+		Rect16 workingRect(chosenSourceRect);
 
 		// Locate the rect at the target position and keep a copy,
 		// so that we can compare how much it was clipped by later.
@@ -97,12 +99,12 @@ namespace BadgerGL
 
 		// Create a new pos and source rect from these deltas.
 		const Point16 newPos = pos + delta0;
-		const SurfaceVector newSourceMin = (sourceRect.min().vector2DCast<Point16>() + delta0).vector2DCast<SurfaceVector>();
-		const SurfaceVector newSourceMax = (sourceRect.max().vector2DCast<Point16>() + delta1).vector2DCast<SurfaceVector>();
+		chosenSourceRect.setP0(chosenSourceRect.p0() + delta0);
+		chosenSourceRect.setP1(chosenSourceRect.p1() + delta1);
 
 		blitInternal(source,
 					 newPos.vector2DCast<SurfaceVector>(),
-					 SurfaceRect(newSourceMin, newSourceMax));
+					 chosenSourceRect.rect2DCast<SurfaceRect>());
 	}
 
 	void BitmapRenderer::drawOutline(const Rect16& rect)

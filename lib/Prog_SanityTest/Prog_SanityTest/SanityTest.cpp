@@ -5,6 +5,8 @@
 #include <SSD1351/CustomDriver/OLEDDriver.h>
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
+#include <ResourceLoaders/StaticBitmapLoader.h>
+#include <Resources/Images/Missing.h>
 
 #include "SanityTest.h"
 
@@ -64,7 +66,6 @@ namespace SanityTest
 		SSD1351::Driver.initialise(*config.ssd1351Config);
 
 		ScreenBufferSurface.fill(0xF0F0);
-		ScreenBufferSurface.fillRect(BadgerGL::BitmapSurface::SurfaceRect(8, 64, 120, 120), 0xFF00);
 
 		BadgerGL::BitmapRenderer renderer(ScreenBufferSurface);
 		renderer.setPrimaryColour(0xFF00);
@@ -80,6 +81,14 @@ namespace SanityTest
 		renderer.setLineWidth(1);
 		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::FilledOutline);
 		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(88, 8), 32, 32));
+
+		BadgerGL::BitmapSurface res;
+		ResourceLoaders::loadStaticBitmap(res, Resources::Missing::META);
+
+		Serial.printf("Loaded bitmap dimensions: %ux%u\n", res.width(), res.height());
+		Serial.printf("Loaded bitmap pixel at (0,0): 0x%04x\n", *res.pixelData<uint16_t>(0,0));
+
+		renderer.blit(res, BadgerGL::Point16(8, 64));
 
 		Serial.println("Sanity test initialised.");
 	}

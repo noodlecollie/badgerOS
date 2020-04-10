@@ -1,0 +1,38 @@
+#pragma once
+
+#include "Meta/StaticImageMetadata.h"
+
+namespace Resources
+{
+	namespace Missing
+	{
+		static constexpr size_t WIDTH = 8;
+		static constexpr size_t HEIGHT = 8;
+
+		// Format that the OLED expects is BGR.
+		// This may be useful for converting formats: https://stackoverflow.com/questions/8579353/convert-16bit-colour-to-32bit
+		static constexpr uint16_t COL_PINK = 0b1101000000011111;
+		static constexpr uint16_t COL_BLACK = 0x0000;
+
+		static constexpr const uint16_t DATA[WIDTH * HEIGHT] =
+		{
+			COL_PINK, COL_PINK, COL_PINK, COL_PINK, COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK,
+			COL_PINK, COL_PINK, COL_PINK, COL_PINK, COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK,
+			COL_PINK, COL_PINK, COL_PINK, COL_PINK, COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK,
+			COL_PINK, COL_PINK, COL_PINK, COL_PINK, COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK,
+			COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK, COL_PINK, COL_PINK, COL_PINK, COL_PINK,
+			COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK, COL_PINK, COL_PINK, COL_PINK, COL_PINK,
+			COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK, COL_PINK, COL_PINK, COL_PINK, COL_PINK,
+			COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK, COL_PINK, COL_PINK, COL_PINK, COL_PINK,
+		};
+
+		static constexpr StaticImageMetadata META =
+		{
+			.width = WIDTH,
+			.height = HEIGHT,
+			.bitDepth = 8 * sizeof(DATA[0]),
+			.isRowMajor = true,
+			.data = DATA
+		};
+	}
+}

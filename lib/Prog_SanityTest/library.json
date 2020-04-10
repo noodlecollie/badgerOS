@@ -2,6 +2,8 @@
 	"dependencies":
 	[
 		{ "name": "PlatformConfig" },
-		{ "name": "BadgerGL" }
+		{ "name": "BadgerGL" },
+		{ "name": "Resources" },
+		{ "name": "ResourceLoaders" }
 	]
 }

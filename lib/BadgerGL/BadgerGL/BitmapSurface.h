@@ -26,11 +26,21 @@ namespace BadgerGL
 		static constexpr uint8_t MAX_BIT_DEPTH = 32;
 		static constexpr size_t MAX_PALETTE_LENGTH = 256;
 
-		inline BitmapSurface(uint16_t width, uint16_t height, void* data, uint8_t bitDepth = 8) :
-			m_Dimensions(width, height),
-			m_BitDepth(bitDepth),
-			m_Pixels(data)
+		inline BitmapSurface()
 		{
+		}
+
+		inline BitmapSurface(uint16_t width, uint16_t height, void* data, uint8_t bitDepth = 8)
+		{
+			setBitmap(width, height, data, bitDepth);
+		}
+
+		inline void setBitmap(uint16_t width, uint16_t height, void* data, uint8_t bitDepth = 8)
+		{
+			m_Dimensions = SurfaceVector(width, height);
+			m_BitDepth = bitDepth;
+			m_Pixels = data;
+
 			if ( m_BitDepth > MAX_BIT_DEPTH )
 			{
 				BGRS_ASSERTD(false, "Maximum bit depth exceeded.");
@@ -50,6 +60,13 @@ namespace BadgerGL
 		inline bool hasPalette() const
 		{
 			return m_Palette != nullptr;
+		}
+
+		// TODO: Swap out bit depth for actual pixel format description of some sort,
+		// so that we have information on channels.
+		inline bool pixelFormat() const
+		{
+			return hasPalette() ? paletteBitDepth() : bitDepth();
 		}
 
 		inline uint16_t width() const
