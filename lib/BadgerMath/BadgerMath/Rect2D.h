@@ -81,6 +81,12 @@ namespace BadgerMath
 			m_P1 = p;
 		}
 
+		inline void translate(const Point& p)
+		{
+			m_P0 += p;
+			m_P1 += p;
+		}
+
 		inline Point min() const
 		{
 			return Point(std::min(m_P0.x(), m_P1.x()), std::min(m_P0.y(), m_P1.y()));

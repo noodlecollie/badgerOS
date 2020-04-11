@@ -14,6 +14,67 @@ namespace SanityTest
 {
 	static BadgerGL::StaticBitmapSurface16<SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT> ScreenBufferSurface;
 
+	static void prepareTestImage()
+	{
+		ScreenBufferSurface.fill(BadgerGL::col24To16(0x404040));
+
+		BadgerGL::BitmapRenderer renderer(ScreenBufferSurface);
+		renderer.setPrimaryColour(BadgerGL::col24To16(0xFFD800));
+		renderer.setSecondaryColour(BadgerGL::col24To16(0x7AFFFF));
+
+		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
+		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(8, 8), 32, 32));
+
+		renderer.setLineWidth(4);
+		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Outline);
+		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(48, 8), 32, 32));
+
+		renderer.setLineWidth(1);
+		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::FilledOutline);
+		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(88, 8), 32, 32));
+
+		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::FilledOutline);
+		renderer.setPrimaryColour(BadgerGL::col24To16(0x000000));
+		renderer.setSecondaryColour(BadgerGL::col24To16(0xFFFFFF));
+
+		renderer.draw(BadgerGL::Rect16(0, 0, 4, 4));
+		renderer.draw(BadgerGL::Rect16(SSD1351::OLED_WIDTH - 4, 0, SSD1351::OLED_WIDTH, 4));
+		renderer.draw(BadgerGL::Rect16(SSD1351::OLED_WIDTH - 4, SSD1351::OLED_HEIGHT - 4, SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT));
+		renderer.draw(BadgerGL::Rect16(0, SSD1351::OLED_HEIGHT - 4, 4, SSD1351::OLED_HEIGHT));
+
+		BadgerGL::BitmapSurface res;
+		ResourceLoaders::loadStaticBitmap(res, Resources::Missing::META);
+
+		renderer.blit(res, BadgerGL::Point16(60, 20));
+
+		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
+		const size_t totalColumns = 128 - 16;	// Width - outer padding
+		const size_t totalHeight = 128 - 16 - 32 - 8;	// Height - outer padding - top shapes - spacing
+		const BadgerGL::Point16 topLeft(8, 8 + 32 + 8);
+		const size_t rowHeight = totalHeight / 4;
+
+		for ( uint32_t column = 0; column < totalColumns; ++column )
+		{
+			const uint8_t colour = static_cast<uint8_t>(static_cast<float>(column * 255) / static_cast<float>(totalColumns));
+			BadgerGL::Rect16 rect(topLeft + BadgerGL::Point16(column, 0), 1, rowHeight);
+
+			renderer.setPrimaryColour(BadgerGL::col24To16(colour << 16));
+			renderer.draw(rect);
+
+			renderer.setPrimaryColour(BadgerGL::col24To16(colour << 8));
+			rect.translate(BadgerGL::Point16(0, rowHeight));
+			renderer.draw(rect);
+
+			renderer.setPrimaryColour(BadgerGL::col24To16(colour));
+			rect.translate(BadgerGL::Point16(0, rowHeight));
+			renderer.draw(rect);
+
+			renderer.setPrimaryColour(BadgerGL::col24To16((colour << 16) | (colour << 8) | colour));
+			rect.translate(BadgerGL::Point16(0, rowHeight));
+			renderer.draw(rect);
+		}
+	}
+
 	void setup(PlatformConfig::ConfigFactoryFunc configFunc)
 	{
 		BGRS_ASSERT(configFunc, "Config factory function is required.");
@@ -65,37 +126,10 @@ namespace SanityTest
 		SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->oledScreenCSPin);
 		SSD1351::Driver.initialise(*config.ssd1351Config);
 
-		ScreenBufferSurface.fill(0b0000000011100000);
-
-		BadgerGL::BitmapRenderer renderer(ScreenBufferSurface);
-		renderer.setPrimaryColour(0xFF00);
-		renderer.setSecondaryColour(0x00FF);
-
-		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
-		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(8, 8), 32, 32));
-
-		renderer.setLineWidth(4);
-		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Outline);
-		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(48, 8), 32, 32));
-
-		renderer.setLineWidth(1);
-		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::FilledOutline);
-		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(88, 8), 32, 32));
-
-		BadgerGL::BitmapSurface res;
-		ResourceLoaders::loadStaticBitmap(res, Resources::Missing::META);
-
-		Serial.printf("Loaded bitmap dimensions: %ux%u\n", res.width(), res.height());
-		Serial.printf("Loaded bitmap pixel at (0,0): 0x%04x\n", *res.pixelData<uint16_t>(0,0));
-
-		renderer.blit(res, BadgerGL::Point16(8, 64));
-		Serial.printf("Target bitmap pixel at (8,64): 0x%04x\n", *ScreenBufferSurface.pixelData<uint16_t>(8, 64));
+		prepareTestImage();
 
 		Serial.println("Sanity test initialised.");
-	}
 
-	void loop()
-	{
 		SSD1351::Driver.clearScreen(0x0000);
 		delay(500);
 		SSD1351::Driver.clearScreen(0xFF00);
@@ -103,6 +137,9 @@ namespace SanityTest
 		SSD1351::Driver.clearScreen(0x00FF);
 		delay(500);
 		SSD1351::Driver.clearScreenToImage(static_cast<const uint16_t*>(ScreenBufferSurface.rawPixelData()));
-		delay(500);
+	}
+
+	void loop()
+	{
 	}
 }
