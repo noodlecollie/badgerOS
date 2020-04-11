@@ -38,7 +38,7 @@ namespace SSD1351
 
 		// For now, assumes dimensions of data are OLED_WIDTH * OLED_HEIGHT * sizeof(uint16_t);
 		// Really we need some kind of blob wrapper class to use with this.
-		void clearScreenToImage(const uint8_t* data);
+		void clearScreenToImage(const uint16_t* data);
 
 	private:
 		void setUpPins();
@@ -47,6 +47,7 @@ namespace SSD1351
 
 		Config m_Config;
 		bool m_HasConfig = false;
+		uint16_t m_RowData[SSD1351::OLED_WIDTH];
 	};
 
 	extern OLEDDriver Driver;

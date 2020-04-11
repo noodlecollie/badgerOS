@@ -11,6 +11,11 @@ namespace SSD1351
 {
 	OLEDDriver Driver;
 
+	inline constexpr uint16_t toSerialBytes(uint16_t colour)
+	{
+		return (colour << 8) | (colour >> 8);
+	}
+
 	OLEDDriver::OLEDDriver()
 	{
 	}
@@ -149,16 +154,16 @@ namespace SSD1351
 
 	void OLEDDriver::clearScreen(uint16_t colour)
 	{
-		static uint16_t clearLine[OLED_WIDTH];
-
 		if ( !m_HasConfig )
 		{
 			return;
 		}
 
+		colour = toSerialBytes(colour);
+
 		for ( uint32_t x = 0; x < OLED_WIDTH; ++x )
 		{
-			clearLine[x] = colour;
+			m_RowData[x] = colour;
 		}
 
 		ramAddress();
@@ -166,11 +171,11 @@ namespace SSD1351
 
 		for ( uint32_t y = 0; y < OLED_HEIGHT; ++y )
 		{
-			writeDataBytes(reinterpret_cast<const uint8_t*>(clearLine), sizeof(clearLine));
+			writeDataBytes(reinterpret_cast<const uint8_t*>(m_RowData), sizeof(m_RowData));
 		}
 	}
 
-	void OLEDDriver::clearScreenToImage(const uint8_t* data)
+	void OLEDDriver::clearScreenToImage(const uint16_t* data)
 	{
 		if ( !data || !m_HasConfig )
 		{
@@ -179,7 +184,16 @@ namespace SSD1351
 
 		ramAddress();
 		writeCommand(Command::WriteRam);
-		writeDataBytes(data, OLED_WIDTH * OLED_HEIGHT * sizeof(uint16_t));
+
+		for ( uint32_t row = 0; row < OLED_HEIGHT; ++row )
+		{
+			for ( uint32_t x = 0; x < OLED_WIDTH; ++x )
+			{
+				m_RowData[x] = toSerialBytes(*(data++));
+			}
+
+			writeDataBytes(reinterpret_cast<const uint8_t*>(m_RowData), sizeof(m_RowData));
+		}
 	}
 
 	void OLEDDriver::setUpPins()

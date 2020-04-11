@@ -65,7 +65,7 @@ namespace SanityTest
 		SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->oledScreenCSPin);
 		SSD1351::Driver.initialise(*config.ssd1351Config);
 
-		ScreenBufferSurface.fill(0xF0F0);
+		ScreenBufferSurface.fill(0b0000000011100000);
 
 		BadgerGL::BitmapRenderer renderer(ScreenBufferSurface);
 		renderer.setPrimaryColour(0xFF00);
@@ -89,6 +89,7 @@ namespace SanityTest
 		Serial.printf("Loaded bitmap pixel at (0,0): 0x%04x\n", *res.pixelData<uint16_t>(0,0));
 
 		renderer.blit(res, BadgerGL::Point16(8, 64));
+		Serial.printf("Target bitmap pixel at (8,64): 0x%04x\n", *ScreenBufferSurface.pixelData<uint16_t>(8, 64));
 
 		Serial.println("Sanity test initialised.");
 	}
@@ -101,7 +102,7 @@ namespace SanityTest
 		delay(500);
 		SSD1351::Driver.clearScreen(0x00FF);
 		delay(500);
-		SSD1351::Driver.clearScreenToImage(static_cast<const uint8_t*>(ScreenBufferSurface.rawPixelData()));
+		SSD1351::Driver.clearScreenToImage(static_cast<const uint16_t*>(ScreenBufferSurface.rawPixelData()));
 		delay(500);
 	}
 }
