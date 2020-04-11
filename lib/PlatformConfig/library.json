@@ -1,0 +1,7 @@
+{
+	"dependencies":
+	[
+		{ "name": "SPI" },
+		{ "name": "SSD1351" }
+	]
+}

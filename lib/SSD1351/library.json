@@ -1,8 +1,7 @@
 {
 	"dependencies":
 	[
-		{
-			"name": "CoreUtil"
-		}
+		{ "name": "CoreUtil" },
+		{ "name": "SPI" }
 	]
 }

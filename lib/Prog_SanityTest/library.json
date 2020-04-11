@@ -4,6 +4,10 @@
 		{ "name": "PlatformConfig" },
 		{ "name": "BadgerGL" },
 		{ "name": "Resources" },
-		{ "name": "ResourceLoaders" }
+		{ "name": "ResourceLoaders" },
+		{ "name": "SSD1351" },
+		{ "name": "CoreUtil" },
+		{ "name": "SPI" },
+		{ "name": "Wire" }
 	]
 }
