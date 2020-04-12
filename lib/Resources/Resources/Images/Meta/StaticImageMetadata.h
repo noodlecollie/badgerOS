@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <BadgerGL/PixelFormat.h>
 
 namespace Resources
 {
@@ -9,7 +10,7 @@ namespace Resources
 	{
 		size_t width;
 		size_t height;
-		uint8_t bitDepth;
+		const BadgerGL::PixelFormat& pixelFormat;
 		bool isRowMajor;
 		const void* data;
 	};

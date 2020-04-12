@@ -29,7 +29,7 @@ namespace Resources
 		{
 			.width = WIDTH,
 			.height = HEIGHT,
-			.bitDepth = 8 * sizeof(DATA[0]),
+			.pixelFormat = BadgerGL::PIXELFORMAT_65K,
 			.isRowMajor = true,
 			.data = DATA
 		};

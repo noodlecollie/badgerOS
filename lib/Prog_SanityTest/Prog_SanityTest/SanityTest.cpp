@@ -13,7 +13,7 @@
 
 namespace SanityTest
 {
-	static BadgerGL::StaticBitmapSurface16<SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT> ScreenBufferSurface;
+	static BadgerGL::Static65KBitmapSurface<SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT> ScreenBufferSurface;
 
 	static void prepareTestImage()
 	{
