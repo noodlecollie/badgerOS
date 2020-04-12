@@ -57,19 +57,37 @@ namespace BadgerGL
 		// Arguments should be checked by the caller before calling.
 		// The functions are not thread-safe.
 
-		// The buffer is assumed to be of length (params.rowWidthInPixels * destByteDepth).
-		static inline void blitToBuffer(uint8_t* buffer, uint8_t destByteDepth, const BlitSourceParameters& params)
+		// This function will tile the pixels specified by the source params into the provided buffer.
+		// This means that the source pixel row will be repeated as many times as necessary to fill the buffer.
+		// If the buffer length is 0, the buffer is assumed to be of length (params.rowWidthInPixels * destByteDepth),
+		// in which case the row of source pixels will be written exactly once. The caller should ensure that the
+		// buffer is long enough to accept this much data!
+		static inline void blitToBuffer(uint8_t* buffer, uint8_t destByteDepth, const BlitSourceParameters& params, size_t bufferLengthInBytes = 0)
 		{
 			BGRS_ASSERTD(buffer, "Buffer was not valid.");
 			BGRS_ASSERTD(destByteDepth > 0 && destByteDepth <= bitDepthToByteDepth(ConstBitmapSurface::MAX_BIT_DEPTH), "Byte depth was not valid.");
 			BGRS_ASSERTD(params.isValid(), "Source params were not valid.");
 
-			// Ensure the data starts zeroed, so that garbage doesn't interfere with the copying.
-			memset(buffer, 0, params.rowWidthInPixels * destByteDepth);
+			if ( bufferLengthInBytes < 1 )
+			{
+				// Assume that the buffer is long enough to hold one complete row, at the target byte depth.
+				bufferLengthInBytes = params.rowWidthInPixels * destByteDepth;
+			}
 
+			// How many target pixels can the buffer hold?
+			const size_t numPixelsWritableInBuffer = bufferLengthInBytes / destByteDepth;
+
+			// Ensure the data starts zeroed, so that garbage doesn't interfere with the copying.
+			memset(buffer, 0, bufferLengthInBytes);
+
+			// Create a "cursor" that will iterate over the source data.
 			const uint8_t* sourcePixels = params.rowData;
 
-			for ( uint32_t pixelIndex = 0; pixelIndex < params.rowWidthInPixels; ++pixelIndex )
+			// Once the cursor reaches or passes this value, it is out of range.
+			const uint8_t* const sourcePixelsEnd = sourcePixels + (params.rowWidthInPixels * params.byteDepth);
+
+			// For each pixel in the target buffer:
+			for ( uint32_t pixelIndex = 0; pixelIndex < numPixelsWritableInBuffer; ++pixelIndex )
 			{
 				// We treat the smaller-width pixel as occupying the most significant bytes of the larger-width pixel.
 				// If the destination width is larger than the source width, the LSBs will remain zero.
@@ -85,6 +103,13 @@ namespace BadgerGL
 				}
 
 				sourcePixels += params.byteDepth;
+
+				// If we have reached the end of the source data, wrap back to the start.
+				if ( sourcePixels >= sourcePixelsEnd )
+				{
+					sourcePixels = params.rowData;
+				}
+
 				buffer += destByteDepth;
 			}
 		}

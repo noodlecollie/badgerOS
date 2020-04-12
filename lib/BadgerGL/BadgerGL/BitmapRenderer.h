@@ -31,6 +31,7 @@ namespace BadgerGL
 		void draw(const Rect16& rect);
 
 		// If sourceRect is not null, it defines the portion of the source bitmap that will be blitted.
+		// Otherwise, the entire bitmap will be blitted.
 		// This function supports source bitmaps that use palettes.
 		void blit(const ConstBitmapSurface& source,
 				  const Point16& pos,
