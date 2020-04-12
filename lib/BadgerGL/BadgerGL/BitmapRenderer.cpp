@@ -69,42 +69,18 @@ namespace BadgerGL
 		}
 	}
 
-	// TOOD: Maybe factor out the rect clipping logic here one day, so that it can be used for other things too?
 	void BitmapRenderer::blit(const ConstBitmapSurface& source,
 							  const Point16& pos,
 							  const SurfaceRect& sourceRect)
 	{
-		Rect16 chosenSourceRect((sourceRect.isNull() ? source.bounds() : sourceRect).rect2DCast<Rect16>());
-		chosenSourceRect.ensureMinMaxOrdered();
+		Rect16 modifiedSourceRect((sourceRect.isNull() ? source.bounds() : sourceRect).rect2DCast<Rect16>());
+		Point16 modifiedPos(pos);
 
-		Rect16 workingRect(chosenSourceRect);
-
-		// Locate the rect at the target position and keep a copy,
-		// so that we can compare how much it was clipped by later.
-		BadgerMath::translateToPosition(workingRect, pos);
-		const Rect16 preClipRect = workingRect.asBounds();
-
-		// Clip the rect to the bounds of the screen.
-		BadgerMath::trimToBounds(workingRect, m_Surface->bounds().rect2DCast<Rect16>());
-
-		if ( workingRect.isEmpty() )
-		{
-			// Nothing to draw.
-			return;
-		}
-
-		// Work out the deltas for each point.
-		const Point16 delta0 = workingRect.p0() - preClipRect.p0();
-		const Point16 delta1 = workingRect.p1() - preClipRect.p1();
-
-		// Create a new pos and source rect from these deltas.
-		const Point16 newPos = pos + delta0;
-		chosenSourceRect.setP0(chosenSourceRect.p0() + delta0);
-		chosenSourceRect.setP1(chosenSourceRect.p1() + delta1);
+		clipParamsToTargetSurfaceBounds(modifiedPos, modifiedSourceRect);
 
 		blitInternal(source,
-					 newPos.vector2DCast<SurfaceVector>(),
-					 chosenSourceRect.rect2DCast<SurfaceRect>());
+					 modifiedPos.vector2DCast<SurfaceVector>(),
+					 modifiedSourceRect.rect2DCast<SurfaceRect>());
 	}
 
 	void BitmapRenderer::drawOutline(const Rect16& rect)
@@ -189,5 +165,28 @@ namespace BadgerGL
 				BitmapBlit::blitRowNonMatchingDepth(*m_Surface, pos + offsetVec, BitmapBlit::BlitSourceParameters(source, rowRect));
 			}
 		}
+	}
+
+	void BitmapRenderer::clipParamsToTargetSurfaceBounds(Point16& destPos, Rect16& sourceRect)
+	{
+		sourceRect.ensureMinMaxOrdered();
+		Rect16 workingRect(sourceRect);
+
+		// Locate the rect at the target position and keep a copy,
+		// so that we can compare how much it was clipped by later.
+		BadgerMath::translateToPosition(workingRect, destPos);
+		const Rect16 preClipRect = workingRect.asBounds();
+
+		// Clip the rect to the bounds of the screen.
+		BadgerMath::trimToBounds(workingRect, m_Surface->bounds().rect2DCast<Rect16>());
+
+		// Work out the deltas for each point.
+		const Point16 delta0 = workingRect.p0() - preClipRect.p0();
+		const Point16 delta1 = workingRect.p1() - preClipRect.p1();
+
+		// Update the params.
+		destPos = destPos + delta0;
+		sourceRect.setP0(sourceRect.p0() + delta0);
+		sourceRect.setP1(sourceRect.p1() + delta1);
 	}
 }

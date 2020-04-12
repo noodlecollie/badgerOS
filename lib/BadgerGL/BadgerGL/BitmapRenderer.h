@@ -37,6 +37,8 @@ namespace BadgerGL
 				  const BitmapSurface::SurfaceRect& sourceRect = BitmapSurface::SurfaceRect());
 
 	private:
+		void clipParamsToTargetSurfaceBounds(Point16& destPos, Rect16& sourceRect);
+
 		void drawOutline(const Rect16& rect);
 		void drawFilled(const Rect16& rect, uint32_t colour);
 
