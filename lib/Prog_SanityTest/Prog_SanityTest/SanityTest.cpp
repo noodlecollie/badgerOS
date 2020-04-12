@@ -7,6 +7,7 @@
 #include <BadgerGL/BitmapRenderer.h>
 #include <ResourceLoaders/StaticBitmapLoader.h>
 #include <Resources/Images/Missing.h>
+#include <CoreUtil/Blob.h>
 
 #include "SanityTest.h"
 
@@ -42,9 +43,7 @@ namespace SanityTest
 		renderer.draw(BadgerGL::Rect16(SSD1351::OLED_WIDTH - 4, SSD1351::OLED_HEIGHT - 4, SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT));
 		renderer.draw(BadgerGL::Rect16(0, SSD1351::OLED_HEIGHT - 4, 4, SSD1351::OLED_HEIGHT));
 
-		BadgerGL::BitmapSurface res;
-		ResourceLoaders::loadStaticBitmap(res, Resources::Missing::META);
-
+		BadgerGL::ConstBitmapSurface res = ResourceLoaders::loadStaticBitmap(Resources::Missing::META);
 		renderer.blit(res, BadgerGL::Point16(60, 20));
 
 		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
@@ -136,7 +135,7 @@ namespace SanityTest
 		delay(500);
 		SSD1351::Driver.clearScreen(0x00FF);
 		delay(500);
-		SSD1351::Driver.clearScreenToImage(static_cast<const uint16_t*>(ScreenBufferSurface.rawPixelData()));
+		SSD1351::Driver.clearScreenToImage(CoreUtil::ConstBlob(ScreenBufferSurface.rawPixelData(), ScreenBufferSurface.pixelDataSize()));
 	}
 
 	void loop()

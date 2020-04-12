@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <CoreUtil/Blob.h>
 #include "Defs.h"
 
 namespace SSD1351
@@ -36,9 +37,8 @@ namespace SSD1351
 
 		void clearScreen(uint16_t colour = 0x0000);
 
-		// For now, assumes dimensions of data are OLED_WIDTH * OLED_HEIGHT * sizeof(uint16_t);
-		// Really we need some kind of blob wrapper class to use with this.
-		void clearScreenToImage(const uint16_t* data);
+		// If the data is not at least OLED_RAM_SIZE_BYTES in length, this function will do nothing.
+		void clearScreenToImage(const CoreUtil::ConstBlob& data);
 
 	private:
 		void setUpPins();

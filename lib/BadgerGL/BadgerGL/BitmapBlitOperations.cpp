@@ -38,7 +38,7 @@ namespace BadgerGL
 			}
 		}
 
-		void blitRowViaPalette(BitmapSurface& dest, const SurfaceVector& destPos, const BitmapSurface& source, const SurfaceRect& sourceRow)
+		void blitRowViaPalette(BitmapSurface& dest, const SurfaceVector& destPos, const ConstBitmapSurface& source, const SurfaceRect& sourceRow)
 		{
 			static constexpr size_t ROW_DATA_LENGTH = 64;
 			static uint8_t staticRowData[ROW_DATA_LENGTH];
@@ -61,7 +61,7 @@ namespace BadgerGL
 				const size_t numPixelsInRow = std::min(maxPixelsInRow, rowWidthInPixels - sourceRowBase);
 
 				// Get pointers to the source and destination memory.
-				const uint8_t* const pixelData = source.pixelData<uint8_t>(sourceRow.p0().x() + sourceRowBase, sourceRow.p0().y());
+				const uint8_t* const pixelData = source.constPixelData<uint8_t>(sourceRow.p0().x() + sourceRowBase, sourceRow.p0().y());
 				uint8_t* const colourData = staticRowData;
 
 				// Make sure that the destination starts out zeroed, just in case.
@@ -75,7 +75,7 @@ namespace BadgerGL
 					// If the value is out of range, the colour will be left at zero.
 					if ( paletteIndex < paletteLength )
 					{
-						const uint8_t* colour = static_cast<const uint8_t*>(source.rawPaletteData(paletteIndex));
+						const uint8_t* colour = static_cast<const uint8_t*>(source.constRawPaletteData(paletteIndex));
 						memcpy(colourData + pixelIndex, colour, colourByteDepth);
 					}
 				}

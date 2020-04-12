@@ -3,8 +3,11 @@
 
 namespace ResourceLoaders
 {
-	void loadStaticBitmap(BadgerGL::BitmapSurface& bitmap, const Resources::StaticImageMetadata& meta)
+	BadgerGL::ConstBitmapSurface loadStaticBitmap(const Resources::StaticImageMetadata& meta)
 	{
+		using namespace BadgerGL;
+		using ConstBitmapInitialiser = ConstBitmapSurface::ConstBitmapInitialiser;
+
 		BGRS_ASSERTD(meta.width > 0, "Resource width was zero.");
 		BGRS_ASSERTD(meta.width <= std::numeric_limits<uint16_t>::max(), "Resource width exceeded max width.");
 		BGRS_ASSERTD(meta.height > 0, "Resource height was zero.");
@@ -15,6 +18,7 @@ namespace ResourceLoaders
 		BGRS_ASSERTD(meta.data, "Resource data was null.");
 
 		// FIXME: We need a way to handle const images!!
-		bitmap.setBitmap(meta.width, meta.height, (void*)meta.data, meta.bitDepth);
+		//bitmap.setBitmap(meta.width, meta.height, (void*)meta.data, meta.bitDepth);
+		return ConstBitmapSurface(ConstBitmapInitialiser(meta.width, meta.height, meta.bitDepth, meta.data));
 	}
 }

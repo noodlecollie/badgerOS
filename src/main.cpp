@@ -1,3 +1,5 @@
+// The following allows us to specify the program and board names in the project configuration,
+// and cut down on the boilerplate code for starting the program.
 #define PROG_HEADER_PREFIX(progName) Prog_##progName
 #define PROG_HEADER_PATH(progName) <PROG_HEADER_PREFIX(progName)/progName.h>
 #define BOARD_HEADER_PATH(boardName) <PlatformConfig/Platform/boardName.h>

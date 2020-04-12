@@ -175,9 +175,9 @@ namespace SSD1351
 		}
 	}
 
-	void OLEDDriver::clearScreenToImage(const uint16_t* data)
+	void OLEDDriver::clearScreenToImage(const CoreUtil::ConstBlob& data)
 	{
-		if ( !data || !m_HasConfig )
+		if ( !m_HasConfig || !data.isValid() || data.length() < OLED_RAM_SIZE_BYTES )
 		{
 			return;
 		}
@@ -185,11 +185,13 @@ namespace SSD1351
 		ramAddress();
 		writeCommand(Command::WriteRam);
 
+		const uint16_t* cursor = reinterpret_cast<const uint16_t*>(data.constBytes());
+
 		for ( uint32_t row = 0; row < OLED_HEIGHT; ++row )
 		{
 			for ( uint32_t x = 0; x < OLED_WIDTH; ++x )
 			{
-				m_RowData[x] = toSerialBytes(*(data++));
+				m_RowData[x] = toSerialBytes(*(cursor++));
 			}
 
 			writeDataBytes(reinterpret_cast<const uint8_t*>(m_RowData), sizeof(m_RowData));

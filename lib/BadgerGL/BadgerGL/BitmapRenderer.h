@@ -32,7 +32,7 @@ namespace BadgerGL
 
 		// If sourceRect is not null, it defines the portion of the source bitmap that will be blitted.
 		// This function supports source bitmaps that use palettes.
-		void blit(const BitmapSurface& source,
+		void blit(const ConstBitmapSurface& source,
 				  const Point16& pos,
 				  const BitmapSurface::SurfaceRect& sourceRect = BitmapSurface::SurfaceRect());
 
@@ -41,9 +41,9 @@ namespace BadgerGL
 		void drawFilled(const Rect16& rect, uint32_t colour);
 
 		// Assumes that the source rect has been adjusted to remain inside the surface bounds.
-		void blitInternal(const BitmapSurface& source,
-						  const BitmapSurface::SurfaceVector& pos,
-						  const BitmapSurface::SurfaceRect& sourceRect);
+		void blitInternal(const ConstBitmapSurface& source,
+						  const ConstBitmapSurface::SurfaceVector& pos,
+						  const ConstBitmapSurface::SurfaceRect& sourceRect);
 
 		BitmapSurface* m_Surface = nullptr;
 		Rect16 m_DirtyArea;

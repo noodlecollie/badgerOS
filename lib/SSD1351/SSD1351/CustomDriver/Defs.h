@@ -1,11 +1,14 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 
 namespace SSD1351
 {
 	static constexpr size_t OLED_WIDTH = 128;
 	static constexpr size_t OLED_HEIGHT = 128;
+	static constexpr size_t OLED_DEPTH_BYTES = sizeof(uint16_t);
+	static constexpr size_t OLED_RAM_SIZE_BYTES = OLED_WIDTH * OLED_HEIGHT * OLED_DEPTH_BYTES;
 
 	enum class Command
 	{

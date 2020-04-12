@@ -5,5 +5,5 @@
 
 namespace ResourceLoaders
 {
-	void loadStaticBitmap(BadgerGL::BitmapSurface& bitmap, const Resources::StaticImageMetadata& meta);
+	BadgerGL::ConstBitmapSurface loadStaticBitmap(const Resources::StaticImageMetadata& meta);
 }

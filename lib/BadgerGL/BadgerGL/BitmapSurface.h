@@ -15,9 +15,11 @@ namespace BadgerGL
 	// Class used to encapsulate a surface of pixels of fixed dimensions and depth.
 	// The depth is in bits, and pixels are assumed not to be bit-packed; for example,
 	// a bit depth of 10 bits would use two bytes per pixel.
-	// Data is assumed to be in row-major format, and the data pointer that is passed
-	// in is assumed to exist for the lifetime of this surface.
-	class BitmapSurface
+	// Data is assumed to be in row-major format, and the data pointers passed in for
+	// both the bitmap and the palette, if applicable, are assumed to exist for the
+	// lifetime of this surface.
+	// The data passed into this class is assumed not to be modifiable.
+	class ConstBitmapSurface
 	{
 	public:
 		using SurfaceVector = BadgerMath::Vector2D<uint16_t>;
@@ -25,31 +27,86 @@ namespace BadgerGL
 
 		static constexpr uint8_t MAX_BIT_DEPTH = 32;
 		static constexpr size_t MAX_PALETTE_LENGTH = 256;
+		static constexpr uint8_t MAX_BIT_DEPTH_FOR_PALETTE = 8;
 
-		inline BitmapSurface()
+		struct ConstBitmapInitialiser
 		{
-		}
-
-		inline BitmapSurface(uint16_t width, uint16_t height, void* data, uint8_t bitDepth = 8)
-		{
-			setBitmap(width, height, data, bitDepth);
-		}
-
-		inline void setBitmap(uint16_t width, uint16_t height, void* data, uint8_t bitDepth = 8)
-		{
-			m_Dimensions = SurfaceVector(width, height);
-			m_BitDepth = bitDepth;
-			m_Pixels = data;
-
-			if ( m_BitDepth > MAX_BIT_DEPTH )
+			inline ConstBitmapInitialiser(uint16_t inWidth, uint16_t inHeight, uint8_t inBitDepth, const void* inData) :
+				width(inWidth),
+				height(inHeight),
+				bitDepth(inBitDepth),
+				data(inData)
 			{
-				BGRS_ASSERTD(false, "Maximum bit depth exceeded.");
-				m_BitDepth = MAX_BIT_DEPTH;
 			}
 
-			BGRS_ASSERTD(m_Dimensions.x() > 0, "X dimension was zero.");
-			BGRS_ASSERTD(m_Dimensions.y() > 0, "Y dimension was zero.");
-			BGRS_ASSERTD(m_BitDepth > 0, "Bit depth was zero.");
+			inline bool isValid() const
+			{
+				return
+					width > 0 &&
+					height > 0 &&
+					bitDepth > 0 &&
+					bitDepth <= ConstBitmapSurface::MAX_BIT_DEPTH &&
+					data;
+			}
+
+			uint16_t width = 0;
+			uint16_t height = 0;
+			uint8_t bitDepth = 0;
+			const void* data = nullptr;
+		};
+
+		struct ConstPaletteInitialiser
+		{
+			inline ConstPaletteInitialiser()
+			{
+			}
+
+			inline ConstPaletteInitialiser(size_t inLength, uint8_t inBitDepth, const void* inData) :
+				length(inLength),
+				bitDepth(inBitDepth),
+				data(inData)
+			{
+			}
+
+			inline bool isValid() const
+			{
+				return
+					length > 0 &&
+					length <= ConstBitmapSurface::MAX_PALETTE_LENGTH &&
+					bitDepth > 0 &&
+					bitDepth <= ConstBitmapSurface::MAX_BIT_DEPTH &&
+					data;
+			}
+
+			size_t length = 0;
+			uint8_t bitDepth = 0;
+			const void* data = 0;
+		};
+
+		inline ConstBitmapSurface(const ConstBitmapInitialiser& bitmap, const ConstPaletteInitialiser palette = ConstPaletteInitialiser())
+		{
+			if ( !bitmap.isValid() )
+			{
+				BGRS_ASSERTD(false, "Provided bitmap data was not valid.");
+				return;
+			}
+
+			if ( palette.isValid() && bitmap.bitDepth > MAX_BIT_DEPTH_FOR_PALETTE )
+			{
+				BGRS_ASSERTD(false, "Maximum bit depth was exceeded for a palette bitmap.");
+				return;
+			}
+
+			m_Dimensions = SurfaceVector(bitmap.width, bitmap.height);
+			m_BitDepth = bitmap.bitDepth;
+			m_Pixels = bitmap.data;
+
+			if ( palette.isValid() )
+			{
+				m_Palette = palette.data;
+				m_PaletteBitDepth = palette.bitDepth;
+				m_PaletteLengthMinusOne = static_cast<uint8_t>(palette.length - 1);
+			}
 		}
 
 		inline bool isValid() const
@@ -152,47 +209,8 @@ namespace BadgerGL
 			}
 		}
 
-		// The palette is expected to be valid for the lifetime of this bitmap surface.
-		inline void setPalette(uint8_t* palette, size_t length, uint8_t bitDepth)
-		{
-			if ( length > MAX_PALETTE_LENGTH )
-			{
-				BGRS_ASSERTD(false, "Maximum palette length exceeded.");
-				length = MAX_PALETTE_LENGTH;
-			}
-
-			if ( bitDepth > MAX_BIT_DEPTH )
-			{
-				BGRS_ASSERTD(false, "Maximum palette bit depth exceeded.");
-				bitDepth = MAX_BIT_DEPTH;
-			}
-
-			BGRS_ASSERTD(palette, "Palette data was null.");
-			BGRS_ASSERTD(bitDepth > 0, "Palette bit depth was zero.");
-
-			// Ensure that we only set up a palette if all the parameters are valid.
-			if ( palette && length > 0 && bitDepth > 0 )
-			{
-				m_Palette = palette;
-				m_PaletteLengthMinusOne = static_cast<uint8_t>(length - 1);
-				m_PaletteBitDepth = bitDepth;
-			}
-			else
-			{
-				m_Palette = nullptr;
-				m_PaletteLengthMinusOne = 0;
-				m_PaletteBitDepth = 0;
-			}
-		}
-
 		template<typename T>
-		inline T* pixelData(uint16_t x = 0, uint16_t y = 0)
-		{
-			return const_cast<T*>(const_cast<const BitmapSurface*>(this)->pixelData<T>(x, y));
-		}
-
-		template<typename T>
-		inline const T* pixelData(uint16_t x = 0, uint16_t y = 0) const
+		inline const T* constPixelData(uint16_t x = 0, uint16_t y = 0) const
 		{
 			if ( !isValid() )
 			{
@@ -209,12 +227,7 @@ namespace BadgerGL
 			return static_cast<const T*>(m_Pixels) + dataOffset(x, y);
 		}
 
-		inline void* rawPixelData(uint16_t x = 0, uint16_t y = 0)
-		{
-			return const_cast<void*>(const_cast<const BitmapSurface*>(this)->rawPixelData(x, y));
-		}
-
-		inline const void* rawPixelData(uint16_t x = 0, uint16_t y = 0) const
+		inline const void* constRawPixelData(uint16_t x = 0, uint16_t y = 0) const
 		{
 			if ( !isValid() )
 			{
@@ -222,39 +235,11 @@ namespace BadgerGL
 				return nullptr;
 			}
 
-			return static_cast<void*>(static_cast<uint8_t*>(m_Pixels) + byteDataOffset(x, y));
+			return static_cast<const void*>(static_cast<const uint8_t*>(m_Pixels) + byteDataOffset(x, y));
 		}
 
 		template<typename T>
-		inline T* paletteData(uint8_t index = 0)
-		{
-			return const_cast<T*>(const_cast<const BitmapSurface*>(this)->paletteData<T>(index));
-		}
-
-		template<typename T>
-		inline const T* paletteData(uint8_t index = 0) const
-		{
-			if ( !hasPalette() )
-			{
-				BGRS_ASSERTD(false, "Bitmap does not have a palette.");
-				return nullptr;
-			}
-
-			if ( sizeof(T) != paletteByteDepth() )
-			{
-				BGRS_ASSERTD(false, "Size of type did not match palette depth.");
-				return nullptr;
-			}
-
-			return static_cast<const T*>(m_Palette) + index;
-		}
-
-		inline void* rawPaletteData(uint8_t index = 0)
-		{
-			return const_cast<void*>(const_cast<const BitmapSurface*>(this)->rawPaletteData(index));
-		}
-
-		inline const void* rawPaletteData(uint8_t index = 0) const
+		inline const T* constPaletteData(uint8_t index = 0) const
 		{
 			if ( !hasPalette() )
 			{
@@ -268,7 +253,148 @@ namespace BadgerGL
 				return nullptr;
 			}
 
-			return m_Palette + (index * bitDepthToByteDepth(m_PaletteBitDepth));
+			if ( sizeof(T) != paletteByteDepth() )
+			{
+				BGRS_ASSERTD(false, "Size of type did not match palette depth.");
+				return nullptr;
+			}
+
+			return static_cast<const T*>(m_Palette) + index;
+		}
+
+		inline const void* constRawPaletteData(uint8_t index = 0) const
+		{
+			if ( !hasPalette() )
+			{
+				BGRS_ASSERTD(false, "Bitmap does not have a palette.");
+				return nullptr;
+			}
+
+			if ( index > m_PaletteLengthMinusOne )
+			{
+				BGRS_ASSERTD(false, "Palette index was out of range.");
+				return nullptr;
+			}
+
+			return static_cast<const uint8_t*>(m_Palette) + (index * bitDepthToByteDepth(m_PaletteBitDepth));
+		}
+
+	protected:
+		inline uint32_t dataOffset(uint16_t x, uint16_t y) const
+		{
+			return (y * m_Dimensions.x()) + x;
+		}
+
+		inline uint32_t byteDataOffset(uint16_t x, uint16_t y) const
+		{
+			return byteDepth() * ((y * m_Dimensions.x()) + x);
+		}
+
+	private:
+		SurfaceVector m_Dimensions;
+		uint8_t m_BitDepth = 0;
+		const void* m_Pixels = nullptr;
+
+		uint8_t m_PaletteLengthMinusOne = 0;
+		uint8_t m_PaletteBitDepth = 0;
+		const void* m_Palette = nullptr;
+	};
+
+	// This class builds upon the ConstBitmapSurface class to provide mutators.
+	// It is assumed that the data passed into this class is modifiable.
+	class BitmapSurface : public ConstBitmapSurface
+	{
+	public:
+		using SurfaceVector = ConstBitmapSurface::SurfaceVector;
+		using SurfaceRect = ConstBitmapSurface::SurfaceRect;
+
+		static constexpr uint8_t MAX_BIT_DEPTH = ConstBitmapSurface::MAX_BIT_DEPTH;
+		static constexpr size_t MAX_PALETTE_LENGTH = ConstBitmapSurface::MAX_PALETTE_LENGTH;
+		static constexpr uint8_t MAX_BIT_DEPTH_FOR_PALETTE = ConstBitmapSurface::MAX_BIT_DEPTH_FOR_PALETTE;
+
+		struct BitmapInitialiser
+		{
+			inline BitmapInitialiser(uint16_t inWidth, uint16_t inHeight, uint8_t inBitDepth, void* inData) :
+				width(inWidth),
+				height(inHeight),
+				bitDepth(inBitDepth),
+				data(inData)
+			{
+			}
+
+			inline bool isValid() const
+			{
+				return
+					width > 0 &&
+					height > 0 &&
+					bitDepth > 0 &&
+					bitDepth <= ConstBitmapSurface::MAX_BIT_DEPTH &&
+					data;
+			}
+
+			uint16_t width = 0;
+			uint16_t height = 0;
+			uint8_t bitDepth = 0;
+			void* data = nullptr;
+		};
+
+		struct PaletteInitialiser
+		{
+			inline PaletteInitialiser()
+			{
+			}
+
+			inline PaletteInitialiser(size_t inLength, uint8_t inBitDepth, void* inData) :
+				length(inLength),
+				bitDepth(inBitDepth),
+				data(inData)
+			{
+			}
+
+			inline bool isValid() const
+			{
+				return
+					length > 0 &&
+					length <= ConstBitmapSurface::MAX_PALETTE_LENGTH &&
+					bitDepth > 0 &&
+					bitDepth <= ConstBitmapSurface::MAX_BIT_DEPTH &&
+					data;
+			}
+
+			size_t length = 0;
+			uint8_t bitDepth = 0;
+			void* data = 0;
+		};
+
+		inline BitmapSurface(const BitmapInitialiser& bitmap, const PaletteInitialiser palette = PaletteInitialiser()) :
+			ConstBitmapSurface(ConstBitmapInitialiser(bitmap.width, bitmap.height, bitmap.bitDepth, bitmap.data),
+							   ConstPaletteInitialiser(palette.length, palette.bitDepth, palette.data))
+		{
+		}
+
+		// Any const_casts in the functions below are safe, because we know that the data we originally
+		// provided to the base class was modifiable.
+
+		template<typename T>
+		inline T* pixelData(uint16_t x = 0, uint16_t y = 0)
+		{
+			return const_cast<T*>(constPixelData<T>(x, y));
+		}
+
+		inline void* rawPixelData(uint16_t x = 0, uint16_t y = 0)
+		{
+			return const_cast<void*>(constRawPixelData(x, y));
+		}
+
+		template<typename T>
+		inline T* paletteData(uint8_t index = 0)
+		{
+			return const_cast<T*>(constPaletteData<T>(index));
+		}
+
+		inline void* rawPaletteData(uint8_t index = 0)
+		{
+			return const_cast<void*>(constRawPaletteData(index));
 		}
 
 		// This function writes directly to the pixel data and ignores the palette.
@@ -282,21 +408,21 @@ namespace BadgerGL
 
 			const uint8_t bDepth = byteDepth();
 			const size_t size = pixelDataSize();
+			uint8_t* pixels = static_cast<uint8_t*>(rawPixelData());
 
 			if ( bDepth == 1 )
 			{
 				// Just flat memset the lowest byte in the colour.
-				memset(m_Pixels, colour & 0x000000FF, size);
+				memset(pixels, colour & 0x000000FF, size);
 			}
 			else if ( bDepth <= (MAX_BIT_DEPTH / 8) )
 			{
-				uint8_t* cursor = static_cast<uint8_t*>(m_Pixels);
-				uint8_t* const end = cursor + size;
+				uint8_t* const end = pixels + size;
 
-				while ( cursor < end )
+				while ( pixels < end )
 				{
 					// Write the lowest byte in the colour buffer.
-					*(cursor++) = (colour & 0x000000FF);
+					*(pixels++) = (colour & 0x000000FF);
 
 					// Rotate the bytes down.
 					colour = CoreUtil::rotateBytesDown(colour, bDepth);
@@ -395,39 +521,36 @@ namespace BadgerGL
 		{
 			if ( hasPalette() )
 			{
-				memset(m_Palette, 0, paletteDataSize());
+				memset(rawPaletteData(), 0, paletteDataSize());
 			}
 		}
-
-	private:
-		inline uint32_t dataOffset(uint16_t x, uint16_t y) const
-		{
-			return (y * m_Dimensions.x()) + x;
-		}
-
-		inline uint32_t byteDataOffset(uint16_t x, uint16_t y) const
-		{
-			return byteDepth() * ((y * m_Dimensions.x()) + x);
-		}
-
-		SurfaceVector m_Dimensions;
-		uint8_t m_BitDepth = 0;
-		void* m_Pixels = nullptr;
-		uint8_t* m_Palette = nullptr;
-		uint8_t m_PaletteLengthMinusOne = 0;
-		uint8_t m_PaletteBitDepth = 0;
 	};
 
 	template<uint16_t W, uint16_t H, uint8_t D = 8>
 	class StaticBitmapSurface : public BitmapSurface
 	{
 	public:
+		using BitmapInitialiser = BitmapSurface::BitmapInitialiser;
+		using PaletteInitialiser = BitmapSurface::PaletteInitialiser;
+
 		static constexpr uint16_t WIDTH = W;
 		static constexpr uint16_t HEIGHT = H;
 		static constexpr uint8_t BIT_DEPTH = D;
 
 		inline StaticBitmapSurface() :
-			BitmapSurface(WIDTH, HEIGHT, m_StaticData, BIT_DEPTH)
+			StaticBitmapSurface(BitmapInitialiser(WIDTH, HEIGHT, BIT_DEPTH, m_StaticData), PaletteInitialiser())
+		{
+		}
+
+	protected:
+		inline StaticBitmapSurface(const PaletteInitialiser& palette) :
+			StaticBitmapSurface(BitmapInitialiser(WIDTH, HEIGHT, BIT_DEPTH, m_StaticData), palette)
+		{
+		}
+
+	private:
+		inline StaticBitmapSurface(const BitmapInitialiser& bitmap, const PaletteInitialiser& palette) :
+			BitmapSurface(bitmap, palette)
 		{
 			static_assert(BIT_DEPTH <= BitmapSurface::MAX_BIT_DEPTH, "Bit depth exceeded maximum depth.");
 
@@ -436,7 +559,6 @@ namespace BadgerGL
 			static_assert(BIT_DEPTH > 0, "Bit depth was zero.");
 		}
 
-	private:
 		uint8_t m_StaticData[WIDTH * HEIGHT * bitDepthToByteDepth(BIT_DEPTH)];
 	};
 
@@ -444,19 +566,24 @@ namespace BadgerGL
 	class StaticPaletteBitmapSurface : public StaticBitmapSurface<W, H, 8>
 	{
 	public:
+		using BaseClass = StaticBitmapSurface<W, H, 8>;
+		using BitmapInitialiser = typename BaseClass::BitmapInitialiser;
+		using PaletteInitialiser = typename BaseClass::PaletteInitialiser;
+
+		static constexpr uint16_t WIDTH = BaseClass::WIDTH;
+		static constexpr uint16_t HEIGHT = BaseClass::HEIGHT;
+		static constexpr uint8_t BIT_DEPTH = BaseClass::BIT_DEPTH;
 		static constexpr size_t PALETTE_LENGTH = PL;
 		static constexpr uint8_t PALETTE_BIT_DEPTH = PD;
 
 		inline StaticPaletteBitmapSurface() :
-			StaticBitmapSurface<W, H, 8>()
+			BaseClass(PaletteInitialiser(PALETTE_LENGTH, PALETTE_BIT_DEPTH, m_Palette))
 		{
 			static_assert(PALETTE_LENGTH <= BitmapSurface::MAX_PALETTE_LENGTH, "Palette size exceeded maximum size.");
 			static_assert(PALETTE_BIT_DEPTH <= BitmapSurface::MAX_BIT_DEPTH, "Palette bit depth exceeded maximum depth.");
 
 			static_assert(PALETTE_LENGTH > 0, "Palette length was zero.");
 			static_assert(PALETTE_BIT_DEPTH > 0, "Palette bit depth was zero.");
-
-			setPalette(m_Palette, PALETTE_LENGTH, PALETTE_BIT_DEPTH);
 		}
 
 	private:

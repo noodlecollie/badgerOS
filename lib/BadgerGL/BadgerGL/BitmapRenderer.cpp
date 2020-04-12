@@ -4,8 +4,8 @@
 
 namespace BadgerGL
 {
-	using SurfaceVector = BitmapSurface::SurfaceVector;
-	using SurfaceRect = BitmapSurface::SurfaceRect;
+	using SurfaceVector = ConstBitmapSurface::SurfaceVector;
+	using SurfaceRect = ConstBitmapSurface::SurfaceRect;
 
 	BitmapRenderer::BitmapRenderer(BitmapSurface& surface) :
 		m_Surface(&surface)
@@ -70,7 +70,7 @@ namespace BadgerGL
 	}
 
 	// TOOD: Maybe factor out the rect clipping logic here one day, so that it can be used for other things too?
-	void BitmapRenderer::blit(const BitmapSurface& source,
+	void BitmapRenderer::blit(const ConstBitmapSurface& source,
 							  const Point16& pos,
 							  const SurfaceRect& sourceRect)
 	{
@@ -162,7 +162,7 @@ namespace BadgerGL
 		BGRS_ASSERTD(success, "Failed to draw filled rect into bitmap.");
 	}
 
-	void BitmapRenderer::blitInternal(const BitmapSurface& source,
+	void BitmapRenderer::blitInternal(const ConstBitmapSurface& source,
 									  const SurfaceVector& pos,
 									  const SurfaceRect& sourceRect)
 	{

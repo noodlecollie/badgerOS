@@ -7,8 +7,8 @@ namespace BadgerGL
 {
 	namespace BitmapBlit
 	{
-		using SurfaceVector = BitmapSurface::SurfaceVector;
-		using SurfaceRect = BitmapSurface::SurfaceRect;
+		using SurfaceVector = ConstBitmapSurface::SurfaceVector;
+		using SurfaceRect = ConstBitmapSurface::SurfaceRect;
 
 		// Used to abstract away from using a bitmap as a source.
 		// This allows us to use temporary uint8_t row buffers,
@@ -33,17 +33,17 @@ namespace BadgerGL
 			{
 			}
 
-			inline BlitSourceParameters(const BitmapSurface& source, const SurfaceRect& sourceRow) :
+			inline BlitSourceParameters(const ConstBitmapSurface& source, const SurfaceRect& sourceRow) :
 				byteDepth(source.byteDepth()),
 				rowWidthInPixels(sourceRow.width()),
-				rowData(static_cast<const uint8_t*>(source.rawPixelData(sourceRow.p0().x(), sourceRow.p0().y())))
+				rowData(static_cast<const uint8_t*>(source.constRawPixelData(sourceRow.p0().x(), sourceRow.p0().y())))
 			{
 			}
 
 			inline bool isValid() const
 			{
 				return byteDepth > 0 &&
-					   byteDepth <= bitDepthToByteDepth(BitmapSurface::MAX_BIT_DEPTH) &&
+					   byteDepth <= bitDepthToByteDepth(ConstBitmapSurface::MAX_BIT_DEPTH) &&
 					   rowWidthInPixels > 0 &&
 					   rowData != nullptr;
 			}
@@ -61,7 +61,7 @@ namespace BadgerGL
 		static inline void blitToBuffer(uint8_t* buffer, uint8_t destByteDepth, const BlitSourceParameters& params)
 		{
 			BGRS_ASSERTD(buffer, "Buffer was not valid.");
-			BGRS_ASSERTD(destByteDepth > 0 && destByteDepth <= bitDepthToByteDepth(BitmapSurface::MAX_BIT_DEPTH), "Byte depth was not valid.");
+			BGRS_ASSERTD(destByteDepth > 0 && destByteDepth <= bitDepthToByteDepth(ConstBitmapSurface::MAX_BIT_DEPTH), "Byte depth was not valid.");
 			BGRS_ASSERTD(params.isValid(), "Source params were not valid.");
 
 			// Ensure the data starts zeroed, so that garbage doesn't interfere with the copying.
@@ -98,6 +98,6 @@ namespace BadgerGL
 		}
 
 		void blitRowNonMatchingDepth(BitmapSurface& dest, const SurfaceVector& destPos, const BlitSourceParameters& params);
-		void blitRowViaPalette(BitmapSurface& dest, const SurfaceVector& destPos, const BitmapSurface& source, const SurfaceRect& sourceRow);
+		void blitRowViaPalette(BitmapSurface& dest, const SurfaceVector& destPos, const ConstBitmapSurface& source, const SurfaceRect& sourceRow);
 	}
 }
