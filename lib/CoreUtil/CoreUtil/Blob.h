@@ -9,6 +9,12 @@ namespace CoreUtil
 	class ConstBlob
 	{
 	public:
+		inline ConstBlob() :
+			m_Data(nullptr),
+			m_Length(0)
+		{
+		}
+
 		inline ConstBlob(const void* data, size_t length) :
 			m_Data(data),
 			m_Length(length)
@@ -49,6 +55,11 @@ namespace CoreUtil
 	class Blob : public ConstBlob
 	{
 	public:
+		inline Blob() :
+			ConstBlob()
+		{
+		}
+
 		inline Blob(void* data, size_t length) :
 			ConstBlob(data, length)
 		{
