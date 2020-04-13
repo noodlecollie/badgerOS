@@ -14,7 +14,11 @@ namespace BadgerGL
 	class BitmapRenderer
 	{
 	public:
-		explicit BitmapRenderer(BitmapSurface& surface);
+		explicit BitmapRenderer(BitmapSurface* surface = nullptr);
+
+		BitmapSurface* bitmap() const;
+		void setBitmap(BitmapSurface* bitmap);
+		bool hasBitmap() const;
 
 		ShapeDrawStyle shapeDrawStyle() const;
 		void setShapeDrawStyle(ShapeDrawStyle style);
@@ -30,23 +34,27 @@ namespace BadgerGL
 
 		void draw(const Rect16& rect);
 
-		// If sourceRect is not null, it defines the portion of the source bitmap that will be blitted.
-		// Otherwise, the entire bitmap will be blitted.
+		// Tiles the given bitmap over the area specified by destRect.
+		// If sourceRect is not null, it defines the portion of the source bitmap that will be used.
+		// Otherwise, the entire bitmap will be used.
+		// If destRect is empty, its min is used as the origin of the blitted bitmap, and the area
+		// that is filled is equal to the source rect.
 		// This function supports source bitmaps that use palettes.
 		void blit(const ConstBitmapSurface& source,
-				  const Point16& pos,
+				  const Rect16& destRect,
 				  const BitmapSurface::SurfaceRect& sourceRect = BitmapSurface::SurfaceRect());
 
-	private:
-		void clipParamsToTargetSurfaceBounds(Point16& destPos, Rect16& sourceRect);
+		// Same as above, but the dest rect dimensions are taken from the source rect.
+		inline void blit(const ConstBitmapSurface& source,
+						 const Point16& destPos,
+						 const BitmapSurface::SurfaceRect& sourceRect = BitmapSurface::SurfaceRect())
+		{
+			blit(source, Rect16(destPos, 0, 0), sourceRect);
+		}
 
+	private:
 		void drawOutline(const Rect16& rect);
 		void drawFilled(const Rect16& rect, uint32_t colour);
-
-		// Assumes that the source rect has been adjusted to remain inside the surface bounds.
-		void blitInternal(const ConstBitmapSurface& source,
-						  const ConstBitmapSurface::SurfaceVector& pos,
-						  const ConstBitmapSurface::SurfaceRect& sourceRect);
 
 		BitmapSurface* m_Surface = nullptr;
 		Rect16 m_DirtyArea;

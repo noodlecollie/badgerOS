@@ -1,16 +1,36 @@
 #include <BadgerMath/Rect2DOperations.h>
 #include "BitmapRenderer.h"
-#include"BitmapBlitOperations.h"
+#include "BitmapBlitter.h"
 
 namespace BadgerGL
 {
 	using SurfaceVector = ConstBitmapSurface::SurfaceVector;
 	using SurfaceRect = ConstBitmapSurface::SurfaceRect;
 
-	BitmapRenderer::BitmapRenderer(BitmapSurface& surface) :
-		m_Surface(&surface)
+	BitmapRenderer::BitmapRenderer(BitmapSurface* surface)
 	{
-		BGRS_ASSERTD(!m_Surface->hasPalette(), "Rendering to bitmaps with palettes is not supported.");
+		setBitmap(surface);
+	}
+
+	BitmapSurface* BitmapRenderer::bitmap() const
+	{
+		return m_Surface;
+	}
+
+	void BitmapRenderer::setBitmap(BitmapSurface* bitmap)
+	{
+		m_Surface = bitmap;
+
+		if ( m_Surface && m_Surface->hasPalette() )
+		{
+			BGRS_ASSERTD(false, "Rendering to bitmaps with palettes is not supported.");
+			m_Surface = nullptr;
+		}
+	}
+
+	bool BitmapRenderer::hasBitmap() const
+	{
+		return m_Surface != nullptr;
 	}
 
 	ShapeDrawStyle BitmapRenderer::shapeDrawStyle() const
@@ -55,6 +75,11 @@ namespace BadgerGL
 
 	void BitmapRenderer::draw(const Rect16& rect)
 	{
+		if ( !m_Surface )
+		{
+			return;
+		}
+
 		Rect16 localRect(rect);
 
 		if ( m_ShapeDrawStyle == ShapeDrawStyle::Outline || m_ShapeDrawStyle == ShapeDrawStyle::FilledOutline )
@@ -70,17 +95,18 @@ namespace BadgerGL
 	}
 
 	void BitmapRenderer::blit(const ConstBitmapSurface& source,
-							  const Point16& pos,
+							  const Rect16& destRect,
 							  const SurfaceRect& sourceRect)
 	{
-		Rect16 modifiedSourceRect((sourceRect.isNull() ? source.bounds() : sourceRect).rect2DCast<Rect16>());
-		Point16 modifiedPos(pos);
+		if ( !m_Surface )
+		{
+			return;
+		}
 
-		clipParamsToTargetSurfaceBounds(modifiedPos, modifiedSourceRect);
-
-		blitInternal(source,
-					 modifiedPos.vector2DCast<SurfaceVector>(),
-					 modifiedSourceRect.rect2DCast<SurfaceRect>());
+		BitmapBlitter blitter;
+		blitter.setSource(&source, sourceRect);
+		blitter.setDest(m_Surface, destRect);
+		blitter.blit();
 	}
 
 	void BitmapRenderer::drawOutline(const Rect16& rect)
@@ -136,57 +162,5 @@ namespace BadgerGL
 
 		const bool success = m_Surface->fillRect(localRect.rect2DCast<URect16>(), colour);
 		BGRS_ASSERTD(success, "Failed to draw filled rect into bitmap.");
-	}
-
-	void BitmapRenderer::blitInternal(const ConstBitmapSurface& source,
-									  const SurfaceVector& pos,
-									  const SurfaceRect& sourceRect)
-	{
-		const size_t sourceWidth = sourceRect.width();
-		const size_t sourceHeight = sourceRect.height();
-		const bool sourceHasPalette = source.hasPalette();
-		const bool depthsMatch = source.byteDepth() == m_Surface->byteDepth();
-
-		for ( uint32_t y = 0; y < sourceHeight; ++y )
-		{
-			const SurfaceVector offsetVec(0, y);
-			const SurfaceRect rowRect(sourceRect.p0() + offsetVec, sourceWidth, 1);
-
-			if ( sourceHasPalette )
-			{
-				BitmapBlit::blitRowViaPalette(*m_Surface, pos + offsetVec, source, rowRect);
-			}
-			else if ( depthsMatch )
-			{
-				BitmapBlit::blitRowMatchingDepth(*m_Surface, pos + offsetVec, BitmapBlit::BlitSourceParameters(source, rowRect));
-			}
-			else
-			{
-				BitmapBlit::blitRowNonMatchingDepth(*m_Surface, pos + offsetVec, BitmapBlit::BlitSourceParameters(source, rowRect));
-			}
-		}
-	}
-
-	void BitmapRenderer::clipParamsToTargetSurfaceBounds(Point16& destPos, Rect16& sourceRect)
-	{
-		sourceRect.ensureMinMaxOrdered();
-		Rect16 workingRect(sourceRect);
-
-		// Locate the rect at the target position and keep a copy,
-		// so that we can compare how much it was clipped by later.
-		BadgerMath::translateToPosition(workingRect, destPos);
-		const Rect16 preClipRect = workingRect.asBounds();
-
-		// Clip the rect to the bounds of the screen.
-		BadgerMath::trimToBounds(workingRect, m_Surface->bounds().rect2DCast<Rect16>());
-
-		// Work out the deltas for each point.
-		const Point16 delta0 = workingRect.p0() - preClipRect.p0();
-		const Point16 delta1 = workingRect.p1() - preClipRect.p1();
-
-		// Update the params.
-		destPos = destPos + delta0;
-		sourceRect.setP0(sourceRect.p0() + delta0);
-		sourceRect.setP1(sourceRect.p1() + delta1);
 	}
 }

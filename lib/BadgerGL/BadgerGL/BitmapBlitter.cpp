@@ -93,15 +93,15 @@ namespace BadgerGL
 			const uint8_t* sourceCursor = sourceBegin + m_InitialSourceOffset.x();
 			const uint8_t* sourceEnd = sourceBegin + (m_SourceRect.width() * sourceByteDepth);
 
-			uint8_t* destCursor = static_cast<uint8_t*>(m_Dest->rawPixelData(m_DestRect.p0().x(), m_DestRect.p0().y()));
+			uint8_t* destCursor = static_cast<uint8_t*>(m_Dest->rawPixelData(m_DestRect.p0().x(), m_DestRect.p0().y() + row));
 			uint8_t* const destEnd = destCursor + (m_DestRect.width() * destByteDepth);
 
 			while ( destCursor < destEnd )
 			{
-				const size_t pixelsToWrite = std::min<size_t>(sourceEnd - sourceCursor, destEnd - destCursor);
-				memcpy(destCursor, sourceCursor, pixelsToWrite);
+				const size_t pixelDataBytes = std::min<size_t>(sourceEnd - sourceCursor, destEnd - destCursor);
+				memcpy(destCursor, sourceCursor, pixelDataBytes);
 
-				destCursor += pixelsToWrite * destByteDepth;
+				destCursor += pixelDataBytes;
 				sourceCursor = sourceBegin;
 			}
 		}

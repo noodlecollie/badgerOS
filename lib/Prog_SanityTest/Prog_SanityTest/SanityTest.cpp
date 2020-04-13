@@ -19,7 +19,7 @@ namespace SanityTest
 	{
 		ScreenBufferSurface.fill(BadgerGL::col24To16(0x404040));
 
-		BadgerGL::BitmapRenderer renderer(ScreenBufferSurface);
+		BadgerGL::BitmapRenderer renderer(&ScreenBufferSurface);
 		renderer.setPrimaryColour(BadgerGL::col24To16(0xFFD800));
 		renderer.setSecondaryColour(BadgerGL::col24To16(0x7AFFFF));
 
@@ -44,7 +44,7 @@ namespace SanityTest
 		renderer.draw(BadgerGL::Rect16(0, SSD1351::OLED_HEIGHT - 4, 4, SSD1351::OLED_HEIGHT));
 
 		BadgerGL::ConstBitmapSurface res = ResourceLoaders::loadStaticBitmap(Resources::Missing::META);
-		renderer.blit(res, BadgerGL::Point16(60, 20));
+		renderer.blit(res, BadgerGL::Rect16(52, 12, 76, 36));
 
 		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
 		const size_t totalColumns = 128 - 16;	// Width - outer padding
