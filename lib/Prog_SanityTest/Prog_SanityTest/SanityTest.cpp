@@ -5,6 +5,7 @@
 #include <CoreUtil/BgrsAssert.h>
 #include <CoreUtil/Blob.h>
 #include <PlatformConfig/Platform.h>
+#include <PlatformConfig/Versions.h>
 #include <SSD1351/CustomDriver/OLEDDriver.h>
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
@@ -121,6 +122,7 @@ namespace SanityTest
 		PlatformConfig::initialiseSubsystem(&PlatformConfig::Config::serialConfig, &testDelegatedSerialInit);
 
 		Serial.printf("Sanity test initialising...\n");
+		Serial.printf("Version %s\n", PlatformConfig::Versions::VERSION_STRING_FULL);
 		Serial.printf("\n");
 
 		Serial.printf("=== Chip select configuration ===\n");
