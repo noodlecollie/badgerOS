@@ -17,4 +17,7 @@ namespace PlatformConfig
 	};
 
 	using ConfigFactoryFunc = void (*)(Config&);
+
+	void initialiseConfig(ConfigFactoryFunc factoryFunc);
+	const Config& globalConfig();
 }

@@ -1,14 +1,15 @@
-#include <CoreUtil/BgrsAssert.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Esp.h>
+#include <SPIFFS.h>
+#include <CoreUtil/BgrsAssert.h>
+#include <CoreUtil/Blob.h>
+#include <PlatformConfig/Platform.h>
 #include <SSD1351/CustomDriver/OLEDDriver.h>
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include <ResourceLoaders/StaticBitmapLoader.h>
 #include <Resources/Images/Missing.h>
-#include <CoreUtil/Blob.h>
-#include <SPIFFS.h>
 
 #include "SanityTest.h"
 
@@ -101,12 +102,9 @@ namespace SanityTest
 		file.close();
 	}
 
-	void setup(PlatformConfig::ConfigFactoryFunc configFunc)
+	void setup()
 	{
-		BGRS_ASSERT(configFunc, "Config factory function is required.");
-
-		PlatformConfig::Config config;
-		configFunc(config);
+		const PlatformConfig::Config& config = PlatformConfig::globalConfig();
 
 		BGRS_ASSERT(config.ssd1351Config, "SSD1351 config is required.");
 		BGRS_ASSERT(config.serialConfig, "Serial config is required.");

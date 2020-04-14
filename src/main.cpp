@@ -3,7 +3,7 @@
 #define PROG_HEADER_PREFIX(progName) Prog_##progName
 #define PROG_HEADER_PATH(progName) <PROG_HEADER_PREFIX(progName)/progName.h>
 #define BOARD_HEADER_PATH(boardName) <PlatformConfig/Platform/boardName.h>
-#define BOARD_CONFIG(boardName) (&PlatformConfig::boardName::getConfig)
+#define BOARD_CONFIG_FACTORY_FUNC(boardName) (&PlatformConfig::boardName::getConfig)
 
 #ifndef PROG_NAME
 #error No PROG_NAME defined!
@@ -13,12 +13,15 @@
 #error No BOARD_NAME defined!
 #endif
 
+#include <PlatformConfig/Platform.h>
+
 #include PROG_HEADER_PATH(PROG_NAME)
 #include BOARD_HEADER_PATH(BOARD_NAME)
 
 void setup()
 {
-	PROG_NAME::setup(BOARD_CONFIG(BOARD_NAME));
+	PlatformConfig::initialiseConfig(BOARD_CONFIG_FACTORY_FUNC(BOARD_NAME));
+	PROG_NAME::setup();
 }
 
 void loop()
