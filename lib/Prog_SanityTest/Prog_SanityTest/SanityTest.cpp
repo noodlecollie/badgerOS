@@ -102,6 +102,11 @@ namespace SanityTest
 		file.close();
 	}
 
+	static void testDelegatedSerialInit(const PlatformConfig::SerialConfig& config)
+	{
+		Serial.begin(config.baudRate);
+	}
+
 	void setup()
 	{
 		const PlatformConfig::Config& config = PlatformConfig::globalConfig();
@@ -112,7 +117,8 @@ namespace SanityTest
 		BGRS_ASSERT(config.spiPinConfig, "SPI pin config is required.");
 		BGRS_ASSERT(config.chipSelectConfig, "Chip select config is required.");
 
-		Serial.begin(config.serialConfig->baudRate);
+		//Serial.begin(config.serialConfig->baudRate);
+		PlatformConfig::initialiseSubsystem(&PlatformConfig::Config::serialConfig, &testDelegatedSerialInit);
 
 		Serial.printf("Sanity test initialising...\n");
 		Serial.printf("\n");
