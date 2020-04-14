@@ -8,6 +8,7 @@
 #include <ResourceLoaders/StaticBitmapLoader.h>
 #include <Resources/Images/Missing.h>
 #include <CoreUtil/Blob.h>
+#include <SPIFFS.h>
 
 #include "SanityTest.h"
 
@@ -74,6 +75,32 @@ namespace SanityTest
 		}
 	}
 
+	static void testFileSystem()
+	{
+		SPIFFS.begin();
+
+		if ( !SPIFFS.exists("/hello.txt") )
+		{
+			Serial.printf("/hello.txt does not exist.\n");
+			return;
+		}
+
+		Serial.printf("/hello.txt exists.\n");
+		File file = SPIFFS.open("/hello.txt", "r");
+
+		if ( !file )
+		{
+			Serial.printf("/hello.txt failed to open.\n");
+			return;
+		}
+
+		char data[32];
+		file.readBytes(data, sizeof(data));
+
+		Serial.printf("First 32 bytes of data: %s\n", data);
+		file.close();
+	}
+
 	void setup(PlatformConfig::ConfigFactoryFunc configFunc)
 	{
 		BGRS_ASSERT(configFunc, "Config factory function is required.");
@@ -126,6 +153,7 @@ namespace SanityTest
 		SSD1351::Driver.initialise(*config.ssd1351Config);
 
 		prepareTestImage();
+		testFileSystem();
 
 		Serial.println("Sanity test initialised.");
 

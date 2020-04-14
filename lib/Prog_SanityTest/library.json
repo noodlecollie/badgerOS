@@ -8,6 +8,8 @@
 		{ "name": "SSD1351" },
 		{ "name": "CoreUtil" },
 		{ "name": "SPI" },
-		{ "name": "Wire" }
+		{ "name": "Wire" },
+		{ "name": "SPIFFS" },
+		{ "name": "FS" }
 	]
 }
