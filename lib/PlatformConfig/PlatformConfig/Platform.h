@@ -23,16 +23,22 @@ namespace PlatformConfig
 	const Config& globalConfig();
 
 	template<typename T>
-	static inline void initialiseSubsystem(const T* Config::* configEntryPtr, void (*initFunc)(const T&))
+	static inline const T& globalConfigItem(const T* Config::* configEntryPtr)
 	{
 		BGRS_ASSERT(configEntryPtr, "No config entry pointer was provided.");
-		BGRS_ASSERT(initFunc, "No initialisation function was provided.");
 
 		const Config& config = globalConfig();
 		const T* configEntry = config.*configEntryPtr;
 
 		BGRS_ASSERT(configEntry, "Specified config entry was not valid.");
+		return *configEntry;
+	}
 
-		initFunc(*configEntry);
+	template<typename T, typename FUNC>
+	static inline void initialiseSubsystem(const T* Config::* configEntryPtr, const FUNC& initFunc)
+	{
+		BGRS_ASSERT(initFunc, "No initialisation function was provided.");
+
+		initFunc(globalConfigItem(configEntryPtr));
 	}
 }

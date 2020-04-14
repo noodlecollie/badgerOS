@@ -1,9 +1,6 @@
 #pragma once
 
-#include "TimeLib.h"
-#include "TimeAlarms.h"
-
-namespace BadgeOS
+namespace CoreUtil
 {
 	using TimevalMs = unsigned long;
 }

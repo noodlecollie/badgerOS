@@ -26,7 +26,7 @@ namespace CoreUtil
 	{
 		if ( !condition )
 		{
-			Serial.printf("** ASSERTION FAILED: %s:%d %s - %s\n", file, line, conditionStr, desc);
+			Serial.printf("\n** ASSERTION FAILED: %s:%d %s - %s\n", file, line, conditionStr, desc);
 			Serial.flush();
 
 			bool ledOn = false;
@@ -40,7 +40,7 @@ namespace CoreUtil
 			}
 
 #ifndef DEBUG
-			HeltecESP32WifiKit32::reset();
+			ESP.restart();
 #endif
 		}
 	}
