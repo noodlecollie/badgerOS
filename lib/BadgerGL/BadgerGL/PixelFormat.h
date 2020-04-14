@@ -53,22 +53,6 @@ namespace BadgerGL
 		uint8_t channelBitDepth[MAX_CHANNELS];
 	};
 
-	static constexpr PixelFormat PIXELFORMAT_0RGB =
-	{
-		.id = PixelFormat_0RGB,
-		.layout = PixelFormat::ChannelLayout::ARGB,
-		.numChannels = 4,
-		.channelBitDepth = { 4, 4, 4, 4 }
-	};
-
-	static constexpr PixelFormat PIXELFORMAT_RGB0 =
-	{
-		.id = PixelFormat_RGB0,
-		.layout = PixelFormat::ChannelLayout::RGBA,
-		.numChannels = 4,
-		.channelBitDepth = { 4, 4, 4, 4 }
-	};
-
 	static constexpr PixelFormat PIXELFORMAT_65K =
 	{
 		.id = PixelFormat_65K,
@@ -84,4 +68,6 @@ namespace BadgerGL
 		.numChannels = 1,
 		.channelBitDepth = { 8 }
 	};
+
+	const PixelFormat* getPixelFormat(PixelFormatId id);
 };

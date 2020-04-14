@@ -13,8 +13,6 @@ namespace BadgerGL
 
 	static const PixelFormatConverter* const FormatConverters[PixelFormat__Count] =
 	{
-		nullptr,								// PixelFormat_0RGB
-		nullptr,								// PixelFormat_RGB0
 		&PixelFormatConverter_65K::Converter,	// PixelFormat_65K
 		nullptr									// PixelFormat_Mono256
 	};
