@@ -10,7 +10,7 @@ namespace BadgerUI
 	class Box : public BaseUIDrawable
 	{
 	public:
-		explicit Box();
+		Box();
 
 		const UIRect& rect() const;
 		void setRect(const UIRect& inRect);

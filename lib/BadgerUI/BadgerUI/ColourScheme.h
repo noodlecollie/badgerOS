@@ -10,9 +10,11 @@ namespace BadgerUI
 	public:
 		enum ColourId
 		{
-			Colour_Background = 0,
-			Colour_Primary,
+			Colour_Primary = 0,
 			Colour_Secondary,
+
+			Colour_Background,
+			Colour_BackgroundAlt,
 
 			Colour__Count,
 			Colour_Custom = -1

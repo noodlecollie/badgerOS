@@ -13,7 +13,7 @@ namespace BadgerMath
 	public:
 		using ValueType = T;
 
-		inline Vector2D(const ValueType& x = 0, const ValueType& y = 0) :
+		constexpr Vector2D(const ValueType& x = 0, const ValueType& y = 0) :
 			m_X(x),
 			m_Y(y)
 		{

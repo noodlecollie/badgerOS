@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Meta/StaticImageMetadata.h"
+#include <BadgerGL/BitmapSurface.h>
 
 namespace Resources
 {
@@ -25,13 +25,6 @@ namespace Resources
 			COL_BLACK, COL_BLACK, COL_BLACK, COL_BLACK, COL_PINK, COL_PINK, COL_PINK, COL_PINK,
 		};
 
-		static constexpr StaticImageMetadata META =
-		{
-			.width = WIDTH,
-			.height = HEIGHT,
-			.pixelFormat = BadgerGL::PIXELFORMAT_65K,
-			.isRowMajor = true,
-			.data = DATA
-		};
+		static constexpr BadgerGL::ConstBitmapSurface BITMAP(WIDTH, HEIGHT, &BadgerGL::PIXELFORMAT_65K, DATA);
 	}
 }

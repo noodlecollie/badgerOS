@@ -9,10 +9,10 @@
 #include <SSD1351/CustomDriver/OLEDDriver.h>
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
-#include <ResourceLoaders/StaticBitmapLoader.h>
 #include <Resources/Images/Missing.h>
 #include <BadgerUI/Box.h>
 #include <BadgerUI/ColourScheme.h>
+#include <BadgerUI/TiledImage.h>
 
 #include "SanityTest.h"
 
@@ -75,8 +75,13 @@ namespace SanityTest
 		renderer.draw(Rect16(SSD1351::OLED_WIDTH - 4, SSD1351::OLED_HEIGHT - 4, SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT));
 		renderer.draw(Rect16(0, SSD1351::OLED_HEIGHT - 4, 4, SSD1351::OLED_HEIGHT));
 
-		ConstBitmapSurface res = ResourceLoaders::loadStaticBitmap(Resources::Missing::META);
-		renderer.blit(res, Rect16(52, 12, 76, 36));
+		{
+			TiledImage img;
+			img.setBitmap(&Resources::Missing::BITMAP);
+			img.setPosition(UIPoint(52, 12));
+			img.setDimensions(UIDimensions(24, 24));
+			img.draw(drawContext);
+		}
 
 		renderer.setShapeDrawStyle(ShapeDrawStyle::Filled);
 		const size_t totalColumns = 128 - 16;	// Width - outer padding

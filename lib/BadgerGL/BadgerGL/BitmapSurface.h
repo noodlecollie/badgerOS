@@ -32,7 +32,7 @@ namespace BadgerGL
 
 		struct ConstBitmapInitialiser
 		{
-			inline ConstBitmapInitialiser(uint16_t inWidth, uint16_t inHeight, const PixelFormat* inPixelFormat, const void* inData) :
+			constexpr ConstBitmapInitialiser(uint16_t inWidth, uint16_t inHeight, const PixelFormat* inPixelFormat, const void* inData) :
 				width(inWidth),
 				height(inHeight),
 				pixelFormat(inPixelFormat),
@@ -40,7 +40,7 @@ namespace BadgerGL
 			{
 			}
 
-			inline bool isValid() const
+			constexpr bool isValid() const
 			{
 				return
 					width > 0 &&
@@ -59,18 +59,18 @@ namespace BadgerGL
 
 		struct ConstPaletteInitialiser
 		{
-			inline ConstPaletteInitialiser()
+			constexpr ConstPaletteInitialiser()
 			{
 			}
 
-			inline ConstPaletteInitialiser(size_t inLength, const PixelFormat* inPixelFormat, const void* inData) :
+			constexpr ConstPaletteInitialiser(size_t inLength, const PixelFormat* inPixelFormat, const void* inData) :
 				length(inLength),
 				pixelFormat(inPixelFormat),
 				data(inData)
 			{
 			}
 
-			inline bool isValid() const
+			constexpr bool isValid() const
 			{
 				return
 					length > 0 &&
@@ -85,6 +85,14 @@ namespace BadgerGL
 			const PixelFormat* pixelFormat = nullptr;
 			const void* data = 0;
 		};
+
+		// Constexpr constructors assume that all inputs are valid.
+		constexpr ConstBitmapSurface(uint16_t width, uint16_t height, const PixelFormat* pixFmt, const void* data) :
+			m_Dimensions(width, height),
+			m_PixelFormat(pixFmt),
+			m_Pixels(data)
+		{
+		}
 
 		inline ConstBitmapSurface(const ConstBitmapInitialiser& bitmap, const ConstPaletteInitialiser palette = ConstPaletteInitialiser())
 		{
