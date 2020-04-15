@@ -67,6 +67,7 @@ namespace SanityTest
 		}
 
 		renderer.setShapeDrawStyle(ShapeDrawStyle::FilledOutline);
+		renderer.setLineWidth(1);
 		renderer.setPrimaryColour(col24To16(0x000000));
 		renderer.setSecondaryColour(col24To16(0xFFFFFF));
 
