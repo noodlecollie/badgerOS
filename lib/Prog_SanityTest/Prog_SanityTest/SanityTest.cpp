@@ -11,6 +11,8 @@
 #include <BadgerGL/BitmapRenderer.h>
 #include <ResourceLoaders/StaticBitmapLoader.h>
 #include <Resources/Images/Missing.h>
+#include <BadgerUI/Box.h>
+#include <BadgerUI/ColourScheme.h>
 
 #include "SanityTest.h"
 
@@ -20,59 +22,86 @@ namespace SanityTest
 
 	static void prepareTestImage()
 	{
-		ScreenBufferSurface.fill(BadgerGL::col24To16(0x404040));
+		using namespace BadgerUI;
+		using namespace BadgerGL;
 
-		BadgerGL::BitmapRenderer renderer(&ScreenBufferSurface);
-		renderer.setPrimaryColour(BadgerGL::col24To16(0xFFD800));
-		renderer.setSecondaryColour(BadgerGL::col24To16(0x7AFFFF));
+		ColourScheme colourScheme;
+		colourScheme.setColour(ColourScheme::Colour_Background, col24To16(0x404040));
+		colourScheme.setColour(ColourScheme::Colour_Primary, col24To16(0xFFD800));
+		colourScheme.setColour(ColourScheme::Colour_Secondary, col24To16(0x7AFFFF));
 
-		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
-		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(8, 8), 32, 32));
+		ScreenBufferSurface.fill(colourScheme.colour(ColourScheme::Colour_Background));
 
-		renderer.setLineWidth(4);
-		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Outline);
-		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(48, 8), 32, 32));
+		BitmapRenderer renderer(&ScreenBufferSurface);
 
-		renderer.setLineWidth(1);
-		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::FilledOutline);
-		renderer.draw(BadgerGL::Rect16(BadgerGL::Point16(88, 8), 32, 32));
+		UIDrawContext drawContext;
+		drawContext.screenBuffer = &ScreenBufferSurface;
+		drawContext.renderer = &renderer;
+		drawContext.colourScheme = &colourScheme;
 
-		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::FilledOutline);
-		renderer.setPrimaryColour(BadgerGL::col24To16(0x000000));
-		renderer.setSecondaryColour(BadgerGL::col24To16(0xFFFFFF));
+		{
+			Box box;
+			box.setRect(Rect16(Point16(8, 8), 32, 32));
+			box.setDrawStyle(ShapeDrawStyle::Filled);
+			box.setFillColour(ColourProperty(ColourScheme::Colour_Primary));
+			box.draw(drawContext);
+		}
 
-		renderer.draw(BadgerGL::Rect16(0, 0, 4, 4));
-		renderer.draw(BadgerGL::Rect16(SSD1351::OLED_WIDTH - 4, 0, SSD1351::OLED_WIDTH, 4));
-		renderer.draw(BadgerGL::Rect16(SSD1351::OLED_WIDTH - 4, SSD1351::OLED_HEIGHT - 4, SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT));
-		renderer.draw(BadgerGL::Rect16(0, SSD1351::OLED_HEIGHT - 4, 4, SSD1351::OLED_HEIGHT));
+		{
+			Box box;
+			box.setRect(Rect16(Point16(48, 8), 32, 32));
+			box.setDrawStyle(ShapeDrawStyle::Outline);
+			box.setOutlineColour(ColourProperty(ColourScheme::Colour_Primary));
+			box.setOutlineWidth(4);
+			box.draw(drawContext);
+		}
 
-		BadgerGL::ConstBitmapSurface res = ResourceLoaders::loadStaticBitmap(Resources::Missing::META);
-		renderer.blit(res, BadgerGL::Rect16(52, 12, 76, 36));
+		{
+			Box box;
+			box.setRect(Rect16(Point16(88, 8), 32, 32));
+			box.setDrawStyle(ShapeDrawStyle::FilledOutline);
+			box.setOutlineColour(ColourProperty(ColourScheme::Colour_Primary));
+			box.setFillColour(ColourProperty(ColourScheme::Colour_Secondary));
+			box.setOutlineWidth(2);
+			box.draw(drawContext);
+		}
 
-		renderer.setShapeDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
+		renderer.setShapeDrawStyle(ShapeDrawStyle::FilledOutline);
+		renderer.setPrimaryColour(col24To16(0x000000));
+		renderer.setSecondaryColour(col24To16(0xFFFFFF));
+
+		renderer.draw(Rect16(0, 0, 4, 4));
+		renderer.draw(Rect16(SSD1351::OLED_WIDTH - 4, 0, SSD1351::OLED_WIDTH, 4));
+		renderer.draw(Rect16(SSD1351::OLED_WIDTH - 4, SSD1351::OLED_HEIGHT - 4, SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT));
+		renderer.draw(Rect16(0, SSD1351::OLED_HEIGHT - 4, 4, SSD1351::OLED_HEIGHT));
+
+		ConstBitmapSurface res = ResourceLoaders::loadStaticBitmap(Resources::Missing::META);
+		renderer.blit(res, Rect16(52, 12, 76, 36));
+
+		renderer.setShapeDrawStyle(ShapeDrawStyle::Filled);
 		const size_t totalColumns = 128 - 16;	// Width - outer padding
 		const size_t totalHeight = 128 - 16 - 32 - 8;	// Height - outer padding - top shapes - spacing
-		const BadgerGL::Point16 topLeft(8, 8 + 32 + 8);
+		const Point16 topLeft(8, 8 + 32 + 8);
 		const size_t rowHeight = totalHeight / 4;
 
 		for ( uint32_t column = 0; column < totalColumns; ++column )
 		{
 			const uint8_t colour = static_cast<uint8_t>(static_cast<float>(column * 255) / static_cast<float>(totalColumns));
-			BadgerGL::Rect16 rect(topLeft + BadgerGL::Point16(column, 0), 1, rowHeight);
+			Rect16 rect(topLeft + Point16(column, 0), 1, rowHeight);
 
-			renderer.setPrimaryColour(BadgerGL::col24To16(colour << 16));
+			renderer.setPrimaryColour(col24To16(colour << 16));
 			renderer.draw(rect);
 
-			renderer.setPrimaryColour(BadgerGL::col24To16(colour << 8));
-			rect.translate(BadgerGL::Point16(0, rowHeight));
+			renderer.setPrimaryColour(col24To16(colour << 8));
+			rect.translate(Point16(0, rowHeight));
 			renderer.draw(rect);
 
-			renderer.setPrimaryColour(BadgerGL::col24To16(colour));
-			rect.translate(BadgerGL::Point16(0, rowHeight));
+			renderer.setPrimaryColour(col24To16(colour));
+			rect.translate(Point16(0, rowHeight));
 			renderer.draw(rect);
 
-			renderer.setPrimaryColour(BadgerGL::col24To16((colour << 16) | (colour << 8) | colour));
-			rect.translate(BadgerGL::Point16(0, rowHeight));
+			renderer.setPrimaryColour(col24To16((colour << 16) | (colour << 8) | colour));
+			rect.translate(Point16(0, rowHeight));
 			renderer.draw(rect);
 		}
 	}

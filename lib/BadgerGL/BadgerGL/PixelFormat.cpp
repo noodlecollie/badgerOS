@@ -1,22 +1,26 @@
+#include <CoreUtil/ArrayUtil.h>
 #include "PixelFormat.h"
 
 namespace BadgerGL
 {
-	static const PixelFormat* const PixelFormats[PixelFormat__Count] =
+	static const PixelFormat* const PixelFormats[] =
 	{
-		&PIXELFORMAT_65K,		// PixelFormat_65K
-		&PIXELFORMAT_MONO256	// PixelFormat_Mono256
+		&PIXELFORMAT_65K,
+		&PIXELFORMAT_MONO256
 	};
 
 	const PixelFormat* getPixelFormat(PixelFormatId id)
 	{
-		if ( id >= 0 && id < PixelFormat__Count )
+		for ( uint32_t index = 0; index < CoreUtil::arraySize(PixelFormats); ++index )
 		{
-			return PixelFormats[id];
+			BGRS_ASSERT(PixelFormats[index], "Pixel format was not valid.");
+
+			if ( PixelFormats[index]->id == id )
+			{
+				return PixelFormats[index];
+			}
 		}
-		else
-		{
-			return nullptr;
-		}
+
+		return nullptr;
 	}
 }

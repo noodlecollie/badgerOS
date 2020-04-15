@@ -1,5 +1,6 @@
 #include <CoreUtil/BgrsAssert.h>
 #include "PixelFormatConverter_65K.h"
+#include "../Defs.h"
 
 namespace BadgerGL
 {
@@ -7,19 +8,62 @@ namespace BadgerGL
 	{
 		static bool canConvert(PixelFormatId id)
 		{
-			BGRS_ASSERT(false, "65K pixel format converter is currently unimplemented.");
+			switch ( id )
+			{
+				case PixelFormat_0RGB:
+				case PixelFormat_RGB0:
+				case PixelFormat_65K:
+				{
+					return true;
+				}
+
+				default:
+				{
+					return false;
+				}
+			}
+		}
+
+		static bool convertValue(uint32_t& dest, uint32_t source, PixelFormatId destFormat)
+		{
+			switch ( destFormat )
+			{
+				case PixelFormat_0RGB:
+				{
+					dest = col24To16(source);
+					break;
+				}
+
+				case PixelFormat_RGB0:
+				{
+					dest = col32To16(source);
+					break;
+				}
+
+				case PixelFormat_65K:
+				{
+					dest = source;
+					break;
+				}
+
+				default:
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		static bool convertPixels(BitmapBuffer& destBuffer, const ConstBitmapBuffer& sourceBuffer)
+		{
+			BGRS_ASSERT(false, "convertPixels is currently unimplemented.");
 			return false;
 		}
 
-		static bool convert(BitmapBuffer& destBuffer, const ConstBitmapBuffer& sourceBuffer)
+		static bool convertPixelsViaPalette(BitmapBuffer& destBuffer, const ConstBitmapBuffer& sourceBuffer, const ConstBitmapBuffer& palette)
 		{
-			BGRS_ASSERT(false, "65K pixel format converter is currently unimplemented.");
-			return false;
-		}
-
-		static bool convertViaPalette(BitmapBuffer& destBuffer, const ConstBitmapBuffer& sourceBuffer, const ConstBitmapBuffer& palette)
-		{
-			BGRS_ASSERT(false, "65K pixel format converter is currently unimplemented.");
+			BGRS_ASSERT(false, "convertPixelsViaPalette is currently unimplemented.");
 			return false;
 		}
 
@@ -27,8 +71,9 @@ namespace BadgerGL
 		{
 			.destType = PixelFormat_65K,
 			.canConvert = &canConvert,
-			.convert = &convert,
-			.convertViaPalette = &convertViaPalette
+			.convertValue = &convertValue,
+			.convertPixels = &convertPixels,
+			.convertPixelsViaPalette = &convertPixelsViaPalette
 		};
 	}
 }

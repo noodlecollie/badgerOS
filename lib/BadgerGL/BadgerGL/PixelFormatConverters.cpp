@@ -1,3 +1,4 @@
+#include <CoreUtil/ArrayUtil.h>
 #include "PixelFormatConverters.h"
 
 #include "PixelFormatConverterDelegations/PixelFormatConverter_65K.h"
@@ -11,23 +12,29 @@ namespace BadgerGL
 
 	static uint8_t ConvertedDataBuffer[MAX_CONVERTED_DATA_LENGTH];
 
-	static const PixelFormatConverter* const FormatConverters[PixelFormat__Count] =
+	static const PixelFormatConverter* const FormatConverters[] =
 	{
-		&PixelFormatConverter_65K::Converter,	// PixelFormat_65K
-		nullptr									// PixelFormat_Mono256
+		&PixelFormatConverter_65K::Converter
 	};
 
 	const PixelFormatConverter* getPixelFormatConverter(PixelFormatId destType)
 	{
-		if ( destType >= PixelFormat__Count )
+		const PixelFormatConverter* converter = nullptr;
+
+		for ( uint32_t index = 0; index < CoreUtil::arraySize(FormatConverters); ++index )
 		{
-			return nullptr;
+			BGRS_ASSERT(FormatConverters[index], "Pixel format converter pointer was not valid.");
+
+			if ( FormatConverters[index]->destType == destType )
+			{
+				converter = FormatConverters[index];
+				break;
+			}
 		}
 
-		const PixelFormatConverter* converter = FormatConverters[destType];
-
-		if ( !converter || !converter->isValid(destType) )
+		if ( !converter->isValid(destType) )
 		{
+			BGRS_ASSERTD(false, "Pixel format converter was not valid.");
 			return nullptr;
 		}
 
@@ -37,6 +44,21 @@ namespace BadgerGL
 	size_t maxConvertedPixels(const PixelFormat& format)
 	{
 		return MAX_CONVERTED_DATA_LENGTH / format.totalByteDepth();
+	}
+
+	uint32_t convertValue(const PixelFormat& destFormat, const PixelFormat& sourceFormat, uint32_t sourceValue)
+	{
+		const PixelFormatConverter* converter = getPixelFormatConverter(destFormat.id);
+
+		if ( !converter || !converter->canConvert(sourceFormat.id) )
+		{
+			return 0;
+		}
+
+		uint32_t out = 0;
+		converter->convertValue(out, sourceValue, destFormat.id);
+
+		return out;
 	}
 
 	CoreUtil::ConstBlob convertPixelData(const PixelFormat& destFormat,
@@ -70,11 +92,11 @@ namespace BadgerGL
 
 		if ( palette.isValid() )
 		{
-			converter->convertViaPalette(destBuffer, sourceBuffer, palette);
+			converter->convertPixelsViaPalette(destBuffer, sourceBuffer, palette);
 		}
 		else
 		{
-			converter->convert(destBuffer, sourceBuffer);
+			converter->convertPixels(destBuffer, sourceBuffer);
 		}
 
 		return CoreUtil::ConstBlob(ConvertedDataBuffer, destBufferSize);

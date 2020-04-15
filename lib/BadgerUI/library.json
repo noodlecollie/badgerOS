@@ -1,0 +1,8 @@
+{
+	"dependencies":
+	[
+		{ "name": "CoreUtil" },
+		{ "name": "BadgerGL" },
+		{ "name": "BadgerMath" }
+	]
+}

@@ -10,6 +10,7 @@
 		{ "name": "SPI" },
 		{ "name": "Wire" },
 		{ "name": "SPIFFS" },
-		{ "name": "FS" }
+		{ "name": "FS" },
+		{ "name": "BadgerUI" }
 	]
 }

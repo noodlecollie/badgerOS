@@ -154,6 +154,16 @@ namespace BadgerMath
 			return *this;
 		}
 
+		inline bool operator ==(const Rect2D& other) const
+		{
+			return m_P0 == other.m_P0 && m_P1 == other.m_P1;
+		}
+
+		inline bool operator !=(const Rect2D& other) const
+		{
+			return !(*this == other);
+		}
+
 	private:
 		Point m_P0;
 		Point m_P1;
