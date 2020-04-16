@@ -32,6 +32,13 @@ namespace BadgerGL
 		uint8_t lineWidth() const;
 		void setLineWidth(uint8_t width);
 
+		// Used to offset the position of anything being drawn.
+		// Useful for "instancing" primitives by drawing the same
+		// input primitive data each time in different locations.
+		Point16 drawingOffset() const;
+		void setDrawingOffset(const Point16& offset);
+		void resetDrawingOffset();
+
 		void draw(const Rect16& rect);
 
 		// Tiles the given bitmap over the area specified by destRect.
@@ -62,5 +69,6 @@ namespace BadgerGL
 		uint32_t m_PrimaryColour = 0xFFFFFFFF;
 		uint32_t m_SecondaryColour = 0x00000000;
 		uint8_t m_LineWidth = 1;
+		Point16 m_DrawingOffset;
 	};
 }

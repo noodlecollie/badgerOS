@@ -12,6 +12,9 @@ namespace BadgerMath
 		Vector2D<T> max = rect.max();
 
 		min.ensureAxesNoLessThan(bounds.min());
+		min.ensureAxesNoGreaterThan(bounds.max());
+
+		max.ensureAxesNoLessThan(bounds.min());
 		max.ensureAxesNoGreaterThan(bounds.max());
 
 		rect.setP0(min);

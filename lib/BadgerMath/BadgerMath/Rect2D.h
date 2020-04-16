@@ -168,4 +168,16 @@ namespace BadgerMath
 		Point m_P0;
 		Point m_P1;
 	};
+
+	template<typename T>
+	inline Rect2D<T> operator +(const Rect2D<T>& rect, const Vector2D<T>& offset)
+	{
+		return Rect2D<T>(rect.p0() + offset, rect.p1() + offset);
+	}
+
+	template<typename T>
+	inline Rect2D<T> operator -(const Rect2D<T>& rect, const Vector2D<T>& offset)
+	{
+		return Rect2D<T>(rect.p0() - offset, rect.p1() - offset);
+	}
 }

@@ -3,6 +3,7 @@
 #include <BadgerUI/BaseLayout.h>
 #include <BadgerUI/Box.h>
 #include <BadgerUI/Image.h>
+#include <BadgerUI/UIDrawableAlias.h>
 
 namespace SanityTest
 {
@@ -16,6 +17,7 @@ namespace SanityTest
 		BadgerUI::Box m_OutlineBox;
 		BadgerUI::Box m_FilledOutlineBox;
 		BadgerUI::Image m_TiledImage;
-		BadgerUI::Box m_OuterBoxes[4];
+		BadgerUI::Box m_OuterBox;
+		BadgerUI::UIDrawableAlias m_OuterBoxAliases[4];
 	};
 }

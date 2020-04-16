@@ -73,6 +73,21 @@ namespace BadgerGL
 		m_LineWidth = width;
 	}
 
+	Point16 BitmapRenderer::drawingOffset() const
+	{
+		return m_DrawingOffset;
+	}
+
+	void BitmapRenderer::setDrawingOffset(const Point16& offset)
+	{
+		m_DrawingOffset = offset;
+	}
+
+	void BitmapRenderer::resetDrawingOffset()
+	{
+		m_DrawingOffset = Point16(0,0);
+	}
+
 	void BitmapRenderer::draw(const Rect16& rect)
 	{
 		if ( !m_Surface )
@@ -80,7 +95,7 @@ namespace BadgerGL
 			return;
 		}
 
-		Rect16 localRect(rect);
+		Rect16 localRect(rect + m_DrawingOffset);
 
 		if ( m_ShapeDrawStyle == ShapeDrawStyle::Outline || m_ShapeDrawStyle == ShapeDrawStyle::FilledOutline )
 		{
@@ -105,7 +120,7 @@ namespace BadgerGL
 
 		BitmapBlitter blitter;
 		blitter.setSource(&source, sourceRect);
-		blitter.setDest(m_Surface, destRect);
+		blitter.setDest(m_Surface, Rect16(destRect + m_DrawingOffset));
 		blitter.blit();
 	}
 

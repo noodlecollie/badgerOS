@@ -33,14 +33,17 @@ namespace SanityTest
 		m_TiledImage.setOverrideDimensions(UIDimensions(24, 24));
 		addItemToTail(&m_TiledImage);
 
-		for ( uint32_t index = 0; index < CoreUtil::arraySize(m_OuterBoxes); ++index )
-		{
-			BadgerUI::Box& box = m_OuterBoxes[index];
+		m_OuterBox.setOutlineWidth(1);
+		m_OuterBox.setOutlineColour(ColourProperty(ColourScheme::Colour_Custom, col24To16(0x000000)));
+		m_OuterBox.setFillColour(ColourProperty(ColourScheme::Colour_Custom, col24To16(0xFFFFFF)));
+		m_OuterBox.setDrawStyle(ShapeDrawStyle::FilledOutline);
+		m_OuterBox.setRect(UIRect(UIPoint(0, 0), 4, 4));
 
-			box.setOutlineWidth(1);
-			box.setOutlineColour(ColourProperty(ColourScheme::Colour_Custom, col24To16(0x000000)));
-			box.setFillColour(ColourProperty(ColourScheme::Colour_Custom, col24To16(0xFFFFFF)));
-			box.setDrawStyle(ShapeDrawStyle::FilledOutline);
+		for ( uint32_t index = 0; index < CoreUtil::arraySize(m_OuterBoxAliases); ++index )
+		{
+			BadgerUI::UIDrawableAlias& alias = m_OuterBoxAliases[index];
+
+			alias.setTarget(&m_OuterBox);
 
 			int16_t x = 0;
 			int16_t y = 0;
@@ -55,8 +58,8 @@ namespace SanityTest
 				x = 124;
 			}
 
-			box.setRect(UIRect(UIPoint(x, y), 4, 4));
-			addItemToTail(&box);
+			alias.setPosition(UIPoint(x, y));
+			addItemToTail(&alias);
 		}
 	}
 }

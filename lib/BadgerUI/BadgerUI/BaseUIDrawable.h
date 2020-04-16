@@ -40,6 +40,10 @@ namespace BadgerUI
 
 		// Redraws the item, regardless of its dirty state.
 		std::function<void(const UIDrawContext&)> draw;
+
+		// If specified, this function will be called to retrieve the dirty state
+		// when dirtyState() is called on the drawable.
+		std::function<DrawableDirtyState(void)> dirtyStateDelegate;
 	};
 
 	class BaseUIDrawable
@@ -61,6 +65,11 @@ namespace BadgerUI
 	protected:
 		BaseUIDrawable();
 
+		inline DrawableDirtyState dirtyStateInternal() const
+		{
+			return m_DirtyState;
+		}
+
 		void setDirtyStateInternal(DrawableDirtyState state);
 		void setRectInternal(const UIRect& r);
 
@@ -77,17 +86,59 @@ namespace BadgerUI
 			}
 		}
 
-		template<typename DERIVED, typename CTX>
-		inline void setCallback(std::function<void(const CTX&)> UIDrawableCallbacks::* callbackPtr,
-								void (DERIVED::*memberFunction)(const CTX&))
+		// Void return type, non-const member function.
+		template<typename DERIVED, typename... ARGS>
+		inline void setCallback(std::function<void(ARGS...)> UIDrawableCallbacks::* callbackPtr,
+								void (DERIVED::*memberFunction)(ARGS...))
 		{
 			DERIVED* derivedInstance = static_cast<DERIVED*>(this);
 
-			m_Callbacks.*callbackPtr = [derivedInstance, memberFunction](const CTX& context)
+			m_Callbacks.*callbackPtr = [derivedInstance, memberFunction](ARGS... args) -> void
 			{
-				(derivedInstance->*memberFunction)(context);
+				(derivedInstance->*memberFunction)(args...);
 			};
 		}
+
+		// Void return type, const member function.
+		template<typename DERIVED, typename... ARGS>
+		inline void setCallback(std::function<void(ARGS...)> UIDrawableCallbacks::* callbackPtr,
+								void (DERIVED::*memberFunction)(ARGS...) const)
+		{
+			const DERIVED* derivedInstance = static_cast<const DERIVED*>(this);
+
+			m_Callbacks.*callbackPtr = [derivedInstance, memberFunction](ARGS... args) -> void
+			{
+				(derivedInstance->*memberFunction)(args...);
+			};
+		}
+
+		// Non-void return type, non-const member function.
+		template<typename DERIVED, typename RET, typename... ARGS>
+		inline void setCallback(std::function<RET(ARGS...)> UIDrawableCallbacks::* callbackPtr,
+								RET (DERIVED::*memberFunction)(ARGS...))
+		{
+			DERIVED* derivedInstance = static_cast<DERIVED*>(this);
+
+			m_Callbacks.*callbackPtr = [derivedInstance, memberFunction](ARGS... args) -> RET
+			{
+				return (derivedInstance->*memberFunction)(args...);
+			};
+		}
+
+		// Non-void return type, const member function.
+		template<typename DERIVED, typename RET, typename... ARGS>
+		inline void setCallback(std::function<RET(ARGS...)> UIDrawableCallbacks::* callbackPtr,
+								RET (DERIVED::*memberFunction)(ARGS...) const)
+		{
+			const DERIVED* derivedInstance = static_cast<const DERIVED*>(this);
+
+			m_Callbacks.*callbackPtr = [derivedInstance, memberFunction](ARGS... args) -> RET
+			{
+				return (derivedInstance->*memberFunction)(args...);
+			};
+		}
+
+		// For convenience:
 
 		template<typename DERIVED>
 		inline void setUpdateCallback(void (DERIVED::*memberFunction)(const UIUpdateContext&))
@@ -99,6 +150,12 @@ namespace BadgerUI
 		inline void setDrawCallback(void (DERIVED::*memberFunction)(const UIDrawContext&))
 		{
 			setCallback(&UIDrawableCallbacks::draw, memberFunction);
+		}
+
+		template<typename DERIVED>
+		inline void setDirtyStateDelegate(DrawableDirtyState (DERIVED::*memberFunction)(void) const)
+		{
+			setCallback(&UIDrawableCallbacks::dirtyStateDelegate, memberFunction);
 		}
 
 		UIDrawableCallbacks m_Callbacks;
