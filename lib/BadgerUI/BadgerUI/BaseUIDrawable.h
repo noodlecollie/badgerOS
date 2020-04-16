@@ -13,7 +13,7 @@ namespace BadgerUI
 	{
 		NotDirty,
 		ItemDirty,
-		ScreenDirty	// If the item requires the whole screen to be redrawn.
+		ContainerDirty	// If the item requires its container to be redrawn
 	};
 
 	struct UIUpdateContext
