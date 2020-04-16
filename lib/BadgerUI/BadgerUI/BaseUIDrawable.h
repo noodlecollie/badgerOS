@@ -8,7 +8,7 @@
 
 namespace BadgerUI
 {
-	enum class DrawableDirtyState
+	enum DrawableDirtyState
 	{
 		NotDirty,
 		ItemDirty,
@@ -49,6 +49,12 @@ namespace BadgerUI
 		void update(const UIUpdateContext& context);
 		void draw(const UIDrawContext& context);
 
+		BaseUIDrawable* prev() const;
+		void setPrev(BaseUIDrawable* item);
+
+		BaseUIDrawable* next() const;
+		void setNext(BaseUIDrawable* item);
+
 	protected:
 		BaseUIDrawable();
 
@@ -58,7 +64,7 @@ namespace BadgerUI
 		// updates the existing property and also sets the dirty state.
 		// operator ==() is used to test equality.
 		template<typename T>
-		inline void setPropertyIfDifferent(T& property, const T& newValue, DrawableDirtyState newDirtyState = DrawableDirtyState::ItemDirty)
+		inline void setPropertyIfDifferent(T& property, const T& newValue, DrawableDirtyState newDirtyState = ItemDirty)
 		{
 			if ( property != newValue )
 			{
@@ -94,6 +100,8 @@ namespace BadgerUI
 		UIDrawableCallbacks m_Callbacks;
 
 	private:
-		DrawableDirtyState m_DirtyState = DrawableDirtyState::ItemDirty;
+		DrawableDirtyState m_DirtyState = ItemDirty;
+		BaseUIDrawable* m_Prev = nullptr;
+		BaseUIDrawable* m_Next = nullptr;
 	};
 }

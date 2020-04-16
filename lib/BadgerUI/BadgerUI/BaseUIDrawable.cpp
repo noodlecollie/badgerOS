@@ -6,6 +6,26 @@ namespace BadgerUI
 	{
 	}
 
+	BaseUIDrawable* BaseUIDrawable::prev() const
+	{
+		return m_Prev;
+	}
+
+	void BaseUIDrawable::setPrev(BaseUIDrawable* item)
+	{
+		m_Prev = item;
+	}
+
+	BaseUIDrawable* BaseUIDrawable::next() const
+	{
+		return m_Next;
+	}
+
+	void BaseUIDrawable::setNext(BaseUIDrawable* item)
+	{
+		m_Next = item;
+	}
+
 	void BaseUIDrawable::update(const UIUpdateContext& context)
 	{
 		if ( m_Callbacks.update )
@@ -26,7 +46,7 @@ namespace BadgerUI
 			m_Callbacks.draw(context);
 		}
 
-		setDirtyState(DrawableDirtyState::NotDirty);
+		setDirtyState(NotDirty);
 	}
 
 	void BaseUIDrawable::setDirtyState(DrawableDirtyState state)

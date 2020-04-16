@@ -9,12 +9,10 @@
 #include <SSD1351/CustomDriver/OLEDDriver.h>
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
-#include <Resources/Images/Missing.h>
-#include <BadgerUI/Box.h>
 #include <BadgerUI/ColourScheme.h>
-#include <BadgerUI/TiledImage.h>
 
 #include "SanityTest.h"
+#include "TestCardLayout.h"
 
 namespace SanityTest
 {
@@ -39,50 +37,8 @@ namespace SanityTest
 		drawContext.renderer = &renderer;
 		drawContext.colourScheme = &colourScheme;
 
-		{
-			Box box;
-			box.setRect(Rect16(Point16(8, 8), 32, 32));
-			box.setDrawStyle(ShapeDrawStyle::Filled);
-			box.setFillColour(ColourProperty(ColourScheme::Colour_Primary));
-			box.draw(drawContext);
-		}
-
-		{
-			Box box;
-			box.setRect(Rect16(Point16(48, 8), 32, 32));
-			box.setDrawStyle(ShapeDrawStyle::Outline);
-			box.setOutlineColour(ColourProperty(ColourScheme::Colour_Primary));
-			box.setOutlineWidth(4);
-			box.draw(drawContext);
-		}
-
-		{
-			Box box;
-			box.setRect(Rect16(Point16(88, 8), 32, 32));
-			box.setDrawStyle(ShapeDrawStyle::FilledOutline);
-			box.setOutlineColour(ColourProperty(ColourScheme::Colour_Primary));
-			box.setFillColour(ColourProperty(ColourScheme::Colour_Secondary));
-			box.setOutlineWidth(2);
-			box.draw(drawContext);
-		}
-
-		renderer.setShapeDrawStyle(ShapeDrawStyle::FilledOutline);
-		renderer.setLineWidth(1);
-		renderer.setPrimaryColour(col24To16(0x000000));
-		renderer.setSecondaryColour(col24To16(0xFFFFFF));
-
-		renderer.draw(Rect16(0, 0, 4, 4));
-		renderer.draw(Rect16(SSD1351::OLED_WIDTH - 4, 0, SSD1351::OLED_WIDTH, 4));
-		renderer.draw(Rect16(SSD1351::OLED_WIDTH - 4, SSD1351::OLED_HEIGHT - 4, SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT));
-		renderer.draw(Rect16(0, SSD1351::OLED_HEIGHT - 4, 4, SSD1351::OLED_HEIGHT));
-
-		{
-			TiledImage img;
-			img.setBitmap(&Resources::Missing::BITMAP);
-			img.setPosition(UIPoint(52, 12));
-			img.setDimensions(UIDimensions(24, 24));
-			img.draw(drawContext);
-		}
+		TestCardLayout layout;
+		layout.drawDirtyItems(drawContext);
 
 		renderer.setShapeDrawStyle(ShapeDrawStyle::Filled);
 		const size_t totalColumns = 128 - 16;	// Width - outer padding
