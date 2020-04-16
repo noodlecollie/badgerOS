@@ -8,14 +8,9 @@ namespace BadgerUI
 		setDrawCallback(&Box::privateDraw);
 	}
 
-	const UIRect& Box::rect() const
-	{
-		return m_Rect;
-	}
-
 	void Box::setRect(const UIRect& inRect)
 	{
-		setPropertyIfDifferent(m_Rect, inRect);
+		setRectInternal(inRect);
 	}
 
 	BadgerGL::ShapeDrawStyle Box::drawStyle() const
@@ -73,6 +68,6 @@ namespace BadgerUI
 			context.renderer->setSecondaryColour(m_FillColour.schemeColour(*context.colourScheme));
 		}
 
-		context.renderer->draw(m_Rect);
+		context.renderer->draw(rect());
 	}
 }

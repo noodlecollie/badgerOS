@@ -2,7 +2,7 @@
 
 #include <BadgerUI/BaseLayout.h>
 #include <BadgerUI/Box.h>
-#include <BadgerUI/TiledImage.h>
+#include <BadgerUI/Image.h>
 
 namespace SanityTest
 {
@@ -15,7 +15,7 @@ namespace SanityTest
 		BadgerUI::Box m_FilledBox;
 		BadgerUI::Box m_OutlineBox;
 		BadgerUI::Box m_FilledOutlineBox;
-		BadgerUI::TiledImage m_TiledImage;
+		BadgerUI::Image m_TiledImage;
 		BadgerUI::Box m_OuterBoxes[4];
 	};
 }

@@ -12,7 +12,6 @@ namespace BadgerUI
 	public:
 		Box();
 
-		const UIRect& rect() const;
 		void setRect(const UIRect& inRect);
 
 		BadgerGL::ShapeDrawStyle drawStyle() const;
@@ -30,7 +29,6 @@ namespace BadgerUI
 	private:
 		void privateDraw(const UIDrawContext& context);
 
-		UIRect m_Rect;
 		BadgerGL::ShapeDrawStyle m_DrawStyle = BadgerGL::ShapeDrawStyle::Filled;
 		uint8_t m_OutlineWidth = 1;
 		ColourProperty m_OutlineColour;

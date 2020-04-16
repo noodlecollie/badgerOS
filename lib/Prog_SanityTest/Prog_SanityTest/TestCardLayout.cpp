@@ -30,7 +30,7 @@ namespace SanityTest
 
 		m_TiledImage.setBitmap(&Resources::Missing::BITMAP);
 		m_TiledImage.setPosition(UIPoint(52, 12));
-		m_TiledImage.setDimensions(UIDimensions(24, 24));
+		m_TiledImage.setOverrideDimensions(UIDimensions(24, 24));
 		addItemToTail(&m_TiledImage);
 
 		for ( uint32_t index = 0; index < CoreUtil::arraySize(m_OuterBoxes); ++index )

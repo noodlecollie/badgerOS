@@ -5,6 +5,7 @@
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include "ColourScheme.h"
+#include "Types.h"
 
 namespace BadgerUI
 {
@@ -55,10 +56,13 @@ namespace BadgerUI
 		BaseUIDrawable* next() const;
 		void setNext(BaseUIDrawable* item);
 
+		const UIRect& rect() const;
+
 	protected:
 		BaseUIDrawable();
 
-		void setDirtyState(DrawableDirtyState state);
+		void setDirtyStateInternal(DrawableDirtyState state);
+		void setRectInternal(const UIRect& r);
 
 		// If the incoming value is different to the existing property,
 		// updates the existing property and also sets the dirty state.
@@ -69,7 +73,7 @@ namespace BadgerUI
 			if ( property != newValue )
 			{
 				property = newValue;
-				setDirtyState(newDirtyState);
+				setDirtyStateInternal(newDirtyState);
 			}
 		}
 
@@ -100,6 +104,7 @@ namespace BadgerUI
 		UIDrawableCallbacks m_Callbacks;
 
 	private:
+		UIRect m_Rect;
 		DrawableDirtyState m_DirtyState = ItemDirty;
 		BaseUIDrawable* m_Prev = nullptr;
 		BaseUIDrawable* m_Next = nullptr;

@@ -26,6 +26,11 @@ namespace BadgerUI
 		m_Next = item;
 	}
 
+	const UIRect& BaseUIDrawable::rect() const
+	{
+		return m_Rect;
+	}
+
 	void BaseUIDrawable::update(const UIUpdateContext& context)
 	{
 		if ( m_Callbacks.update )
@@ -46,11 +51,16 @@ namespace BadgerUI
 			m_Callbacks.draw(context);
 		}
 
-		setDirtyState(NotDirty);
+		setDirtyStateInternal(NotDirty);
 	}
 
-	void BaseUIDrawable::setDirtyState(DrawableDirtyState state)
+	void BaseUIDrawable::setDirtyStateInternal(DrawableDirtyState state)
 	{
 		m_DirtyState = state;
+	}
+
+	void BaseUIDrawable::setRectInternal(const UIRect& r)
+	{
+		setPropertyIfDifferent(m_Rect, r);
 	}
 }
