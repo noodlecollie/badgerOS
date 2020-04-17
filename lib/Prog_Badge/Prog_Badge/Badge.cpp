@@ -2,6 +2,7 @@
 #include <PlatformConfig/Platform.h>
 #include <PlatformConfig/Versions.h>
 #include "Badge.h"
+#include "UIModule.h"
 
 namespace Badge
 {
@@ -65,6 +66,11 @@ namespace Badge
 			SSD1351::Driver.initialise(config);
 		});
 
+		initialiseSubsystem("UIModule", [](const Config& config)
+		{
+			UIModule::setup();
+		});
+
 		const CoreUtil::TimevalMs initDuration = millis() - initStartTime;
 		Serial.printf("Initialisation complete. (%.2fs)\n", static_cast<float>(initDuration) / 1000.0f);
 	}
@@ -76,5 +82,6 @@ namespace Badge
 
 	void loop()
 	{
+		UIModule::loop();
 	}
 }

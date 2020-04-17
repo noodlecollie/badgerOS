@@ -12,6 +12,11 @@ namespace BadgerUI
 		return m_ItemTail;
 	}
 
+	DrawableDirtyState BaseLayout::dirtyState() const
+	{
+		return m_DirtyState;
+	}
+
 	void BaseLayout::addItemToHead(BaseUIDrawable* item)
 	{
 		if ( !item )

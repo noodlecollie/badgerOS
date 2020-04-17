@@ -176,7 +176,7 @@ namespace SSD1351
 		}
 	}
 
-	void OLEDDriver::clearScreenToImage(const CoreUtil::ConstBlob& data)
+	void OLEDDriver::writeImage(const CoreUtil::ConstBlob& data)
 	{
 		if ( !m_HasConfig || !data.isValid() || data.length() < OLED_RAM_SIZE_BYTES )
 		{
@@ -199,7 +199,7 @@ namespace SSD1351
 		}
 	}
 
-	void OLEDDriver::clearScreenSectionToImage(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const CoreUtil::ConstBlob& data)
+	void OLEDDriver::writeImage(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const CoreUtil::ConstBlob& data)
 	{
 		if ( !m_HasConfig ||
 			 !data.isValid() ||

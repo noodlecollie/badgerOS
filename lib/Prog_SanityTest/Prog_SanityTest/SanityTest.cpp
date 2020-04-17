@@ -160,7 +160,7 @@ namespace SanityTest
 		delay(500);
 		SSD1351::Driver.clearScreen(0x00FF);
 		delay(500);
-		SSD1351::Driver.clearScreenToImage(CoreUtil::ConstBlob(ScreenBufferSurface.rawPixelData(), ScreenBufferSurface.pixelDataSize()));
+		SSD1351::Driver.writeImage(CoreUtil::ConstBlob(ScreenBufferSurface.rawPixelData(), ScreenBufferSurface.pixelDataSize()));
 	}
 
 	void loop()

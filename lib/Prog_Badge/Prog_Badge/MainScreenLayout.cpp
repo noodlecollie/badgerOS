@@ -1,3 +1,4 @@
+#include <Resources/Images/Missing.h>
 #include "MainScreenLayout.h"
 
 namespace Badge
@@ -23,5 +24,15 @@ namespace Badge
 		m_MessageAreaSeparator.setFillColour(ColourProperty(ColourScheme::Colour_Secondary));
 		m_MessageAreaSeparator.setRect(UIRect(UIPoint(0, height - TEXT_AREA_HEIGHT - SEPARATOR_THICKNESS), m_Width, SEPARATOR_THICKNESS));
 		addItemToTail(&m_MessageAreaSeparator);
+
+		m_PlaceholderCharacterImage.setBitmap(&Resources::Missing::BITMAP);
+		m_PlaceholderCharacterImage.setPosition(UIPoint(0, STATUS_AREA_HEIGHT));
+		m_PlaceholderCharacterImage.setOverrideDimensions(UIDimensions(m_Width, m_MessageAreaSeparator.rect().min().y() - STATUS_AREA_HEIGHT));
+		addItemToTail(&m_PlaceholderCharacterImage);
+
+		m_PlaceholderScrollingText.setRect(UIRect(UIPoint(0, m_MessageAreaSeparator.rect().max().y()), m_Width, m_Height - m_MessageAreaSeparator.rect().max().y()));
+		m_PlaceholderScrollingText.setDrawStyle(ShapeDrawStyle::Filled);
+		m_PlaceholderScrollingText.setFillColour(ColourProperty(ColourScheme::Colour_Primary));
+		addItemToTail(&m_PlaceholderScrollingText);
 	}
 }
