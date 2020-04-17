@@ -56,7 +56,7 @@ namespace BadgerGL
 		}
 
 		uint32_t out = 0;
-		converter->convertValue(out, sourceValue, destFormat.id);
+		converter->convertValue(out, sourceValue, sourceFormat.id);
 
 		return out;
 	}

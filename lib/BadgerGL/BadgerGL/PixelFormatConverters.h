@@ -19,11 +19,12 @@ namespace BadgerGL
 		// Returns true if the given format can be converted to the destingation format, or false otherwise.
 		bool (*canConvert)(PixelFormatId id);
 
-		// Converts an individual colour value to the destination format.
-		bool (*convertValue)(uint32_t& dest, uint32_t source, PixelFormatId destFormat);
+		// Converts an individual colour value from the source format.
+		bool (*convertValue)(uint32_t& dest, uint32_t source, PixelFormatId sourceFormat);
 
 		// Converts the source pixels to the destination format.
-		// Assumes that the destination buffer format matches destType.
+		// Assumes that the destination buffer format matches destType, and that the number
+		// of pixels in the source and destination buffers is the same.
 		bool (*convertPixels)(BitmapBuffer& destBuffer, const ConstBitmapBuffer& sourceBuffer);
 
 		// Same as above, but looks up the colours for each pixel in the source buffer via the palette.
