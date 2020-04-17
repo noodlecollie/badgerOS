@@ -33,6 +33,11 @@ namespace BadgerGL
 		return m_Surface != nullptr;
 	}
 
+	const URect16& BitmapRenderer::dirtyArea() const
+	{
+		return m_DirtyArea;
+	}
+
 	ShapeDrawStyle BitmapRenderer::shapeDrawStyle() const
 	{
 		return m_ShapeDrawStyle;
@@ -120,8 +125,14 @@ namespace BadgerGL
 
 		BitmapBlitter blitter;
 		blitter.setSource(&source, sourceRect);
-		blitter.setDest(m_Surface, Rect16(destRect + m_DrawingOffset));
-		blitter.blit();
+		blitter.setDest(m_Surface, destRect + m_DrawingOffset);
+
+		if ( blitter.blit() )
+		{
+			// We use the dest rect as provided by the blitter, as it
+			// may have been trimmed during the operation.
+			addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
+		}
 	}
 
 	void BitmapRenderer::drawOutline(const Rect16& rect)
@@ -175,7 +186,26 @@ namespace BadgerGL
 			return;
 		}
 
-		const bool success = m_Surface->fillRect(localRect.rect2DCast<URect16>(), colour);
+		URect16 screenRect(localRect.rect2DCast<URect16>());
+
+		const bool success = m_Surface->fillRect(screenRect, colour);
 		BGRS_ASSERTD(success, "Failed to draw filled rect into bitmap.");
+
+		if ( success )
+		{
+			addToDirtyArea(screenRect);
+		}
+	}
+
+	void BitmapRenderer::addToDirtyArea(const URect16& area)
+	{
+		if ( m_DirtyArea.isNull() )
+		{
+			m_DirtyArea = area;
+		}
+		else
+		{
+			BadgerMath::enlarge(m_DirtyArea, area);
+		}
 	}
 }

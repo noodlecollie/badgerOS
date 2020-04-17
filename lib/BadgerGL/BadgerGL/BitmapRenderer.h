@@ -20,6 +20,8 @@ namespace BadgerGL
 		void setBitmap(BitmapSurface* bitmap);
 		bool hasBitmap() const;
 
+		const URect16& dirtyArea() const;
+
 		ShapeDrawStyle shapeDrawStyle() const;
 		void setShapeDrawStyle(ShapeDrawStyle style);
 
@@ -62,9 +64,10 @@ namespace BadgerGL
 	private:
 		void drawOutline(const Rect16& rect);
 		void drawFilled(const Rect16& rect, uint32_t colour);
+		void addToDirtyArea(const URect16& area);
 
 		BitmapSurface* m_Surface = nullptr;
-		Rect16 m_DirtyArea;
+		URect16 m_DirtyArea;
 		ShapeDrawStyle m_ShapeDrawStyle = ShapeDrawStyle::Outline;
 		uint32_t m_PrimaryColour = 0xFFFFFFFF;
 		uint32_t m_SecondaryColour = 0x00000000;

@@ -454,6 +454,7 @@ namespace BadgerGL
 		// It is the caller's responsibility to ensure that the passed rectangle fits on the bitmap.
 		// If this is not the case, nothing will be drawn and false will be returned.
 		// This function writes directly to the pixel data and ignores the palette.
+		// Returns whether the bitmap was actually modified.
 		inline bool fillRect(const SurfaceRect& rect, uint32_t colour)
 		{
 			if ( !isValid() )
@@ -464,8 +465,7 @@ namespace BadgerGL
 
 			if ( rect.isEmpty() )
 			{
-				// Technically, this is drawn correctly (ie. not at all).
-				return true;
+				return false;
 			}
 
 			const SurfaceVector rectMin = rect.min();
@@ -512,6 +512,7 @@ namespace BadgerGL
 		// It is assumed that the byte depth of the incoming data matches that of the bitmap.
 		// The incoming data length is truncated to be a multiple of the byte depth.
 		// This function writes directly to the pixel data and ignores the palette.
+		// Returns whether the bitmap was actually modified.
 		inline bool blitHLine(const SurfaceVector& pos, const uint8_t* data, size_t dataSize)
 		{
 			if ( !data )
@@ -522,13 +523,7 @@ namespace BadgerGL
 			const uint8_t bDepth = byteDepth();
 			const size_t numPixelsOfData = dataSize / bDepth;
 
-			if ( numPixelsOfData < 1 )
-			{
-				// Nothing to draw.
-				return true;
-			}
-
-			if ( pos.x() + numPixelsOfData > width() )
+			if ( numPixelsOfData < 1 || pos.x() + numPixelsOfData > width() )
 			{
 				return false;
 			}

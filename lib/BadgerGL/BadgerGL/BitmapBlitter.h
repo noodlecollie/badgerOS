@@ -20,7 +20,10 @@ namespace BadgerGL
 		// Destination bitmaps that use palettes are not supported.
 		void setDest(BitmapSurface* dest, const Rect16& rect);
 
-		void blit();
+		const SurfaceRect& sourceRect() const;
+		const Rect16& destRect() const;
+
+		bool blit();
 
 	private:
 		void chooseRects();

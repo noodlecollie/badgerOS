@@ -43,6 +43,20 @@ namespace BadgerMath
 		rect.setP1(max);
 	}
 
+	// Enlarges rect so that it is the union of itself and other.
+	template<typename T>
+	inline void enlarge(Rect2D<T>& rect, const Rect2D<T>& other)
+	{
+		Vector2D<T> min = rect.min();
+		Vector2D<T> max = rect.max();
+
+		min.ensureAxesNoGreaterThan(other.min());
+		max.ensureAxesNoLessThan(other.max());
+
+		rect.setP0(min);
+		rect.setP1(max);
+	}
+
 	// Adjusts the rect so that its top left corner is located at pos.
 	// The dimensions of the rect remain the same.
 	template<typename T>

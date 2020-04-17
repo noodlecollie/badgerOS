@@ -16,11 +16,21 @@ namespace BadgerGL
 		m_DestRect = rect;
 	}
 
-	void BitmapBlitter::blit()
+	const BitmapBlitter::SurfaceRect& BitmapBlitter::sourceRect() const
+	{
+		return m_SourceRect;
+	}
+
+	const Rect16& BitmapBlitter::destRect() const
+	{
+		return m_DestRect;
+	}
+
+	bool BitmapBlitter::blit()
 	{
 		if ( !m_Source || !m_Dest || !m_Source->isValid() || !m_Dest->isValid() || m_Dest->hasPalette() )
 		{
-			return;
+			return false;
 		}
 
 		chooseRects();
@@ -28,7 +38,7 @@ namespace BadgerGL
 
 		if ( m_SourceRect.isEmpty() || m_DestRect.isEmpty() )
 		{
-			return;
+			return false;
 		}
 
 		if ( !m_Source->hasPalette() && *m_Source->pixelFormat() == *m_Dest->pixelFormat() )
@@ -39,6 +49,8 @@ namespace BadgerGL
 		{
 			blitNonMatchingPixelFormats();
 		}
+
+		return true;
 	}
 
 	void BitmapBlitter::chooseRects()
