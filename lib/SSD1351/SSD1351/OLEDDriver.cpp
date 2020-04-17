@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <Arduino.h>
 #include <SPI.h>
 #include <CoreUtil/ArrayUtil.h>
@@ -166,7 +167,7 @@ namespace SSD1351
 			m_RowData[x] = colour;
 		}
 
-		ramAddress();
+		ramAddressSection();
 		writeCommand(Command::WriteRam);
 
 		for ( uint32_t y = 0; y < OLED_HEIGHT; ++y )
@@ -182,7 +183,7 @@ namespace SSD1351
 			return;
 		}
 
-		ramAddress();
+		ramAddressSection();
 		writeCommand(Command::WriteRam);
 
 		const uint16_t* cursor = reinterpret_cast<const uint16_t*>(data.constBytes());
@@ -195,6 +196,39 @@ namespace SSD1351
 			}
 
 			writeDataBytes(reinterpret_cast<const uint8_t*>(m_RowData), sizeof(m_RowData));
+		}
+	}
+
+	void OLEDDriver::clearScreenSectionToImage(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const CoreUtil::ConstBlob& data)
+	{
+		if ( !m_HasConfig ||
+			 !data.isValid() ||
+			 x + width > OLED_WIDTH ||
+			 y + height > OLED_HEIGHT )
+		{
+			return;
+		}
+
+		const size_t bytesToWrite = width * height * OLED_DEPTH_BYTES;
+
+		if ( data.length() < bytesToWrite )
+		{
+			return;
+		}
+
+		ramAddressSection(x, y, width, height);
+		writeCommand(Command::WriteRam);
+
+		const uint16_t* cursor = reinterpret_cast<const uint16_t*>(data.constBytes());
+
+		for ( uint32_t row = 0; row < height; ++row )
+		{
+			for ( uint32_t col = 0; col < width; ++col )
+			{
+				m_RowData[col] = toSerialBytes(*(cursor++));
+			}
+
+			writeDataBytes(reinterpret_cast<const uint8_t*>(m_RowData), width * OLED_DEPTH_BYTES);
 		}
 	}
 
@@ -237,9 +271,9 @@ namespace SSD1351
 		writeCommand(Command::DisplayOn);
 	}
 
-	void OLEDDriver::ramAddress()
+	void OLEDDriver::ramAddressSection(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 	{
-		writeCommand(Command::SetColumn, 0x00, OLED_WIDTH - 1);
-		writeCommand(Command::SetRow, 0x00, OLED_HEIGHT - 1);
+		writeCommand(Command::SetColumn, x, x + width - 1);
+		writeCommand(Command::SetRow, y, y + height - 1);
 	}
 }

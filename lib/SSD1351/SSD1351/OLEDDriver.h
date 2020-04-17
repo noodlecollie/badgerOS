@@ -40,10 +40,16 @@ namespace SSD1351
 		// If the data is not at least OLED_RAM_SIZE_BYTES in length, this function will do nothing.
 		void clearScreenToImage(const CoreUtil::ConstBlob& data);
 
+		// If the data is not at least (width * height * OLED_DEPTH_BYTES) in length, or the defined rectangle is not within
+		// the bounds of the screen, this function will do nothing.
+		void clearScreenSectionToImage(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const CoreUtil::ConstBlob& data);
+
 	private:
 		void setUpPins();
 		void defaultDeviceInit();
-		void ramAddress();
+
+		// Assumes that all values are valid for the screen dimensions.
+		void ramAddressSection(uint8_t x = 0, uint8_t y = 0, uint8_t width = OLED_WIDTH, uint8_t height = OLED_HEIGHT);
 
 		Config m_Config;
 		bool m_HasConfig = false;

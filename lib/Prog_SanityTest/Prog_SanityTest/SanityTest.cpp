@@ -6,7 +6,7 @@
 #include <CoreUtil/Blob.h>
 #include <PlatformConfig/Platform.h>
 #include <PlatformConfig/Versions.h>
-#include <SSD1351/CustomDriver/OLEDDriver.h>
+#include <SSD1351/OLEDDriver.h>
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/ColourScheme.h>

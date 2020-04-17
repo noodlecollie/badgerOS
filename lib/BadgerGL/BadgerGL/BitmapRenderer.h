@@ -43,6 +43,9 @@ namespace BadgerGL
 
 		void draw(const Rect16& rect);
 
+		void fillWithPrimaryColour();
+		void fillWithSecondaryColour();
+
 		// Tiles the given bitmap over the area specified by destRect.
 		// If sourceRect is not null, it defines the portion of the source bitmap that will be used.
 		// Otherwise, the entire bitmap will be used.
@@ -62,6 +65,7 @@ namespace BadgerGL
 		}
 
 	private:
+		void fill(uint32_t colour);
 		void drawOutline(const Rect16& rect);
 		void drawFilled(const Rect16& rect, uint32_t colour);
 		void addToDirtyArea(const URect16& area);

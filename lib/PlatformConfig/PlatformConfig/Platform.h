@@ -1,7 +1,7 @@
 #pragma once
 
 #include <CoreUtil/BgrsAssert.h>
-#include <SSD1351/CustomDriver/OLEDDriver.h>
+#include <SSD1351/OLEDDriver.h>
 #include "Serial.h"
 #include "SPI.h"
 #include "ChipSelect.h"

@@ -114,6 +114,26 @@ namespace BadgerGL
 		}
 	}
 
+	void BitmapRenderer::fillWithPrimaryColour()
+	{
+		if ( !m_Surface )
+		{
+			return;
+		}
+
+		fill(m_PrimaryColour);
+	}
+
+	void BitmapRenderer::fillWithSecondaryColour()
+	{
+		if ( !m_Surface )
+		{
+			return;
+		}
+
+		fill(m_SecondaryColour);
+	}
+
 	void BitmapRenderer::blit(const ConstBitmapSurface& source,
 							  const Rect16& destRect,
 							  const SurfaceRect& sourceRect)
@@ -133,6 +153,12 @@ namespace BadgerGL
 			// may have been trimmed during the operation.
 			addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
 		}
+	}
+
+	void BitmapRenderer::fill(uint32_t colour)
+	{
+		m_Surface->fill(colour);
+		m_DirtyArea = m_Surface->bounds();
 	}
 
 	void BitmapRenderer::drawOutline(const Rect16& rect)
