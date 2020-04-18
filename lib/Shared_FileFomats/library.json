@@ -1,0 +1,13 @@
+{
+	"srcFilter":
+	[
+		"+<*>",
+		"-<Shared_FileFormats/Writers>"
+	],
+
+	"dependencies":
+	[
+		{ "name": "CoreUtil" },
+		{ "name": "BadgerGL" }
+	]
+}
