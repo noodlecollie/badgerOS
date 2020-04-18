@@ -1,50 +1,50 @@
-#include "Image.h"
+#include "Bitmap.h"
 
 namespace BadgerUI
 {
-	Image::Image() :
+	Bitmap::Bitmap() :
 		BaseUIDrawable()
 	{
-		setDrawCallback(&Image::privateDraw);
+		setDrawCallback(&Bitmap::privateDraw);
 	}
 
-	const BadgerGL::ConstBitmapSurface* Image::bitmap() const
+	const BadgerGL::ConstBitmapSurface* Bitmap::bitmap() const
 	{
 		return m_Bitmap;
 	}
 
-	void Image::setBitmap(const BadgerGL::ConstBitmapSurface* inBitmap)
+	void Bitmap::setBitmap(const BadgerGL::ConstBitmapSurface* inBitmap)
 	{
 		setPropertyIfDifferent(m_Bitmap, inBitmap);
 	}
 
-	const Image::SourceRect& Image::sourceRect() const
+	const Bitmap::SourceRect& Bitmap::sourceRect() const
 	{
 		return m_SourceRect;
 	}
 
-	void Image::setSourceRect(const SourceRect& rect)
+	void Bitmap::setSourceRect(const SourceRect& rect)
 	{
 		setPropertyIfDifferent(m_SourceRect, rect);
 	}
 
-	UIPoint Image::position() const
+	UIPoint Bitmap::position() const
 	{
 		return rect().min();
 	}
 
-	void Image::setPosition(const UIPoint& pos)
+	void Bitmap::setPosition(const UIPoint& pos)
 	{
 		setRectInternal(UIRect(pos, 0, 0));
 	}
 
-	void Image::setOverrideDimensions(const UIDimensions& dim)
+	void Bitmap::setOverrideDimensions(const UIDimensions& dim)
 	{
 		const UIPoint pos = position();
 		setRectInternal(UIRect(pos, pos + dim.vector2DCast<UIPoint>()));
 	}
 
-	void Image::privateDraw(const UIDrawContext& context)
+	void Bitmap::privateDraw(const UIDrawContext& context)
 	{
 		if ( !m_Bitmap || !m_Bitmap->isValid() )
 		{

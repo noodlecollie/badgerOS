@@ -243,6 +243,12 @@ namespace BadgerGL
 				return nullptr;
 			}
 
+			if ( x >= m_Dimensions.x() || y >= m_Dimensions.y() )
+			{
+				BGRS_ASSERTD(false, "Pixel co-ordinates were out of range.");
+				return nullptr;
+			}
+
 			return static_cast<const T*>(m_Pixels) + dataOffset(x, y);
 		}
 
@@ -251,6 +257,12 @@ namespace BadgerGL
 			if ( !isValid() )
 			{
 				BGRS_ASSERTD(false, "Bitmap was not valid.");
+				return nullptr;
+			}
+
+			if ( x >= m_Dimensions.x() || y >= m_Dimensions.y() )
+			{
+				BGRS_ASSERTD(false, "Pixel co-ordinates were out of range.");
 				return nullptr;
 			}
 

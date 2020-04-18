@@ -1,11 +1,12 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 namespace CoreUtil
 {
 	template<typename T>
-	static inline T rotateBytesDown(T data, uint8_t width = sizeof(T))
+	static constexpr inline T rotateBytesDown(T data, uint8_t width = sizeof(T))
 	{
 		// We want the following to happen, where '*' is data we don't care about:
 
@@ -45,5 +46,21 @@ namespace CoreUtil
 			(	// Lower bytes
 				(data & 0xFF) << (8 * (width - 1))
 			);
+	}
+
+	// Assumes buffers are large enough for the specified number of bits.
+	static inline void writeBits(uint8_t* dest, const uint8_t* source, size_t numBits)
+	{
+		while ( numBits >= 8 )
+		{
+			*(dest++) = *(source++);
+			numBits -= 8;
+		}
+
+		if ( numBits > 0 )
+		{
+			// Shift up and down to ensure that the remaining bits are zeroed.
+			*dest = ((*source) << numBits) >> numBits;
+		}
 	}
 }

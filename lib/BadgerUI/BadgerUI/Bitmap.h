@@ -1,17 +1,18 @@
 #pragma once
 
 #include <BadgerGL/BitmapSurface.h>
+#include <BadgerGL/BitmapMask.h>
 #include "BaseUIDrawable.h"
 #include "Types.h"
 
 namespace BadgerUI
 {
-	class Image : public BaseUIDrawable
+	class Bitmap : public BaseUIDrawable
 	{
 	public:
 		using SourceRect = BadgerGL::ConstBitmapSurface::SurfaceRect;
 
-		Image();
+		Bitmap();
 
 		const BadgerGL::ConstBitmapSurface* bitmap() const;
 		void setBitmap(const BadgerGL::ConstBitmapSurface* inBitmap);
@@ -33,7 +34,7 @@ namespace BadgerUI
 	private:
 		void privateDraw(const UIDrawContext& context);
 
-		const BadgerGL::ConstBitmapSurface* m_Bitmap;
+		const BadgerGL::ConstBitmapSurface* m_Bitmap = nullptr;
 		SourceRect m_SourceRect;
 	};
 }

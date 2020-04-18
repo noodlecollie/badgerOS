@@ -2,6 +2,7 @@
 
 #include <BadgerMath/Rect2D.h>
 #include "BitmapSurface.h"
+#include "BitmapMask.h"
 #include "Defs.h"
 
 namespace BadgerGL
@@ -62,6 +63,21 @@ namespace BadgerGL
 						 const BitmapSurface::SurfaceRect& sourceRect = BitmapSurface::SurfaceRect())
 		{
 			blit(source, Rect16(destPos, 0, 0), sourceRect);
+		}
+
+		// Same as blit(), but uses a bitmap mask. Draws in the primary colour.
+		void blitMask(const BitmapMask& source,
+					  const Rect16& destRect,
+					  const BitmapMask::SurfaceRect& sourceRect = BitmapMask::SurfaceRect(),
+					  bool drawSecondaryColour = false);
+
+		// Same as above, but the dest rect dimensions are taken from the source rect.
+		inline void blitMask(const BitmapMask& source,
+							 const Point16& destPos,
+							 const BitmapMask::SurfaceRect& sourceRect = BitmapMask::SurfaceRect(),
+							 bool drawSecondaryColour = false)
+		{
+			blitMask(source, Rect16(destPos, 0, 0), sourceRect, drawSecondaryColour);
 		}
 
 	private:

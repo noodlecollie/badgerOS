@@ -1,6 +1,7 @@
 #include <BadgerMath/Rect2DOperations.h>
 #include "BitmapRenderer.h"
 #include "BitmapBlitter.h"
+#include "BitmapMaskBlitter.h"
 
 namespace BadgerGL
 {
@@ -146,6 +147,32 @@ namespace BadgerGL
 		BitmapBlitter blitter;
 		blitter.setSource(&source, sourceRect);
 		blitter.setDest(m_Surface, destRect + m_DrawingOffset);
+
+		if ( blitter.blit() )
+		{
+			// We use the dest rect as provided by the blitter, as it
+			// may have been trimmed during the operation.
+			addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
+		}
+	}
+
+	void BitmapRenderer::blitMask(const BitmapMask& source,
+								  const Rect16& destRect,
+								  const BitmapMask::SurfaceRect& sourceRect,
+								  bool drawSecondaryColour)
+	{
+		if ( !m_Surface )
+		{
+			return;
+		}
+
+		BitmapMaskBlitter blitter;
+
+		blitter.setSource(&source, sourceRect);
+		blitter.setDest(m_Surface, destRect + m_DrawingOffset);
+		blitter.setPrimaryColour(m_PrimaryColour);
+		blitter.setSecondaryColour(m_SecondaryColour);
+		blitter.setDrawSecondaryColour(drawSecondaryColour);
 
 		if ( blitter.blit() )
 		{

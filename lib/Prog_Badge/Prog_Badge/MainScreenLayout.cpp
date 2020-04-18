@@ -1,4 +1,5 @@
 #include <Resources/Images/Missing.h>
+#include <Resources/Images/ChequerboardMask.h>
 #include "MainScreenLayout.h"
 
 namespace Badge
@@ -30,9 +31,10 @@ namespace Badge
 		m_PlaceholderCharacterImage.setOverrideDimensions(UIDimensions(m_Width, m_MessageAreaSeparator.rect().min().y() - STATUS_AREA_HEIGHT));
 		addItemToTail(&m_PlaceholderCharacterImage);
 
-		m_PlaceholderScrollingText.setRect(UIRect(UIPoint(0, m_MessageAreaSeparator.rect().max().y()), m_Width, m_Height - m_MessageAreaSeparator.rect().max().y()));
-		m_PlaceholderScrollingText.setDrawStyle(ShapeDrawStyle::Filled);
-		m_PlaceholderScrollingText.setFillColour(ColourProperty(ColourScheme::Colour_Primary));
+		m_PlaceholderScrollingText.setBitmap(&Resources::ChequerboardMask::BITMAP);
+		m_PlaceholderScrollingText.setPosition(UIPoint(0, m_MessageAreaSeparator.rect().max().y()));
+		m_PlaceholderScrollingText.setOverrideDimensions(UIDimensions(m_Width, m_Height - m_MessageAreaSeparator.rect().max().y()));
+		m_PlaceholderScrollingText.setPrimaryColour(ColourProperty(ColourScheme::Colour_Custom, col24To16(0x0000FF)));
 		addItemToTail(&m_PlaceholderScrollingText);
 	}
 }

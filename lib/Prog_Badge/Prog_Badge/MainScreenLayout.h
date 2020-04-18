@@ -2,7 +2,8 @@
 
 #include <BadgerUI/BaseLayout.h>
 #include <BadgerUI/Box.h>
-#include <BadgerUI/Image.h>
+#include <BadgerUI/Bitmap.h>
+#include <BadgerUI/MaskedBitmap.h>
 
 namespace Badge
 {
@@ -19,7 +20,7 @@ namespace Badge
 		BadgerUI::Box m_MessageAreaSeparator;
 
 		// Placeholders - to be replaced once we have the correct things up and running.
-		BadgerUI::Image m_PlaceholderCharacterImage;
-		BadgerUI::Box m_PlaceholderScrollingText;
+		BadgerUI::Bitmap m_PlaceholderCharacterImage;
+		BadgerUI::MaskedBitmap m_PlaceholderScrollingText;
 	};
 }
