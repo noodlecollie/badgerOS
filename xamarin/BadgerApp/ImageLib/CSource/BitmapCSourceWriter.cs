@@ -16,6 +16,7 @@ namespace ImageLib.CSource
 			public string IncludePath;
 			public string ClassName;
 			public string ConstructionArgs;
+			public byte ByteDepth;
 		}
 
 		public BitmapCSourceFile File { get; set; }
@@ -108,8 +109,7 @@ namespace ImageLib.CSource
 			WriteWithIndent($"static constexpr size_t HEIGHT = {File.Height};");
 			WriteBlankLine();
 
-			WriteWithIndent($"static constexpr size_t DATA_LENGTH = {File.Data.Length};");
-			WriteWithIndent("static constexpr uint8_t DATA[DATA_LENGTH] =");
+			WriteWithIndent($"static constexpr uint8_t DATA[WIDTH * HEIGHT * {m_FileTypeInfo.ByteDepth}] =");
 			WriteWithIndent("{");
 
 			IncreaseIndent();
@@ -169,7 +169,10 @@ namespace ImageLib.CSource
 
 		private static FileTypeInfo GetFileTypeInfo(FileFormatDefs.FileType type)
 		{
-			FileTypeInfo info = new FileTypeInfo();
+			FileTypeInfo info = new FileTypeInfo
+			{
+				Type = type
+			};
 
 			switch ( type )
 			{
@@ -178,6 +181,7 @@ namespace ImageLib.CSource
 					info.ClassName = "BadgerGL::BitmapMask";
 					info.IncludePath = "BadgerGL/BitmapMask.h";
 					info.ConstructionArgs = "WIDTH, HEIGHT, DATA";
+					info.ByteDepth = 1;
 					break;
 				}
 
@@ -186,6 +190,7 @@ namespace ImageLib.CSource
 					info.ClassName = "BadgerGL::ConstBitmapSurface";
 					info.IncludePath = "BadgerGL/BitmapSurface.h";
 					info.ConstructionArgs = "WIDTH, HEIGHT, &BadgerGL::PIXELFORMAT_65K, DATA";
+					info.ByteDepth = 2;
 					break;
 				}
 

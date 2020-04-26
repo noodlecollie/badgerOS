@@ -29,7 +29,7 @@ namespace ImageLib
 						builder.Append(", ");
 					}
 
-					builder.AppendFormat("0x{0:X2}", data[index]);
+					builder.AppendFormat("0x{0:X2}", data[offset + index]);
 				}
 
 				string finalString = builder.ToString();
