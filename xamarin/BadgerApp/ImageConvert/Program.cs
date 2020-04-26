@@ -12,7 +12,7 @@ namespace ImageConvert
 {
 	class Program
 	{
-		class Options
+		class CommonOptions
 		{
 			[Option('i', "input", Required = true, HelpText = "Input file to convert.")]
 			public string InputFile { get; set; }
@@ -20,7 +20,7 @@ namespace ImageConvert
 			[Option('o', "output", Required = true, HelpText = "Destination file to create.")]
 			public string OutputFile { get; set; }
 
-			[Option('f', "format", Required = true, HelpText = "Format of the output file.")]
+			[Option('f', "format", Required = true, HelpText = "Format of the output file, eg Bitmap65K.")]
 			public string Format { get; set; }
 
 			public FileFormatDefs.FileType? OutputType = null;
@@ -38,18 +38,28 @@ namespace ImageConvert
 			}
 		}
 
+		[Verb("toheader", HelpText = "Outputs the bitmap as a C++ header file containing a constexpr array of data.")]
+		class HeaderOutputOptions : CommonOptions
+		{
+			[Option("namespace", Required = true, HelpText = "Name of outer namespace within which the bitmap file data resides.")]
+			public string NamespaceName { get; set; }
+
+			[Option("bitmap-name", Required = true, HelpText = "Name that the bitmap will be known by in code.")]
+			public string BitmapName { get; set; }
+		}
+
 		static int Main(string[] args)
 		{
-			var result = Parser.Default.ParseArguments<Options>(args);
+			return Parser.Default.ParseArguments<HeaderOutputOptions, object>(args)
+				.MapResult(
+					(HeaderOutputOptions opts) => RunConvertToHeader(opts),
+					errs => 1);
+		}
 
-			if ( result.GetType() != typeof(Parsed<Options>) )
-			{
-				return 1;
-			}
-
+		static int RunConvertToHeader(HeaderOutputOptions cmdOptions)
+		{
 			try
 			{
-				Options cmdOptions = ((Parsed<Options>)result).Value;
 				cmdOptions.ComputeProperties();
 
 				Bitmap bitmap = LoadInputFile(cmdOptions.InputFile);
@@ -69,8 +79,8 @@ namespace ImageConvert
 					ImageLib.CSource.BitmapCSourceWriter writer = new ImageLib.CSource.BitmapCSourceWriter
 					{
 						File = outFile,
-						BitmapName = "TEST", // FIXME
-						OuterNamespace = "TESTNAMESPACE", // FIXME
+						BitmapName = cmdOptions.BitmapName,
+						OuterNamespace = cmdOptions.NamespaceName,
 						TargetFileType = cmdOptions.OutputType.Value
 					};
 
@@ -78,14 +88,14 @@ namespace ImageConvert
 				}
 
 				Console.WriteLine("Done.");
+				return 0;
 			}
 			catch ( Exception ex )
 			{
 				Console.Error.WriteLine($"An error occurred during execution. {ex.Message}");
-				return 1;
 			}
 
-			return 0;
+			return 1;
 		}
 
 		static byte[] ConvertBitmapPixels(Bitmap bitmap, FileFormatDefs.FileType targetType)
