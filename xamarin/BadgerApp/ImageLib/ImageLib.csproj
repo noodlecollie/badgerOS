@@ -43,6 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapOperations.cs" />
+    <Compile Include="CSource\BitmapCSourceFile.cs" />
+    <Compile Include="CSource\BitmapCSourceWriter.cs" />
+    <Compile Include="CSource\CSourceUtils.cs" />
+    <Compile Include="FileFormatDefs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
