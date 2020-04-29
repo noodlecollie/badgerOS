@@ -11,6 +11,7 @@ namespace ImageLib
 		public enum FileType
 		{
 			Bitmap65K,
+			Bitmap65KPalette,
 			BitmapMask
 		}
 	}

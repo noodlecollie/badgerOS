@@ -20,7 +20,7 @@ namespace ImageConvert
 			[Option('o', "output", Required = true, HelpText = "Destination file to create.")]
 			public string OutputFile { get; set; }
 
-			[Option('f', "format", Required = true, HelpText = "Format of the output file, eg Bitmap65K.")]
+			[Option('f', "format", Required = true, HelpText = "Format of the output file. Run using 'list-formats' for a list of possible values.")]
 			public string Format { get; set; }
 
 			public FileFormatDefs.FileType? OutputType = null;
@@ -48,12 +48,26 @@ namespace ImageConvert
 			public string BitmapName { get; set; }
 		}
 
+		[Verb("list-formats", HelpText = "Lists possible values accepted by the --format option.")]
+		class ListFormatsOptions
+		{
+		}
+
 		static int Main(string[] args)
 		{
-			return Parser.Default.ParseArguments<HeaderOutputOptions, object>(args)
+			return Parser.Default.ParseArguments<HeaderOutputOptions, ListFormatsOptions>(args)
 				.MapResult(
+					(ListFormatsOptions opts) => RunListFormats(opts),
 					(HeaderOutputOptions opts) => RunConvertToHeader(opts),
 					errs => 1);
+		}
+
+		static int RunListFormats(ListFormatsOptions cmdOptions)
+		{
+			Console.Write("Available formats:\n  ");
+			Console.WriteLine(string.Join("\n  ", Enum.GetNames(typeof(FileFormatDefs.FileType))));
+
+			return 0;
 		}
 
 		static int RunConvertToHeader(HeaderOutputOptions cmdOptions)

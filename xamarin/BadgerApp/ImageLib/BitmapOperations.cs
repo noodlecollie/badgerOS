@@ -17,11 +17,20 @@ namespace ImageLib
 
 			if ( bitmap.PixelFormat != PixelFormat.Format24bppRgb && bitmap.PixelFormat != PixelFormat.Format32bppArgb )
 			{
-				throw new ArgumentException("The provided bitmap's pixel format was not supported.");
+				throw new ArgumentException("The provided bitmap's pixel format is not supported.");
 			}
 
 			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			BitmapData bmpData = bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+
+			if ( bmpData.Stride < 0 )
+			{
+				bitmap.UnlockBits(bmpData);
+
+				// Negative stride means that this is a bottom-up bitmap.
+				// We can support these later if we need to.
+				throw new ArgumentException("Bitmaps with negative data strides are not currently supported.");
+			}
 
 			byte[] bmpPixels = new byte[bmpData.Stride * bmpData.Height];
 			Marshal.Copy(bmpData.Scan0, bmpPixels, 0, bmpPixels.Length);
@@ -51,34 +60,50 @@ namespace ImageLib
 
 			if ( bitmap.PixelFormat != PixelFormat.Format24bppRgb && bitmap.PixelFormat != PixelFormat.Format32bppArgb )
 			{
-				throw new ArgumentException("The provided bitmap's pixel format was not supported.");
+				throw new ArgumentException("The provided bitmap's pixel format is not supported.");
 			}
 
 			Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
 			BitmapData bmpData = bitmap.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 
+			if ( bmpData.Stride < 0 )
+			{
+				bitmap.UnlockBits(bmpData);
+
+				// Negative stride means that this is a bottom-up bitmap.
+				// We can support these later if we need to.
+				throw new ArgumentException("Bitmaps with negative data strides are not currently supported.");
+			}
+
 			byte[] bmpPixels = new byte[bmpData.Stride * bmpData.Height];
 			Marshal.Copy(bmpData.Scan0, bmpPixels, 0, bmpPixels.Length);
 			bitmap.UnlockBits(bmpData);
 
-			byte[] outPixels = new byte[bitmap.Width * bitmap.Height * outPixelDepth];
-			
-			for ( uint y = 0; y < bitmap.Height; ++y )
+			return RawDataTo65KColour(bmpPixels, (uint)bitmap.Width, (uint)bitmap.Height, (uint)bmpData.Stride, inPixelDepth, outPixelDepth);
+		}
+
+		static byte[] RawDataTo65KColour(byte[] sourceData, uint width, uint height, uint sourceStride, uint sourceByteDepth, uint destByteDepth)
+		{
+			uint destDataLength = width * height * destByteDepth;
+
+			byte[] outData = new byte[destDataLength];
+
+			for ( uint y = 0; y < height; ++y )
 			{
-				for ( uint x = 0; x < bitmap.Width; ++x )
+				for ( uint x = 0; x < width; ++x )
 				{
-					uint sourcePixelIndex = IndexBeginningOfPixel(x, y, (uint)bmpData.Stride, inPixelDepth);
+					uint sourcePixelIndex = IndexBeginningOfPixel(x, y, sourceStride, sourceByteDepth);
 
-					// Remember endianness! 0x*RGB corresponds to blue being in the lowest channel.
-					ushort col16bit = Col24To16(Col24(bmpPixels[sourcePixelIndex + 2], bmpPixels[sourcePixelIndex + 1], bmpPixels[sourcePixelIndex]));
+					// Remember endianness! 0x*RGB corresponds to blue being in the lowest byte.
+					ushort col16bit = Col24To16(Col24(sourceData[sourcePixelIndex + 2], sourceData[sourcePixelIndex + 1], sourceData[sourcePixelIndex]));
 
-					uint destPixelIndex = ((y * (uint)bitmap.Width) + x) * outPixelDepth;
-					outPixels[destPixelIndex] = (byte)(col16bit & 0x00FF);
-					outPixels[destPixelIndex + 1] = (byte)((col16bit & 0xFF00) >> 8);
+					uint destPixelIndex = ((y * width) + x) * destByteDepth;
+					outData[destPixelIndex] = (byte)(col16bit & 0x00FF);
+					outData[destPixelIndex + 1] = (byte)((col16bit & 0xFF00) >> 8);
 				}
 			}
 
-			return outPixels;
+			return outData;
 		}
 
 		// Single-channel colour.

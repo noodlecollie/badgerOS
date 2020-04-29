@@ -87,7 +87,27 @@ namespace BadgerGL
 		};
 
 		// Constexpr constructors assume that all inputs are valid.
-		constexpr ConstBitmapSurface(uint16_t width, uint16_t height, const PixelFormat* pixFmt, const void* data) :
+		constexpr ConstBitmapSurface(uint16_t width,
+									 uint16_t height,
+									 const void* data,
+									 const PixelFormat* palettePixFmt,
+									 size_t paletteLength,
+									 const void* paletteData) :
+			m_Dimensions(width, height),
+			m_PixelFormat(&PIXELFORMAT_MONO256),
+			m_Pixels(data),
+			m_PaletteLengthMinusOne(paletteLength - 1),
+			m_PalettePixelFormat(palettePixFmt),
+			m_Palette(paletteData)
+		{
+		}
+
+		// For bitmaps with a palette.
+		// Constexpr constructors assume that all inputs are valid.
+		constexpr ConstBitmapSurface(uint16_t width,
+									 uint16_t height,
+									 const PixelFormat* pixFmt,
+									 const void* data) :
 			m_Dimensions(width, height),
 			m_PixelFormat(pixFmt),
 			m_Pixels(data)
