@@ -77,14 +77,8 @@ namespace ImageConvert
 				cmdOptions.ComputeProperties();
 
 				Bitmap bitmap = LoadInputFile(cmdOptions.InputFile);
-				byte[] pixels = ConvertBitmapPixels(bitmap, cmdOptions.OutputType.Value);
-
-				ImageLib.CSource.BitmapCSourceFile outFile = new ImageLib.CSource.BitmapCSourceFile
-				{
-					Width = (ushort)bitmap.Width,
-					Height = (ushort)bitmap.Height,
-					Data = pixels
-				};
+				ImageLib.Images.MutableImage image = ConvertToImage(bitmap, cmdOptions.OutputType.Value);
+				ImageLib.CSource.BitmapCSourceFile outFile = ImageLib.CSource.BitmapCSourceFactory.CreateCSourceFile(image, cmdOptions.OutputType.Value);
 
 				Console.WriteLine($"Writing to output file: {cmdOptions.OutputFile}");
 
@@ -112,25 +106,28 @@ namespace ImageConvert
 			return 1;
 		}
 
-		static byte[] ConvertBitmapPixels(Bitmap bitmap, FileFormatDefs.FileType targetType)
+		static ImageLib.Images.MutableImage ConvertToImage(Bitmap bitmap, FileFormatDefs.FileType fileType)
 		{
-			switch ( targetType )
+			switch ( fileType )
 			{
-				case FileFormatDefs.FileType.BitmapMask:
-				{
-					Console.WriteLine("Converting input file to a binary bitmap.");
-					return BitmapOperations.ToBinary(bitmap);
-				}
-
 				case FileFormatDefs.FileType.Bitmap65K:
 				{
-					Console.WriteLine("Converting input file to a 65K-colour bitmap.");
-					return BitmapOperations.To65KColour(bitmap);
+					return ImageConversion.BitmapTo65K(bitmap);
+				}
+
+				case FileFormatDefs.FileType.Bitmap65KPalette:
+				{
+					return ImageConversion.BitmapTo65KPaletted(bitmap);
+				}
+
+				case FileFormatDefs.FileType.BitmapMask:
+				{
+					return ImageConversion.BitmapToMasked(bitmap);
 				}
 
 				default:
 				{
-					throw new ArgumentException($"Bitmap conversion to format '{targetType.ToString("G")}' is not yet supported.");
+					throw new NotImplementedException("The provided file type was not recognised,");
 				}
 			}
 		}

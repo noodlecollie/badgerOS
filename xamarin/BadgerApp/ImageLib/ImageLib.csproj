@@ -42,11 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitmapOperations.cs" />
+    <Compile Include="ColourConversion.cs" />
+    <Compile Include="CSource\BitmapCSourceFactory.cs" />
+    <Compile Include="ImageConversion.cs" />
     <Compile Include="CSource\BitmapCSourceFile.cs" />
     <Compile Include="CSource\BitmapCSourceWriter.cs" />
     <Compile Include="CSource\CSourceUtils.cs" />
     <Compile Include="FileFormatDefs.cs" />
+    <Compile Include="ImagePaletteBuilder.cs" />
+    <Compile Include="Images\IImageDataSource.cs" />
+    <Compile Include="Images\ImageDataSourceFactory.cs" />
+    <Compile Include="Images\TrueColourImageDataSource.cs" />
+    <Compile Include="Images\MutableImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -119,9 +119,9 @@ namespace ImageLib.CSource
 		{
 			if ( File.HasPalette )
 			{
-				WriteWithIndent($"static constexpr size_t {PROP_PALETTE_LENGTH} = {File.Palette.Length}");
-				WriteWithIndent($"static constexpr size_t {PROP_PALETTE_BYTE_DEPTH} = {m_FileTypeInfo.PaletteByteDepth}");
-				WriteWithIndent($"static constexpr size_t {PROP_PALETTE_DATA_LENGTH} = {PROP_PALETTE_LENGTH} * {PROP_PALETTE_BYTE_DEPTH}");
+				WriteWithIndent($"static constexpr size_t {PROP_PALETTE_LENGTH} = {File.Palette.Length / m_FileTypeInfo.PaletteByteDepth};");
+				WriteWithIndent($"static constexpr size_t {PROP_PALETTE_BYTE_DEPTH} = {m_FileTypeInfo.PaletteByteDepth};");
+				WriteWithIndent($"static constexpr size_t {PROP_PALETTE_DATA_LENGTH} = {PROP_PALETTE_LENGTH} * {PROP_PALETTE_BYTE_DEPTH};");
 				WriteBlankLine();
 
 				WriteWithIndent($"static constexpr uint8_t {PROP_PALETTE_DATA}[{PROP_PALETTE_DATA_LENGTH}] =");
