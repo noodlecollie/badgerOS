@@ -232,7 +232,7 @@ namespace ImageLib.CSource
 				{
 					info.ClassName = "BadgerGL::ConstBitmapSurface";
 					info.IncludePath = "BadgerGL/BitmapSurface.h";
-					info.ConstructionArgs = $"{PROP_BITMAP_WIDTH}, {PROP_BITMAP_HEIGHT}, {PROP_BITMAP_DATA}, &BadgerGL::PIXELFORMAT_65K, {PROP_PALETTE_DATA_LENGTH}, {PROP_PALETTE_DATA}";
+					info.ConstructionArgs = $"{PROP_BITMAP_WIDTH}, {PROP_BITMAP_HEIGHT}, {PROP_BITMAP_DATA}, &BadgerGL::PIXELFORMAT_65K, {PROP_PALETTE_LENGTH}, {PROP_PALETTE_DATA}";
 					info.BitmapByteDepth = 1;
 					info.PaletteByteDepth = 2;
 					break;

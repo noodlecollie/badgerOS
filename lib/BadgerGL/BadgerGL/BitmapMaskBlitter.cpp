@@ -1,6 +1,5 @@
 #include <CoreUtil/DataUtil.h>
 #include "BitmapMaskBlitter.h"
-#include "PixelFormatConverters.h"
 
 namespace BadgerGL
 {

@@ -205,6 +205,11 @@ namespace BadgerGL
 			return hasPalette() ? m_PalettePixelFormat->totalByteDepth() : 0;
 		}
 
+		inline const PixelFormat* palettePixelFormat() const
+		{
+			return hasPalette() ? m_PalettePixelFormat : nullptr;
+		}
+
 		inline SurfaceVector dimensions() const
 		{
 			return m_Dimensions;

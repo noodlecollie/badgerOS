@@ -26,7 +26,11 @@ namespace BadgerGL
 			return false;
 		}
 
-		if ( !m_Source->hasPalette() && *m_Source->pixelFormat() == *m_Dest->pixelFormat() )
+		const bool pixelFormatsMatch =
+			(m_Source->hasPalette() && *m_Source->palettePixelFormat() == *m_Dest->pixelFormat()) ||
+			(!m_Source->hasPalette() && *m_Source->pixelFormat() == *m_Dest->pixelFormat());
+
+		if ( pixelFormatsMatch )
 		{
 			blitMatchingPixelFormats();
 		}
@@ -40,8 +44,12 @@ namespace BadgerGL
 
 	void BitmapBlitter::blitMatchingPixelFormats()
 	{
+		const bool sourceUsesPalette = m_Source->hasPalette();
 		const uint8_t sourceByteDepth = m_Source->byteDepth();
+		const uint8_t sourcePaletteByteDepth = m_Source->paletteByteDepth();
+		const uint16_t sourcePaletteLength = m_Source->paletteLength();
 		const size_t sourceRectHeight = m_SourceRect.height();
+
 		const uint8_t destByteDepth = m_Dest->byteDepth();
 		const size_t destRectHeight = m_DestRect.height();
 
@@ -57,8 +65,37 @@ namespace BadgerGL
 
 			while ( destCursor < destEnd )
 			{
-				const size_t pixelDataBytes = std::min<size_t>(sourceEnd - sourceCursor, destEnd - destCursor);
-				memcpy(destCursor, sourceCursor, pixelDataBytes);
+				size_t sourceRowColourBytes = sourceEnd - sourceCursor;
+
+				if ( sourceUsesPalette )
+				{
+					// The distance between the pointers will be in palette indices (1 byte each).
+					// To work out how much space the colours will take, we need to multiply this by
+					// the palette byte depth.
+					sourceRowColourBytes *= sourcePaletteByteDepth;
+				}
+
+				const size_t pixelDataBytes = std::min<size_t>(sourceRowColourBytes, destEnd - destCursor);
+
+				if ( sourceUsesPalette )
+				{
+					for ( size_t bytesWritten = 0; bytesWritten < pixelDataBytes; bytesWritten += sourcePaletteByteDepth )
+					{
+						// Get the index into the palette from the image.
+						const uint8_t paletteIndex = *(sourceCursor++);
+
+						if ( paletteIndex < sourcePaletteLength )
+						{
+							// Get a pointer to the palette data and write this colour to the destination.
+							const uint8_t* const paletteColour = static_cast<const uint8_t*>(m_Source->constRawPaletteData(paletteIndex));
+							memcpy(destCursor + bytesWritten, paletteColour, sourcePaletteByteDepth);
+						}
+					}
+				}
+				else
+				{
+					memcpy(destCursor, sourceCursor, pixelDataBytes);
+				}
 
 				destCursor += pixelDataBytes;
 				sourceCursor = sourceBegin;

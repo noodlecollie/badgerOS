@@ -17,6 +17,7 @@ namespace BadgerGL
 
 	private:
 		void blitMatchingPixelFormats();
+		void blitMatchingPixelFormatsWithPalette();
 		void blitNonMatchingPixelFormats();
 
 		const ConstBitmapSurface* m_Source = nullptr;
