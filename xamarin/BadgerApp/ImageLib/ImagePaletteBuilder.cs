@@ -12,6 +12,7 @@ namespace ImageLib
 	{
 		private class ColourBucket
 		{
+			// Colour is 24-bit 0RGB
 			public uint Colour = 0;
 			public uint Count = 0;
 		}
@@ -77,14 +78,14 @@ namespace ImageLib
 			{
 				for ( uint x = 0; x < m_Source.Width; ++x )
 				{
-					uint colour = m_Source.GetPixelColour(x, y);
+					uint col24 = ColourConversion.ColARGBTo24(m_Source.GetPixelColour(x, y));
 					ColourBucket bucket = null;
 
-					if ( !buckets.TryGetValue(colour, out bucket) )
+					if ( !buckets.TryGetValue(col24, out bucket) )
 					{
 						bucket = new ColourBucket();
-						bucket.Colour = ColourConversion.ColARGBTo24(colour);
-						buckets[colour] = bucket;
+						bucket.Colour = col24;
+						buckets[col24] = bucket;
 					}
 
 					bucket.Count += 1;
