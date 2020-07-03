@@ -5,6 +5,7 @@
 #include "Serial.h"
 #include "SPI.h"
 #include "ChipSelect.h"
+#include "Power.h"
 
 namespace PlatformConfig
 {
@@ -15,6 +16,7 @@ namespace PlatformConfig
 		const SPIConfig* spiConfig;
 		const SPIPinConfig* spiPinConfig;
 		const ChipSelectConfig* chipSelectConfig;
+		const PowerConfig* powerConfig;
 	};
 
 	using ConfigFactoryFunc = void (*)(Config&);

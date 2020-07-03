@@ -26,6 +26,12 @@ namespace PlatformConfig
 		.oledScreenCSPin = 5
 	};
 
+	static constexpr PowerConfig POWER_CONFIG =
+	{
+		.batteryLevelPin = 35,
+		.externalPowerSensePin = 39
+	};
+
 	namespace OlimexESP32
 	{
 		void getConfig(Config& config)
@@ -37,6 +43,7 @@ namespace PlatformConfig
 			config.spiConfig = &SPI_CONFIG;
 			config.spiPinConfig = &SPI_PIN_CONFIG_VSPI;
 			config.chipSelectConfig = &CHIP_SELECT_CONFIG;
+			config.powerConfig = &POWER_CONFIG;
 		}
 	}
 }

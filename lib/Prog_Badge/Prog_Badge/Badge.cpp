@@ -49,6 +49,7 @@ namespace Badge
 
 		const CoreUtil::TimevalMs initStartTime = millis();
 
+		initialiseSubsystem("Power measurement", &Config::powerConfig, &powerSetup);
 		initialiseSubsystem("Chip select pins", &Config::chipSelectConfig, &chipSelectSetup);
 		initialiseSubsystem("SPI setup", &Config::spiConfig, &spiSetup);
 
