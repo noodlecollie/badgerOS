@@ -168,12 +168,20 @@ namespace BadgerGL
 		{
 			const Block_Character& character = characters[index];
 
-			if ( character.id >= m_CharBuffer->elementCount() )
+			uint32_t characterId = character.id;
+
+			if ( characterId == static_cast<uint32_t>(-1) )
+			{
+				// Remap index -1 (invalid) to ASCII character 0, which shouldn't be used.
+				characterId = 0;
+			}
+
+			if ( characterId >= m_CharBuffer->elementCount() )
 			{
 				continue;
 			}
 
-			BitmapMaskFont::CharInfo* charInfo = m_CharBuffer->data(character.id);
+			BitmapMaskFont::CharInfo* charInfo = m_CharBuffer->data(characterId);
 			BGRS_ASSERT(charInfo, "Character info was not valid!");
 
 			charInfo->imageRect = BitmapMaskFont::SurfaceRect(character.x, character.y, character.x + character.width, character.y + character.height);
