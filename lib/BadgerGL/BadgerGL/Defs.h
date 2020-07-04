@@ -26,7 +26,7 @@ namespace BadgerGL
 
 	static constexpr size_t maskedDataSizeForDimensions(uint16_t width, uint16_t height)
 	{
-		return height * bitDepthToByteDepth(width);
+		return height * ((width + 7) / 8);
 	}
 
 	// Single-channel colour.
