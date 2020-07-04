@@ -86,7 +86,7 @@ namespace ImageLib.CSource
 			{
 				Width = (ushort)image.Width,
 				Height = (ushort)image.Height,
-				Data = data,
+				Data = data
 			};
 
 			for ( uint y = 0; y < image.Height; ++y )

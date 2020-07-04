@@ -13,11 +13,13 @@ namespace ImageLib.CSource
 		private class FileTypeInfo
 		{
 			public FileFormatDefs.FileType Type;
-			public string IncludePath;
+			public string[] IncludePaths;
 			public string ClassName;
 			public string ConstructionArgs;
 			public byte BitmapByteDepth;
 			public byte PaletteByteDepth;
+			public string DataLengthExpression;
+			public bool SpecifiesDepth;
 		}
 
 		public BitmapCSourceFile File { get; set; }
@@ -89,7 +91,12 @@ namespace ImageLib.CSource
 
 			WriteWithIndent("#include <cstddef>");
 			WriteWithIndent("#include <cstdint>");
-			WriteWithIndent($"#include <{m_FileTypeInfo.IncludePath}>");
+
+			foreach ( string path in m_FileTypeInfo.IncludePaths )
+			{
+				WriteWithIndent($"#include <{path}>");
+			}
+
 			WriteBlankLine();
 
 			WriteWithIndent($"namespace {OuterNamespace}");
@@ -137,8 +144,13 @@ namespace ImageLib.CSource
 
 			WriteWithIndent($"static constexpr size_t {PROP_BITMAP_WIDTH} = {File.Width};");
 			WriteWithIndent($"static constexpr size_t {PROP_BITMAP_HEIGHT} = {File.Height};");
-			WriteWithIndent($"static constexpr size_t {PROP_BITMAP_BYTE_DEPTH} = {m_FileTypeInfo.BitmapByteDepth};");
-			WriteWithIndent($"static constexpr size_t {PROP_BITMAP_DATA_LENGTH} = {PROP_BITMAP_WIDTH} * {PROP_BITMAP_HEIGHT} * {PROP_BITMAP_BYTE_DEPTH};");
+
+			if ( m_FileTypeInfo.SpecifiesDepth )
+			{
+				WriteWithIndent($"static constexpr size_t {PROP_BITMAP_BYTE_DEPTH} = {m_FileTypeInfo.BitmapByteDepth};");
+			}
+
+			WriteWithIndent($"static constexpr size_t {PROP_BITMAP_DATA_LENGTH} = {m_FileTypeInfo.DataLengthExpression};");
 			WriteBlankLine();
 
 			WriteWithIndent($"static constexpr uint8_t {PROP_BITMAP_DATA}[{PROP_BITMAP_DATA_LENGTH}] =");
@@ -206,35 +218,42 @@ namespace ImageLib.CSource
 				Type = type
 			};
 
+			// TODO: Make these subclasses instead?
 			switch ( type )
 			{
 				case FileFormatDefs.FileType.BitmapMask:
 				{
 					info.ClassName = "BadgerGL::BitmapMask";
-					info.IncludePath = "BadgerGL/BitmapMask.h";
+					info.IncludePaths = new string[] { "BadgerGL/BitmapMask.h", "BadgerGL/Defs.h" };
 					info.ConstructionArgs = $"{PROP_BITMAP_WIDTH}, {PROP_BITMAP_HEIGHT}, {PROP_BITMAP_DATA}";
 					info.BitmapByteDepth = 1;
 					info.PaletteByteDepth = 0;
+					info.DataLengthExpression = $"BadgerGL::maskedDataSizeForDimensions({PROP_BITMAP_WIDTH}, {PROP_BITMAP_HEIGHT})";
+					info.SpecifiesDepth = false;
 					break;
 				}
 
 				case FileFormatDefs.FileType.Bitmap65K:
 				{
 					info.ClassName = "BadgerGL::ConstBitmapSurface";
-					info.IncludePath = "BadgerGL/BitmapSurface.h";
+					info.IncludePaths = new string[] { "BadgerGL/BitmapSurface.h" };
 					info.ConstructionArgs = $"{PROP_BITMAP_WIDTH}, {PROP_BITMAP_HEIGHT}, &BadgerGL::PIXELFORMAT_65K, {PROP_BITMAP_DATA}";
 					info.BitmapByteDepth = 2;
 					info.PaletteByteDepth = 0;
+					info.DataLengthExpression = $"{PROP_BITMAP_WIDTH} * {PROP_BITMAP_HEIGHT} * {PROP_BITMAP_BYTE_DEPTH}";
+					info.SpecifiesDepth = true;
 					break;
 				}
 
 				case FileFormatDefs.FileType.Bitmap65KPalette:
 				{
 					info.ClassName = "BadgerGL::ConstBitmapSurface";
-					info.IncludePath = "BadgerGL/BitmapSurface.h";
+					info.IncludePaths = new string[] { "BadgerGL/BitmapSurface.h" };
 					info.ConstructionArgs = $"{PROP_BITMAP_WIDTH}, {PROP_BITMAP_HEIGHT}, {PROP_BITMAP_DATA}, &BadgerGL::PIXELFORMAT_65K, {PROP_PALETTE_LENGTH}, {PROP_PALETTE_DATA}";
 					info.BitmapByteDepth = 1;
 					info.PaletteByteDepth = 2;
+					info.DataLengthExpression = $"{PROP_BITMAP_WIDTH} * {PROP_BITMAP_HEIGHT} * {PROP_BITMAP_BYTE_DEPTH}";
+					info.SpecifiesDepth = true;
 					break;
 				}
 
