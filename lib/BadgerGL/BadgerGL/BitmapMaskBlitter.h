@@ -11,13 +11,16 @@ namespace BadgerGL
 		using SurfaceRect = BaseBlitter::SurfaceRect;
 		using SurfaceVector = BaseBlitter::SurfaceVector;
 
-		// If the rect is empty, the entire bitmap is used. Otherwise, the specified portion is used.
-		void setSource(const BitmapMask* source, const SurfaceRect& rect = SurfaceRect());
-
 		// Colours are assumed to be in the destination pixel format.
 		void setPrimaryColour(uint32_t col);
 		void setSecondaryColour(uint32_t col);
 		void setDrawSecondaryColour(bool draw);
+
+		const BitmapMask* sourceBitmap() const;
+		void setSourceBitmap(const BitmapMask* bitmap);
+
+		// If the rect is empty, the entire bitmap is used. Otherwise, the specified portion is used.
+		void setSource(const BitmapMask* source, const SurfaceRect& rect = SurfaceRect());
 
 		bool blit();
 

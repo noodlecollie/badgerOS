@@ -10,8 +10,18 @@ namespace BadgerGL
 		using SurfaceRect = BitmapSurface::SurfaceRect;
 		using SurfaceVector = BitmapSurface::SurfaceVector;
 
+		const SurfaceRect& sourceRect() const;
+
 		// If the rect is empty, the entire bitmap is used. Otherwise, the specified portion is used.
 		void setSourceRect(const SurfaceRect& rect = SurfaceRect());
+
+		const Rect16& destRect() const;
+
+		// Same rules as setDest() for the rect.
+		void setDestRect(const Rect16& rect);
+
+		BitmapSurface* destBitmap() const;
+		void setDestBitmap(BitmapSurface* bitmap);
 
 		// If the rect is empty, its min is used as the destination position and the
 		// specified area of the source bitmap is blitted once, without tiling.
@@ -19,9 +29,6 @@ namespace BadgerGL
 		// across the destination bitmap area.
 		// Destination bitmaps that use palettes are not supported.
 		void setDest(BitmapSurface* dest, const Rect16& rect);
-
-		const SurfaceRect& sourceRect() const;
-		const Rect16& destRect() const;
 
 	protected:
 		void chooseRects(const SurfaceRect& sourceBounds);

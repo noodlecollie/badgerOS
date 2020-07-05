@@ -55,7 +55,7 @@ namespace BadgerGL
 
 		for ( uint32_t row = 0; row < destRectHeight; ++row )
 		{
-			const uint16_t sourceRow = (m_InitialSourceOffset.y() + row) % sourceRectHeight;
+			const uint16_t sourceRow =  m_SourceRect.p0().y() + ((m_InitialSourceOffset.y() + row) % sourceRectHeight);
 			const uint8_t* const sourceBegin = static_cast<const uint8_t*>(m_Source->constRawPixelData(m_SourceRect.p0().x(), sourceRow));
 			const uint8_t* sourceCursor = sourceBegin + m_InitialSourceOffset.x();
 			const uint8_t* sourceEnd = sourceBegin + (m_SourceRect.width() * sourceByteDepth);

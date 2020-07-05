@@ -37,9 +37,9 @@ namespace BadgerGL
 			}
 		};
 
-		BitmapMaskFont(BitmapMask* fontBitmap, const CharInfoBuffer& charDataBuffer);
+		BitmapMaskFont(const BitmapMask* fontBitmap, const CharInfoBuffer& charDataBuffer);
 
-		BitmapMask* fontBitmap() const;
+		const BitmapMask* fontBitmap() const;
 		bool isValid() const;
 		size_t charCount() const;
 
@@ -54,7 +54,7 @@ namespace BadgerGL
 		const CharInfo* charData(const char* stringPtr) const;
 
 	private:
-		BitmapMask* m_FontBitmap = nullptr;
+		const BitmapMask* m_FontBitmap = nullptr;
 		CharInfoBuffer m_CharData;
 	};
 }

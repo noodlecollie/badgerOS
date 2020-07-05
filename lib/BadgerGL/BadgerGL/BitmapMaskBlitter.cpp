@@ -24,6 +24,16 @@ namespace BadgerGL
 		m_DrawSecondaryColour = draw;
 	}
 
+	const BitmapMask* BitmapMaskBlitter::sourceBitmap() const
+	{
+		return m_Source;
+	}
+
+	void BitmapMaskBlitter::setSourceBitmap(const BitmapMask* bitmap)
+	{
+		m_Source = bitmap;
+	}
+
 	bool BitmapMaskBlitter::blit()
 	{
 		if ( !m_Source || !m_Dest || !m_Source->isValid() || !m_Dest->isValid() || m_Dest->hasPalette() )
@@ -57,7 +67,7 @@ namespace BadgerGL
 
 		for ( uint32_t row = 0; row < destRectHeight; ++row )
 		{
-			const uint16_t sourceRow = (m_InitialSourceOffset.y() + row) % sourceRectHeight;
+			const uint16_t sourceRow = m_SourceRect.p0().y() + ((m_InitialSourceOffset.y() + row) % sourceRectHeight);
 			uint16_t sourceXOffset = m_InitialSourceOffset.x();
 
 			uint8_t* destCursor = static_cast<uint8_t*>(m_Dest->rawPixelData(m_DestRect.p0().x(), m_DestRect.p0().y() + row));

@@ -14,6 +14,11 @@ namespace BadgerGL
 		m_DestRect = rect;
 	}
 
+	void BaseBlitter::setDestRect(const Rect16& rect)
+	{
+		m_DestRect = rect;
+	}
+
 	const BaseBlitter::SurfaceRect& BaseBlitter::sourceRect() const
 	{
 		return m_SourceRect;
@@ -22,6 +27,16 @@ namespace BadgerGL
 	const Rect16& BaseBlitter::destRect() const
 	{
 		return m_DestRect;
+	}
+
+	BitmapSurface* BaseBlitter::destBitmap() const
+	{
+		return m_Dest;
+	}
+
+	void BaseBlitter::setDestBitmap(BitmapSurface* bitmap)
+	{
+		m_Dest = bitmap;
 	}
 
 	void BaseBlitter::chooseRects(const SurfaceRect& sourceBounds)

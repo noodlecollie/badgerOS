@@ -33,6 +33,9 @@ namespace BadgerUI
 	};
 
 	// Used to avoid the extra CPU/memory overhead of vtables.
+	// TODO: std::function requires a virtual function call anyway,
+	// apparently, so it'd be better just to make these virtual
+	// functions on the object.
 	struct UIDrawableCallbacks
 	{
 		// Update the internal state of the item for this frame.

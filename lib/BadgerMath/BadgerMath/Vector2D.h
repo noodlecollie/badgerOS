@@ -218,4 +218,13 @@ namespace BadgerMath
 
 		return a;
 	}
+
+	template<typename T>
+	inline Vector2D<T>& operator -(Vector2D<T>& vec)
+	{
+		vec[0] = -vec[0];
+		vec[1] = -vec[1];
+
+		return vec;
+	}
 }
