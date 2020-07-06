@@ -38,9 +38,10 @@ namespace BadgerUI
 		bool drawSecondaryColour() const;
 		void setDrawSecondaryColour(bool draw);
 
-	private:
-		void privateDraw(const UIDrawContext& context);
+	protected:
+		virtual void delegatedDraw(const UIDrawContext& context) override;
 
+	private:
 		const BadgerGL::BitmapMask* m_Bitmap = nullptr;
 		SourceRect m_SourceRect;
 		ColourProperty m_PrimaryColour;

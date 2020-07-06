@@ -26,9 +26,10 @@ namespace BadgerUI
 		const ColourProperty& fillColour() const;
 		void setFillColour(const ColourProperty& col);
 
-	private:
-		void privateDraw(const UIDrawContext& context);
+	protected:
+		virtual void delegatedDraw(const UIDrawContext& context) override;
 
+	private:
 		BadgerGL::ShapeDrawStyle m_DrawStyle = BadgerGL::ShapeDrawStyle::Filled;
 		uint8_t m_OutlineWidth = 1;
 		ColourProperty m_OutlineColour;

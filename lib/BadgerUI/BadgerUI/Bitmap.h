@@ -31,9 +31,10 @@ namespace BadgerUI
 		// Setting dimensions of 0 clears the override dimensions.
 		void setOverrideDimensions(const UIDimensions& dim);
 
-	private:
-		void privateDraw(const UIDrawContext& context);
+	protected:
+		virtual void delegatedDraw(const UIDrawContext& context) override;
 
+	private:
 		const BadgerGL::ConstBitmapSurface* m_Bitmap = nullptr;
 		SourceRect m_SourceRect;
 	};

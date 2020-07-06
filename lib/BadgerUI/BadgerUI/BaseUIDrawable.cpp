@@ -33,25 +33,33 @@ namespace BadgerUI
 
 	void BaseUIDrawable::update(const UIUpdateContext& context)
 	{
-		if ( m_Callbacks.update )
-		{
-			m_Callbacks.update(context);
-		}
+		delegatedUpdate(context);
 	}
 
 	DrawableDirtyState BaseUIDrawable::dirtyState() const
 	{
-		return m_Callbacks.dirtyStateDelegate ? m_Callbacks.dirtyStateDelegate() : dirtyStateInternal();
+		return delegatedDirtyState();
 	}
 
 	void BaseUIDrawable::draw(const UIDrawContext& context)
 	{
-		if ( m_Callbacks.draw )
-		{
-			m_Callbacks.draw(context);
-		}
-
+		delegatedDraw(context);
 		setDirtyStateInternal(NotDirty);
+	}
+
+	DrawableDirtyState BaseUIDrawable::delegatedDirtyState() const
+	{
+		return m_DirtyState;
+	}
+
+	void BaseUIDrawable::delegatedUpdate(const UIUpdateContext& context)
+	{
+		// Nothing
+	}
+
+	void BaseUIDrawable::delegatedDraw(const UIDrawContext& context)
+	{
+		// Nothing
 	}
 
 	void BaseUIDrawable::setDirtyStateInternal(DrawableDirtyState state)

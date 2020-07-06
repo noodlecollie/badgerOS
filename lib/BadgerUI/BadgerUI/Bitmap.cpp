@@ -5,7 +5,6 @@ namespace BadgerUI
 	Bitmap::Bitmap() :
 		BaseUIDrawable()
 	{
-		setDrawCallback(&Bitmap::privateDraw);
 	}
 
 	const BadgerGL::ConstBitmapSurface* Bitmap::bitmap() const
@@ -44,7 +43,7 @@ namespace BadgerUI
 		setRectInternal(UIRect(pos, pos + dim.vector2DCast<UIPoint>()));
 	}
 
-	void Bitmap::privateDraw(const UIDrawContext& context)
+	void Bitmap::delegatedDraw(const UIDrawContext& context)
 	{
 		if ( !m_Bitmap || !m_Bitmap->isValid() )
 		{

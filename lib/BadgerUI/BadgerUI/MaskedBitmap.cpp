@@ -5,7 +5,6 @@ namespace BadgerUI
 	MaskedBitmap::MaskedBitmap() :
 		BaseUIDrawable()
 	{
-		setDrawCallback(&MaskedBitmap::privateDraw);
 	}
 
 	const BadgerGL::BitmapMask* MaskedBitmap::bitmap() const
@@ -74,7 +73,7 @@ namespace BadgerUI
 		setPropertyIfDifferent(m_DrawSecondaryColour, draw);
 	}
 
-	void MaskedBitmap::privateDraw(const UIDrawContext& context)
+	void MaskedBitmap::delegatedDraw(const UIDrawContext& context)
 	{
 		if ( !m_Bitmap || !m_Bitmap->isValid() )
 		{

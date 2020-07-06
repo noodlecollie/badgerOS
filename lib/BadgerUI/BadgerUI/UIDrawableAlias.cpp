@@ -5,8 +5,6 @@ namespace BadgerUI
 	UIDrawableAlias::UIDrawableAlias() :
 		BaseUIDrawable()
 	{
-		setDrawCallback(&UIDrawableAlias::privateDraw);
-		setDirtyStateDelegate(&UIDrawableAlias::privateDirtyState);
 	}
 
 	BaseUIDrawable* UIDrawableAlias::target() const
@@ -29,7 +27,7 @@ namespace BadgerUI
 		setRectInternal(UIRect(pos, 0, 0));
 	}
 
-	void UIDrawableAlias::privateDraw(const UIDrawContext& context)
+	void UIDrawableAlias::delegatedDraw(const UIDrawContext& context)
 	{
 		if ( !m_Target )
 		{
@@ -44,9 +42,9 @@ namespace BadgerUI
 		context.renderer->setDrawingOffset(oldDrawingOffset);
 	}
 
-	DrawableDirtyState UIDrawableAlias::privateDirtyState() const
+	DrawableDirtyState UIDrawableAlias::delegatedDirtyState() const
 	{
-		const DrawableDirtyState localDirtyState = dirtyStateInternal();
+		const DrawableDirtyState localDirtyState = BaseUIDrawable::delegatedDirtyState();
 
 		if ( !m_Target )
 		{

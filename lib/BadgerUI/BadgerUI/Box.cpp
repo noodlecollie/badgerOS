@@ -5,7 +5,6 @@ namespace BadgerUI
 	Box::Box() :
 		BaseUIDrawable()
 	{
-		setDrawCallback(&Box::privateDraw);
 	}
 
 	void Box::setRect(const UIRect& inRect)
@@ -53,7 +52,7 @@ namespace BadgerUI
 		setPropertyIfDifferent(m_FillColour, col);
 	}
 
-	void Box::privateDraw(const UIDrawContext& context)
+	void Box::delegatedDraw(const UIDrawContext& context)
 	{
 		context.renderer->setLineWidth(m_OutlineWidth);
 		context.renderer->setShapeDrawStyle(m_DrawStyle);

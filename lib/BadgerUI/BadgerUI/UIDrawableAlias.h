@@ -15,10 +15,11 @@ namespace BadgerUI
 		UIPoint position();
 		void setPosition(const UIPoint& pos);
 
-	private:
-		void privateDraw(const UIDrawContext& context);
-		DrawableDirtyState privateDirtyState() const;
+	protected:
+		virtual void delegatedDraw(const UIDrawContext& context) override;
+		virtual DrawableDirtyState delegatedDirtyState() const override;
 
+	private:
 		BaseUIDrawable* m_Target = nullptr;
 	};
 }
