@@ -23,22 +23,33 @@ namespace BadgerGL
 		m_Blitter = bltr;
 	}
 
-	void StringRenderer::renderString(const char* str, const Rect16& destRect)
+	void StringRenderer::renderString(const char* str, const Rect16& destRect, int16_t xShift)
 	{
 		if ( !m_Font ||
 			 !str ||
 			 !(*str) ||
 			 !m_Blitter ||
 			 !m_Blitter->destBitmap() ||
-			 destRect.isEmpty() )
+			 destRect.isEmpty() ||
+			 xShift >= static_cast<int16_t>(destRect.width()) )
 		{
 			return;
 		}
 
 		m_Blitter->setSourceBitmap(m_Font->fontBitmap());
 
+		// Create a mutable rect. This will resize based on the unused space after the written characters.
 		Rect16 targetRect(destRect);
 		targetRect.ensureMinMaxOrdered();
+
+		// Make a note of the left hand boundary of the target drawing area.
+		// If we can determine that a character would be drawn entirely left of this
+		// boundary, we don't need to draw it at all.
+		const int16_t leftDrawingBorder = targetRect.p0().x();
+
+		// Account for X shift. We have ensured that this will not be so large in the
+		// positive direction that it would exceed the width of the dest rect.
+		targetRect.setP0(targetRect.p0() + Point16(xShift, 0));
 
 		for ( ; *str && targetRect.width() > 0; str = CoreUtil::nextCharUTF8(str) )
 		{
@@ -49,7 +60,11 @@ namespace BadgerGL
 				continue;
 			}
 
-			drawCharacter(*chInfo, targetRect);
+			// Only bother drawing if the character is in the dest rect.
+			if ( targetRect.p0().x() + chInfo->imageRect.width() > leftDrawingBorder )
+			{
+				drawCharacter(*chInfo, targetRect);
+			}
 
 			const size_t widthConsumed = std::min<size_t>(targetRect.width(), chInfo->advance);
 			targetRect.setP0(targetRect.p0() + Point16(widthConsumed, 0));
