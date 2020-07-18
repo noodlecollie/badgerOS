@@ -9,13 +9,13 @@ namespace CoreUtil
 	class ConstBlob
 	{
 	public:
-		inline ConstBlob() :
+		inline constexpr ConstBlob() :
 			m_Data(nullptr),
 			m_Length(0)
 		{
 		}
 
-		inline ConstBlob(const void* data, size_t length) :
+		inline constexpr ConstBlob(const void* data, size_t length) :
 			m_Data(data),
 			m_Length(length)
 		{

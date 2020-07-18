@@ -4,6 +4,7 @@
 #include <BadgerUI/Box.h>
 #include <BadgerUI/Bitmap.h>
 #include <BadgerUI/MaskedBitmap.h>
+#include <BadgerUI/Label.h>
 
 namespace Badge
 {
@@ -18,9 +19,9 @@ namespace Badge
 
 		BadgerUI::Box m_StatusBarArea;
 		BadgerUI::Box m_MessageAreaSeparator;
+		BadgerUI::Label m_MessageLabel;
 
 		// Placeholders - to be replaced once we have the correct things up and running.
 		BadgerUI::Bitmap m_PlaceholderCharacterImage;
-		BadgerUI::MaskedBitmap m_PlaceholderScrollingText;
 	};
 }

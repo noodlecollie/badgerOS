@@ -5,22 +5,28 @@
 
 namespace BadgerGL
 {
+#define BADGERGL_BMFFILEREADER_FILESTATUS_LIST \
+	LIST_ITEM(Valid = 0, "Valid") \
+	LIST_ITEM(Unverified, "File not verified yet") \
+	LIST_ITEM(NoFileProvided, "No file was provided") \
+	LIST_ITEM(FileWasTooShort, "File was too short to contain required data") \
+	LIST_ITEM(FileWasNotBMF, "File was not a BMF file") \
+	LIST_ITEM(BlockDataWasNotValid, "Invalid block data was encountered")
+
 	// TODO: Architecture of this class is kinda messy. Block structs should probably be
 	// forward-declared privately, and functions taking references to data and length
 	// should be refactored to be better.
 	class BMFFileReader
 	{
 	public:
+#define LIST_ITEM(enum, desc) enum,
 		enum class FileStatus
 		{
-			Valid = 0,
-			Unverified,
-
-			NoFileProvided,
-			FileWasTooShort,
-			FileWasNotBMF,
-			BlockDataWasNotValid
+			BADGERGL_BMFFILEREADER_FILESTATUS_LIST
 		};
+#undef LIST_ITEM
+
+		static const char* fileStatusDescription(FileStatus status);
 
 		void setFileData(const CoreUtil::ConstBlob& data);
 		void setCharInfoBuffer(BitmapMaskFont::CharInfoBuffer* buffer);

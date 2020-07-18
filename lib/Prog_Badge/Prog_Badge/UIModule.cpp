@@ -17,6 +17,7 @@ namespace Badge
 		static MainScreenLayout MainScreen(SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT);
 		static BadgerUI::ColourScheme ColScheme;
 		static CoreUtil::TimevalMs LastUpdate = 0;
+		static BadgerUI::FontDirectory FontDirectory;
 
 		void setup()
 		{
@@ -27,6 +28,8 @@ namespace Badge
 			ColScheme.setColour(ColourScheme::Colour_BackgroundAlt, col24To16(0x534b62));
 			ColScheme.setColour(ColourScheme::Colour_Primary, col24To16(0xfdfffc));
 			ColScheme.setColour(ColourScheme::Colour_Secondary, col24To16(0xc0bcb5));
+
+			FontDirectory.loadAllFonts();
 		}
 
 		void loop()
@@ -58,6 +61,7 @@ namespace Badge
 			drawContext.colourScheme = &ColScheme;
 			drawContext.renderer = &renderer;
 			drawContext.screenBuffer = &ScreenBufferSurface;
+			drawContext.fontDirectory = &FontDirectory;
 
 			switch ( MainScreen.dirtyState() )
 			{

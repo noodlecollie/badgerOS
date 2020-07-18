@@ -107,6 +107,7 @@ char id=126  x=29    y=90    width=10    height=4     xoffset=1     yoffset=10  
 
 #include <cstdint>
 #include <cstddef>
+#include <CoreUtil/Blob.h>
 
 namespace Resources
 {
@@ -366,5 +367,7 @@ namespace Resources
 			0x04, 0x00, 0x01, 0x00, 0x07, 0x00, 0x0c, 0x00,
 			0x00, 0x0f
 		};
+
+		static constexpr CoreUtil::ConstBlob BLOB(DATA, LENGTH);
 	}
 }

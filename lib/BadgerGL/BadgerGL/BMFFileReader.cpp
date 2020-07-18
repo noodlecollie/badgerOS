@@ -1,11 +1,19 @@
 #include <cstring>
 #include <cstdint>
 #include <CoreUtil/BgrsAssert.h>
+#include <CoreUtil/ArrayUtil.h>
 #include "BMFFileReader.h"
 
 namespace
 {
 	using BadgerGL::BMFFileReader;
+
+#define LIST_ITEM(enum, desc) desc,
+	static constexpr const char* const FILE_STATUS_DESCRIPTIONS[] =
+	{
+		BADGERGL_BMFFILEREADER_FILESTATUS_LIST
+	};
+#undef LIST_ITEM
 
 	static constexpr const char BMF_SIGNATURE[4] = { 'B', 'M', 'F', 3 };
 
@@ -139,6 +147,15 @@ namespace
 
 namespace BadgerGL
 {
+	const char* BMFFileReader::fileStatusDescription(FileStatus status)
+	{
+		const uint32_t index = static_cast<uint32_t>(status);
+
+		return index < CoreUtil::arraySize(FILE_STATUS_DESCRIPTIONS)
+			? FILE_STATUS_DESCRIPTIONS[index]
+			: "<unknown>";
+	}
+
 	void BMFFileReader::setFileData(const CoreUtil::ConstBlob& data)
 	{
 		m_FileData = data;

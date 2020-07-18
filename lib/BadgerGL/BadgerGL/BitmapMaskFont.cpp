@@ -37,7 +37,7 @@ namespace BadgerGL
 
 	BitmapMaskFont::CharInfo* BitmapMaskFont::charData(const char* stringPtr)
 	{
-		// TODO: Handle UTF-8.
+		// TODO: Handle UTF-8 - we may need to refer to multiple bytes.
 		return stringPtr ? charData(static_cast<size_t>(*stringPtr)) : nullptr;
 	}
 
@@ -58,12 +58,27 @@ namespace BadgerGL
 
 	const BitmapMaskFont::CharInfo* BitmapMaskFont::charData(const char* stringPtr) const
 	{
-		// TODO: Handle UTF-8.
+		// TODO: Handle UTF-8 - we may need to refer to multiple bytes.
 		return stringPtr ? charData(static_cast<size_t>(*stringPtr)) : nullptr;
 	}
 
 	const BitmapMask* BitmapMaskFont::fontBitmap() const
 	{
 		return m_FontBitmap;
+	}
+
+	void BitmapMaskFont::setFontBitmap(const BitmapMask* bitmap)
+	{
+		m_FontBitmap = bitmap;
+	}
+
+	const BitmapMaskFont::CharInfoBuffer& BitmapMaskFont::charDataBuffer() const
+	{
+		return m_CharData;
+	}
+
+	void BitmapMaskFont::setCharDataBuffer(const CharInfoBuffer& buffer)
+	{
+		m_CharData = buffer;
 	}
 }
