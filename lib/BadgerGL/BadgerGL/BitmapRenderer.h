@@ -4,6 +4,7 @@
 #include "BitmapSurface.h"
 #include "BitmapMask.h"
 #include "Defs.h"
+#include "BitmapMaskFont.h"
 
 namespace BadgerGL
 {
@@ -34,6 +35,9 @@ namespace BadgerGL
 
 		uint8_t lineWidth() const;
 		void setLineWidth(uint8_t width);
+
+		const BitmapMaskFont* font() const;
+		void setFont(const BitmapMaskFont* fnt);
 
 		// Used to offset the position of anything being drawn.
 		// Useful for "instancing" primitives by drawing the same
@@ -80,6 +84,8 @@ namespace BadgerGL
 			blitMask(source, Rect16(destPos, 0, 0), sourceRect, drawSecondaryColour);
 		}
 
+		void drawString(const char* string, const Rect16& destRect, int16_t xShift = 0);
+
 	private:
 		void fill(uint32_t colour);
 		void drawOutline(const Rect16& rect);
@@ -93,5 +99,6 @@ namespace BadgerGL
 		uint32_t m_SecondaryColour = 0x00000000;
 		uint8_t m_LineWidth = 1;
 		Point16 m_DrawingOffset;
+		const BitmapMaskFont* m_Font = nullptr;
 	};
 }

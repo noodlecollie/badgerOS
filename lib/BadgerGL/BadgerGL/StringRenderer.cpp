@@ -3,6 +3,13 @@
 
 namespace BadgerGL
 {
+	size_t StringRenderer::calculateStringWidth(const BitmapMaskFont* font, const char* str)
+	{
+		StringRenderer renderer;
+		renderer.setFont(font);
+		return renderer.calculateStringWidth(str);
+	}
+
 	const BitmapMaskFont* StringRenderer::font() const
 	{
 		return m_Font;
@@ -23,7 +30,7 @@ namespace BadgerGL
 		m_Blitter = bltr;
 	}
 
-	void StringRenderer::renderString(const char* str, const Rect16& destRect, int16_t xShift)
+	bool StringRenderer::renderString(const char* str, const Rect16& destRect, int16_t xShift)
 	{
 		if ( !m_Font ||
 			 !str ||
@@ -33,7 +40,7 @@ namespace BadgerGL
 			 destRect.isEmpty() ||
 			 xShift >= static_cast<int16_t>(destRect.width()) )
 		{
-			return;
+			return false;
 		}
 
 		m_Blitter->setSourceBitmap(m_Font->fontBitmap());
@@ -51,6 +58,8 @@ namespace BadgerGL
 		// positive direction that it would exceed the width of the dest rect.
 		targetRect.setP0(targetRect.p0() + Point16(xShift, 0));
 
+		bool renderedCharacters = false;
+
 		for ( ; *str && targetRect.width() > 0; str = CoreUtil::nextCharUTF8(str) )
 		{
 			const BitmapMaskFont::CharInfo* chInfo = m_Font->charData(str);
@@ -64,11 +73,14 @@ namespace BadgerGL
 			if ( targetRect.p0().x() + chInfo->imageRect.width() > leftDrawingBorder )
 			{
 				drawCharacter(*chInfo, targetRect);
+				renderedCharacters = true;
 			}
 
 			const size_t widthConsumed = std::min<size_t>(targetRect.width(), chInfo->advance);
 			targetRect.setP0(targetRect.p0() + Point16(widthConsumed, 0));
 		}
+
+		return renderedCharacters;
 	}
 
 	size_t StringRenderer::calculateStringWidth(const char* str) const

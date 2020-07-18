@@ -8,13 +8,15 @@ namespace BadgerGL
 	class StringRenderer
 	{
 	public:
+		static size_t calculateStringWidth(const BitmapMaskFont* font, const char* str);
+
 		const BitmapMaskFont* font() const;
 		void setFont(const BitmapMaskFont* font);
 
 		BitmapMaskBlitter* blitter() const;
 		void setBlitter(BitmapMaskBlitter* bltr);
 
-		void renderString(const char* str, const Rect16& destRect, int16_t xShift = 0);
+		bool renderString(const char* str, const Rect16& destRect, int16_t xShift = 0);
 		size_t calculateStringWidth(const char* str) const;
 
 	private:

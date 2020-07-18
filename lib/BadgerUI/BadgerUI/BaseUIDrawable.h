@@ -4,6 +4,7 @@
 #include <CoreUtil/TimeHelpers.h>
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
+#include <BadgerGL/BitmapMaskBlitter.h>
 #include "ColourScheme.h"
 #include "Types.h"
 

@@ -2,6 +2,7 @@
 #include "BitmapRenderer.h"
 #include "BitmapBlitter.h"
 #include "BitmapMaskBlitter.h"
+#include "StringRenderer.h"
 
 namespace BadgerGL
 {
@@ -77,6 +78,16 @@ namespace BadgerGL
 	void BitmapRenderer::setLineWidth(uint8_t width)
 	{
 		m_LineWidth = width;
+	}
+
+	const BitmapMaskFont* BitmapRenderer::font() const
+	{
+		return m_Font;
+	}
+
+	void BitmapRenderer::setFont(const BitmapMaskFont* fnt)
+	{
+		m_Font = fnt;
 	}
 
 	Point16 BitmapRenderer::drawingOffset() const
@@ -175,6 +186,32 @@ namespace BadgerGL
 		blitter.setDrawSecondaryColour(drawSecondaryColour);
 
 		if ( blitter.blit() )
+		{
+			// We use the dest rect as provided by the blitter, as it
+			// may have been trimmed during the operation.
+			addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
+		}
+	}
+
+	void BitmapRenderer::drawString(const char* string, const Rect16& destRect, int16_t xShift)
+	{
+		if ( !m_Surface || !m_Font )
+		{
+			return;
+		}
+
+		const Rect16 adjustedDest(destRect + m_DrawingOffset);
+
+		BitmapMaskBlitter blitter;
+		blitter.setDest(m_Surface, adjustedDest);
+		blitter.setPrimaryColour(m_PrimaryColour);
+		blitter.setSecondaryColour(m_SecondaryColour);
+
+		BadgerGL::StringRenderer stringRenderer;
+		stringRenderer.setBlitter(&blitter);
+		stringRenderer.setFont(m_Font);
+
+		if ( stringRenderer.renderString(string, adjustedDest, xShift) )
 		{
 			// We use the dest rect as provided by the blitter, as it
 			// may have been trimmed during the operation.

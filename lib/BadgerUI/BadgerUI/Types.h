@@ -10,4 +10,11 @@ namespace BadgerUI
 	using UIPoint = BadgerGL::Point16;
 	using UIRect = BadgerGL::Rect16;
 	using UIDimensions = BadgerMath::Vector2D<uint16_t>;
+
+	enum class HAlignment
+	{
+		Left,
+		Centre,
+		Right
+	};
 }
