@@ -12,16 +12,27 @@ namespace BadgerUI
 		FontDirectoryBase()
 	{
 		initialiseEntries();
-
-#ifdef DEBUG
-		validateEntries();
-#endif
 	}
 
 	void FontDirectory::initialiseEntries()
 	{
 		item(FontID::ArialStd).fontBitmap = &Resources::ArialStdBitmap::BITMAP;
 		item(FontID::ArialStd).bmfData = Resources::ArialStdFont::BLOB;
+	}
+
+	void FontDirectory::finaliseEntries()
+	{
+		forEach([](uint32_t index, FontDirectoryEntry& item)
+		{
+			item.fontObject.setCharDataBuffer(item.fontCharData);
+			item.fontObject.setFontBitmap(item.fontBitmap);
+
+			if ( !item.isValid() )
+			{
+				Serial.printf("Font %u validation failed.\n", index);
+				BGRS_ASSERT(false, "An entry in the font directory was not set up correctly.");
+			}
+		});
 	}
 
 	void FontDirectory::loadAllFonts()
@@ -53,11 +64,7 @@ namespace BadgerUI
 			reader.populateCharInfo();
 		});
 
-		if ( success )
-		{
-			Serial.printf("%u fonts loaded successfully.\n", FontDirectory::ITEM_COUNT);
-		}
-		else
+		if ( !success )
 		{
 			BGRS_ASSERT(false, "One or more fonts failed to load.");
 		}

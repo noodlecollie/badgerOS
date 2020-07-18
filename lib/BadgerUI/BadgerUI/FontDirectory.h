@@ -43,15 +43,6 @@ namespace BadgerUI
 
 	private:
 		void initialiseEntries();
-
-#ifdef DEBUG
-		inline void validateEntries()
-		{
-			forEach([](uint32_t index, const FontDirectoryEntry& item)
-			{
-				BGRS_ASSERT(item.isValid(), "An entry in the font directory was not set up correctly.");
-			});
-		}
-#endif
+		void finaliseEntries();
 	};
 }
