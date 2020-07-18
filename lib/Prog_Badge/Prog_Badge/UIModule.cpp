@@ -19,6 +19,11 @@ namespace Badge
 		static CoreUtil::TimevalMs LastUpdate = 0;
 		static BadgerUI::FontDirectory FontDirectory;
 
+		const BadgerUI::FontDirectory& fontDirectory()
+		{
+			return FontDirectory;
+		}
+
 		void setup()
 		{
 			using namespace BadgerGL;
@@ -30,6 +35,7 @@ namespace Badge
 			ColScheme.setColour(ColourScheme::Colour_Secondary, col24To16(0xc0bcb5));
 
 			FontDirectory.loadAllFonts();
+			MainScreen.setup();
 		}
 
 		void loop()

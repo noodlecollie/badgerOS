@@ -12,6 +12,8 @@ namespace BadgerUI
 
 		DrawableDirtyState dirtyState() const;
 
+		virtual void setup();
+
 		void updateItems(const UIUpdateContext& context);
 		void drawDirtyItems(const UIDrawContext& context);
 		void drawAllItems(const UIDrawContext& context);

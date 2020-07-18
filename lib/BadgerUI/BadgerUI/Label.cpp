@@ -51,7 +51,7 @@ namespace BadgerUI
 		return m_HAlignment;
 	}
 
-	void Label::setAlignment(HAlignment align)
+	void Label::setHorizontalAlignment(HAlignment align)
 	{
 		setPropertyIfDifferent(m_HAlignment, align);
 	}
@@ -118,6 +118,8 @@ namespace BadgerUI
 		}
 
 		targetXShift += m_XShift;
+
+		context.renderer->setFont(m_Font);
 		context.renderer->drawString(m_Text, target, targetXShift);
 	}
 

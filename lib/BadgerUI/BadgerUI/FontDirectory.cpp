@@ -20,21 +20,6 @@ namespace BadgerUI
 		item(FontID::ArialStd).bmfData = Resources::ArialStdFont::BLOB;
 	}
 
-	void FontDirectory::finaliseEntries()
-	{
-		forEach([](uint32_t index, FontDirectoryEntry& item)
-		{
-			item.fontObject.setCharDataBuffer(item.fontCharData);
-			item.fontObject.setFontBitmap(item.fontBitmap);
-
-			if ( !item.isValid() )
-			{
-				Serial.printf("Font %u validation failed.\n", index);
-				BGRS_ASSERT(false, "An entry in the font directory was not set up correctly.");
-			}
-		});
-	}
-
 	void FontDirectory::loadAllFonts()
 	{
 		using namespace BadgerGL;
@@ -62,11 +47,24 @@ namespace BadgerUI
 			}
 
 			reader.populateCharInfo();
+
+			item.fontObject.setCharDataBuffer(item.fontCharData);
+			item.fontObject.setFontBitmap(item.fontBitmap);
+
+			if ( !item.fontObject.isValid() )
+			{
+				Serial.printf("Font %u was not valid after loading font data.", index);
+			}
 		});
 
 		if ( !success )
 		{
 			BGRS_ASSERT(false, "One or more fonts failed to load.");
 		}
+	}
+
+	const BadgerGL::BitmapMaskFont* FontDirectory::getFont(FontID id) const
+	{
+		return &item(id).fontObject;
 	}
 }

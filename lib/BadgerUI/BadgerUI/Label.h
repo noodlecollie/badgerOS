@@ -23,7 +23,7 @@ namespace BadgerUI
 		void setTextColour(const ColourProperty& col);
 
 		HAlignment horizontalAlignment() const;
-		void setAlignment(HAlignment align);
+		void setHorizontalAlignment(HAlignment align);
 
 		int16_t xShift() const;
 		void setXShift(int16_t shift);

@@ -34,15 +34,17 @@ namespace BadgerUI
 	// Annoying to have to type out more than once.
 	using FontDirectoryBase = CoreUtil::EnumAddressableList<FontDirectoryEntry, FontID, FontID::Count>;
 
-	class FontDirectory : public FontDirectoryBase
+
+	// TODO: Add addressable list as member rather than inheriting?
+	class FontDirectory : private FontDirectoryBase
 	{
 	public:
 		FontDirectory();
 
 		void loadAllFonts();
+		const BadgerGL::BitmapMaskFont* getFont(FontID id) const;
 
 	private:
 		void initialiseEntries();
-		void finaliseEntries();
 	};
 }

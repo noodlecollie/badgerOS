@@ -1,6 +1,7 @@
 #include <Resources/Images/PlaceholderChar.h>
 #include <Resources/Fonts/ArialStdFont.h>
 #include "MainScreenLayout.h"
+#include "UIModule.h"
 
 namespace Badge
 {
@@ -13,6 +14,10 @@ namespace Badge
 		BadgerUI::BaseLayout(),
 		m_Width(width),
 		m_Height(height)
+	{
+	}
+
+	void MainScreenLayout::setup()
 	{
 		using namespace BadgerUI;
 		using namespace BadgerGL;
@@ -32,13 +37,10 @@ namespace Badge
 		m_PlaceholderCharacterImage.setOverrideDimensions(UIDimensions(m_Width, m_MessageAreaSeparator.rect().min().y() - STATUS_AREA_HEIGHT));
 		addItemToTail(&m_PlaceholderCharacterImage);
 
-		// m_PlaceholderScrollingText.setBitmap(&Resources::ChequerboardMask::BITMAP);
-		// m_PlaceholderScrollingText.setPosition(UIPoint(0, m_Height - TEXT_AREA_HEIGHT));
-		// m_PlaceholderScrollingText.setOverrideDimensions(UIDimensions(m_Width, TEXT_AREA_HEIGHT));
-		// m_PlaceholderScrollingText.setPrimaryColour(ColourProperty(ColourScheme::Colour_Custom, col24To16(0x0000FF)));
-		// addItemToTail(&m_PlaceholderScrollingText);
-
 		m_MessageLabel.setRect(UIRect(UIPoint(0, m_Height - TEXT_AREA_HEIGHT), m_Width, TEXT_AREA_HEIGHT));
-		m_MessageLabel.setAlignment(BadgerUI::HAlignment::Left);
+		m_MessageLabel.setHorizontalAlignment(BadgerUI::HAlignment::Left);
+		m_MessageLabel.setText("Testing");
+		m_MessageLabel.setFont(UIModule::fontDirectory().getFont(FontID::ArialStd));
+		addItemToTail(&m_MessageLabel);
 	}
 }

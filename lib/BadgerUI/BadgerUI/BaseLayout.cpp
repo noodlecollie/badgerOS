@@ -17,6 +17,11 @@ namespace BadgerUI
 		return m_DirtyState;
 	}
 
+	void BaseLayout::setup()
+	{
+		// Implemented in subclasses.
+	}
+
 	void BaseLayout::addItemToHead(BaseUIDrawable* item)
 	{
 		if ( !item )
