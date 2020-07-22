@@ -39,8 +39,10 @@ namespace Badge
 
 		m_MessageLabel.setRect(UIRect(UIPoint(0, m_Height - TEXT_AREA_HEIGHT), m_Width, TEXT_AREA_HEIGHT));
 		m_MessageLabel.setHorizontalAlignment(BadgerUI::HAlignment::Left);
+		m_MessageLabel.setVerticalAlignment(BadgerUI::VAlignment::Centre);
 		m_MessageLabel.setText("Testing");
 		m_MessageLabel.setFont(UIModule::fontDirectory().getFont(FontID::ArialStd));
+
 		addItemToTail(&m_MessageLabel);
 	}
 }

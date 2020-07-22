@@ -16,7 +16,7 @@ namespace BadgerGL
 		BitmapMaskBlitter* blitter() const;
 		void setBlitter(BitmapMaskBlitter* bltr);
 
-		bool renderString(const char* str, const Rect16& destRect, int16_t xShift = 0);
+		bool renderString(const char* str, const Rect16& destRect, const Point16& adjustment = Point16());
 		size_t calculateStringWidth(const char* str) const;
 
 	private:

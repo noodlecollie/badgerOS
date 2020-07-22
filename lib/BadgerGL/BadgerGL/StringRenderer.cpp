@@ -30,7 +30,7 @@ namespace BadgerGL
 		m_Blitter = bltr;
 	}
 
-	bool StringRenderer::renderString(const char* str, const Rect16& destRect, int16_t xShift)
+	bool StringRenderer::renderString(const char* str, const Rect16& destRect, const Point16& adjustment)
 	{
 		if ( !m_Font ||
 			 !str ||
@@ -38,7 +38,8 @@ namespace BadgerGL
 			 !m_Blitter ||
 			 !m_Blitter->destBitmap() ||
 			 destRect.isEmpty() ||
-			 xShift >= static_cast<int16_t>(destRect.width()) )
+			 adjustment.x() >= static_cast<int16_t>(destRect.width()) ||
+			 adjustment.y() >= static_cast<int16_t>(destRect.height()) )
 		{
 			return false;
 		}
@@ -54,9 +55,10 @@ namespace BadgerGL
 		// boundary, we don't need to draw it at all.
 		const int16_t leftDrawingBorder = targetRect.p0().x();
 
-		// Account for X shift. We have ensured that this will not be so large in the
-		// positive direction that it would exceed the width of the dest rect.
-		targetRect.setP0(targetRect.p0() + Point16(xShift, 0));
+		// Account for adjustment of the string within the rect. We have ensured
+		// that this will not be so large in the positive direction that it
+		/// would exceed the dimensions of the dest rect.
+		targetRect.setP0(targetRect.p0() + adjustment);
 
 		bool renderedCharacters = false;
 

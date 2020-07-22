@@ -25,6 +25,9 @@ namespace BadgerUI
 		HAlignment horizontalAlignment() const;
 		void setHorizontalAlignment(HAlignment align);
 
+		VAlignment verticalAlignment() const;
+		void setVerticalAlignment(VAlignment align);
+
 		int16_t xShift() const;
 		void setXShift(int16_t shift);
 
@@ -34,11 +37,14 @@ namespace BadgerUI
 
 	private:
 		bool shouldDrawBox() const;
+		int16_t horizontalAlignmentShift() const;
+		int16_t verticalAlignmentShift() const;
 
 		const char* m_Text = nullptr;
 		bool m_RecalculateStringWidth = false;
 		ColourProperty m_TextColour;
 		HAlignment m_HAlignment = HAlignment::Left;
+		VAlignment m_VAlignment = VAlignment::Top;
 		const BadgerGL::BitmapMaskFont* m_Font = nullptr;
 		int16_t m_XShift = 0;
 

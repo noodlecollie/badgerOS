@@ -56,6 +56,16 @@ namespace BadgerUI
 		setPropertyIfDifferent(m_HAlignment, align);
 	}
 
+	VAlignment Label::verticalAlignment() const
+	{
+		return m_VAlignment;
+	}
+
+	void Label::setVerticalAlignment(VAlignment align)
+	{
+		m_VAlignment = align;
+	}
+
 	int16_t Label::xShift() const
 	{
 		return m_XShift;
@@ -90,41 +100,66 @@ namespace BadgerUI
 			return;
 		}
 
-		const UIRect& target = rect();
-
-		// This is the number of pixels that the left of the string should be away
-		// from the left of the target rectangle.
-		int16_t targetXShift = 0;
-
-		switch ( m_HAlignment )
-		{
-			case HAlignment::Centre:
-			{
-				targetXShift = (static_cast<int16_t>(target.width()) / 2) - (static_cast<int16_t>(m_StringWidth) / 2);
-				break;
-			}
-
-			case HAlignment::Right:
-			{
-				targetXShift = static_cast<int16_t>(m_StringWidth) - static_cast<int16_t>(target.width());
-				break;
-			}
-
-			default:
-			{
-				targetXShift = 0;
-				break;
-			}
-		}
-
-		targetXShift += m_XShift;
+		const UIPoint adjustment(horizontalAlignmentShift() + m_XShift, verticalAlignmentShift());
 
 		context.renderer->setFont(m_Font);
-		context.renderer->drawString(m_Text, target, targetXShift);
+		context.renderer->setPrimaryColour(m_TextColour.schemeColour(*context.colourScheme));
+		context.renderer->drawString(m_Text, rect(), adjustment);
 	}
 
 	bool Label::shouldDrawBox() const
 	{
 		return drawStyle() != BadgerGL::ShapeDrawStyle::Outline || outlineWidth() > 0;
+	}
+
+	// This is the number of pixels that the left of the string should be away
+	// from the left of the target rectangle.
+	int16_t Label::horizontalAlignmentShift() const
+	{
+		switch ( m_HAlignment )
+		{
+			case HAlignment::Centre:
+			{
+				return (static_cast<int16_t>(rect().width()) / 2) - (static_cast<int16_t>(m_StringWidth) / 2);
+			}
+
+			case HAlignment::Right:
+			{
+				return static_cast<int16_t>(m_StringWidth) - static_cast<int16_t>(rect().width());
+			}
+
+			default:
+			{
+				return 0;
+			}
+		}
+	}
+
+	// This is the number of pixels that the top of the string should be away
+	// from the top of the target rectangle.
+	int16_t Label::verticalAlignmentShift() const
+	{
+		if ( !m_Font )
+		{
+			return 0;
+		}
+
+		switch ( m_VAlignment )
+		{
+			case VAlignment::Centre:
+			{
+				return (static_cast<int16_t>(rect().height()) / 2) - (m_Font->lineHeight() / 2);
+			}
+
+			case VAlignment::Bottom:
+			{
+				return static_cast<int16_t>(rect().height()) - m_Font->lineHeight();
+			}
+
+			default:
+			{
+				return 0;
+			}
+		}
 	}
 }

@@ -17,4 +17,11 @@ namespace BadgerUI
 		Centre,
 		Right
 	};
+
+	enum class VAlignment
+	{
+		Top,
+		Centre,
+		Bottom
+	};
 }

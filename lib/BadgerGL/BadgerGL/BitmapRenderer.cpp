@@ -161,9 +161,7 @@ namespace BadgerGL
 
 		if ( blitter.blit() )
 		{
-			// We use the dest rect as provided by the blitter, as it
-			// may have been trimmed during the operation.
-			addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
+			addToDirtyArea(blitter);
 		}
 	}
 
@@ -187,23 +185,21 @@ namespace BadgerGL
 
 		if ( blitter.blit() )
 		{
-			// We use the dest rect as provided by the blitter, as it
-			// may have been trimmed during the operation.
-			addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
+			addToDirtyArea(blitter);
 		}
 	}
 
-	void BitmapRenderer::drawString(const char* string, const Rect16& destRect, int16_t xShift)
+	void BitmapRenderer::drawString(const char* string, const Rect16& destRect, const Point16& adjustment)
 	{
 		if ( !m_Surface || !m_Font )
 		{
 			return;
 		}
 
-		const Rect16 adjustedDest(destRect + m_DrawingOffset);
+		const Rect16 offsetDest(destRect + m_DrawingOffset);
 
 		BitmapMaskBlitter blitter;
-		blitter.setDest(m_Surface, adjustedDest);
+		blitter.setDest(m_Surface, offsetDest);
 		blitter.setPrimaryColour(m_PrimaryColour);
 		blitter.setSecondaryColour(m_SecondaryColour);
 
@@ -211,11 +207,9 @@ namespace BadgerGL
 		stringRenderer.setBlitter(&blitter);
 		stringRenderer.setFont(m_Font);
 
-		if ( stringRenderer.renderString(string, adjustedDest, xShift) )
+		if ( stringRenderer.renderString(string, offsetDest, adjustment) )
 		{
-			// We use the dest rect as provided by the blitter, as it
-			// may have been trimmed during the operation.
-			addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
+			addToDirtyArea(blitter);
 		}
 	}
 
@@ -297,5 +291,19 @@ namespace BadgerGL
 		{
 			BadgerMath::enlarge(m_DirtyArea, area);
 		}
+	}
+
+	void BitmapRenderer::addToDirtyArea(const BitmapBlitter& blitter)
+	{
+		// We use the dest rect as provided by the blitter, as it
+		// may have been trimmed during the operation.
+		addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
+	}
+
+	void BitmapRenderer::addToDirtyArea(const BitmapMaskBlitter& blitter)
+	{
+		// We use the dest rect as provided by the blitter, as it
+		// may have been trimmed during the operation.
+		addToDirtyArea(blitter.destRect().rect2DCast<URect16>());
 	}
 }

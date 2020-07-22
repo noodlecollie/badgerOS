@@ -8,6 +8,9 @@
 
 namespace BadgerGL
 {
+	class BitmapBlitter;
+	class BitmapMaskBlitter;
+
 	// Class for rendering graphics to a provided bitmap.
 	// The bitmap is expected to exist for the lifetime of the class instance.
 	// Rendering to bitmaps which use palettes is not supported right now,
@@ -84,13 +87,15 @@ namespace BadgerGL
 			blitMask(source, Rect16(destPos, 0, 0), sourceRect, drawSecondaryColour);
 		}
 
-		void drawString(const char* string, const Rect16& destRect, int16_t xShift = 0);
+		void drawString(const char* string, const Rect16& destRect, const Point16& adjustment = Point16());
 
 	private:
 		void fill(uint32_t colour);
 		void drawOutline(const Rect16& rect);
 		void drawFilled(const Rect16& rect, uint32_t colour);
 		void addToDirtyArea(const URect16& area);
+		void addToDirtyArea(const BitmapBlitter& blitter);
+		void addToDirtyArea(const BitmapMaskBlitter& blitter);
 
 		BitmapSurface* m_Surface = nullptr;
 		URect16 m_DirtyArea;
