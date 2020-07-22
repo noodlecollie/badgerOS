@@ -4,6 +4,8 @@
 #include <CoreUtil/ArrayUtil.h>
 #include "BMFFileReader.h"
 
+// TODO: This whole file could do with a good refactor.
+
 namespace
 {
 	using BadgerGL::BMFFileReader;
@@ -124,25 +126,6 @@ namespace
 
 		return BMFFileReader::FileStatus::Valid;
 	}
-
-	// This assumes a valid file.
-	static const Block_Character* getCharacterBlocks(const void* fileData, size_t fileLength, uint32_t& characterCount)
-	{
-		const uint8_t* const base = static_cast<const uint8_t*>(fileData) + sizeof(BMF_SIGNATURE);
-
-		for ( const BlockIdentifier* identifier = reinterpret_cast<const BlockIdentifier*>(base);
-			  reinterpret_cast<const uint8_t*>(identifier) - base < fileLength;
-			  identifier = reinterpret_cast<const BlockIdentifier*>(reinterpret_cast<const uint8_t*>(identifier) + sizeof(BlockIdentifier) + identifier->blockLength) )
-		{
-			if ( identifier->blockId == Block_Character::BLOCK_ID )
-			{
-				characterCount = identifier->blockLength / sizeof(Block_Character);
-				return reinterpret_cast<const Block_Character*>(reinterpret_cast<const uint8_t*>(identifier) + sizeof(BlockIdentifier));
-			}
-		}
-
-		return nullptr;
-	}
 }
 
 namespace BadgerGL
@@ -156,11 +139,17 @@ namespace BadgerGL
 			: "<unknown>";
 	}
 
+	BMFFileReader::BMFFileReader()
+	{
+		clearBlockOffsets();
+	}
+
 	void BMFFileReader::setFileData(const CoreUtil::ConstBlob& data)
 	{
 		m_FileData = data;
 		m_FileStatus = data.isValid() ? FileStatus::Unverified : FileStatus::NoFileProvided;
 		m_BlockFailedValidation = 0;
+		clearBlockOffsets();
 	}
 
 	void BMFFileReader::setCharInfoBuffer(BitmapMaskFont::CharInfoBuffer* buffer)
@@ -175,11 +164,9 @@ namespace BadgerGL
 			return;
 		}
 
-		uint32_t characterCount = 0;
-		const Block_Character* characters = getCharacterBlocks(m_FileData.constData(), m_FileData.length(), characterCount);
-
-		// Given we've already validated the file at this point, we expect to be able to get the data properly.
-		BGRS_ASSERT(characters, "Character data was not found in validated file!");
+		const uint8_t* const base = m_FileData.constBytes() + m_BlockOffsets[Block_Character::BLOCK_ID];
+		const Block_Character* characters = reinterpret_cast<const Block_Character*>(base);
+		uint32_t characterCount = (reinterpret_cast<const BlockIdentifier*>(base - sizeof(BlockIdentifier))->blockLength) / sizeof(Block_Character);
 
 		for ( uint32_t index = 0; index < characterCount; ++index )
 		{
@@ -207,10 +194,27 @@ namespace BadgerGL
 		}
 	}
 
+	uint16_t BMFFileReader::lineHeight() const
+	{
+		if ( m_FileStatus != FileStatus::Valid )
+		{
+			return 0;
+		}
+
+		const uint8_t* const base = m_FileData.constBytes() + m_BlockOffsets[Block_Common::BLOCK_ID];
+		return reinterpret_cast<const Block_Common*>(base)->lineHeight;
+	}
+
 	BMFFileReader::FileStatus BMFFileReader::validateFile()
 	{
 		m_BlockFailedValidation = 0;
 		m_FileStatus = validateFileInternal();
+
+		if ( m_FileStatus != FileStatus::Valid )
+		{
+			clearBlockOffsets();
+		}
+
 		return m_FileStatus;
 	}
 
@@ -306,6 +310,8 @@ namespace BadgerGL
 			return FileStatus::BlockDataWasNotValid;
 		}
 
+		m_BlockOffsets[Block_Info::BLOCK_ID] = (fileData + sizeof(BlockIdentifier)) - m_FileData.constBytes();
+
 		fileData += sizeof(BlockIdentifier) + blockLength;
 		fileLength -= sizeof(BlockIdentifier) + blockLength;
 		return FileStatus::Valid;
@@ -320,6 +326,8 @@ namespace BadgerGL
 		{
 			return status;
 		}
+
+		m_BlockOffsets[Block_Common::BLOCK_ID] = (fileData + sizeof(BlockIdentifier)) - m_FileData.constBytes();
 
 		fileData += sizeof(BlockIdentifier) + blockLength;
 		fileLength -= sizeof(BlockIdentifier) + blockLength;
@@ -359,6 +367,8 @@ namespace BadgerGL
 			return FileStatus::BlockDataWasNotValid;
 		}
 
+		m_BlockOffsets[Block_Character::BLOCK_ID] = (fileData + sizeof(BlockIdentifier)) - m_FileData.constBytes();
+
 		fileData += sizeof(BlockIdentifier) + blockLength;
 		fileLength -= sizeof(BlockIdentifier) + blockLength;
 		return FileStatus::Valid;
@@ -385,5 +395,10 @@ namespace BadgerGL
 		fileData += sizeof(BlockIdentifier) + blockLength;
 		fileLength -= sizeof(BlockIdentifier) + blockLength;
 		return FileStatus::Valid;
+	}
+
+	void BMFFileReader::clearBlockOffsets()
+	{
+		memset(m_BlockOffsets, 0, sizeof(m_BlockOffsets));
 	}
 }

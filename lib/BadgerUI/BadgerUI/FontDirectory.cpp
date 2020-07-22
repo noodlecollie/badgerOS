@@ -48,6 +48,7 @@ namespace BadgerUI
 
 			reader.populateCharInfo();
 
+			item.fontObject.setLineHeight(reader.lineHeight());
 			item.fontObject.setCharDataBuffer(item.fontCharData);
 			item.fontObject.setFontBitmap(item.fontBitmap);
 

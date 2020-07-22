@@ -42,6 +42,9 @@ namespace BadgerGL
 		const BitmapMask* fontBitmap() const;
 		void setFontBitmap(const BitmapMask* bitmap);
 
+		uint16_t lineHeight() const;
+		void setLineHeight(uint16_t height);
+
 		const CharInfoBuffer& charDataBuffer() const;
 		void setCharDataBuffer(const CharInfoBuffer& buffer);
 
@@ -61,5 +64,6 @@ namespace BadgerGL
 	private:
 		const BitmapMask* m_FontBitmap = nullptr;
 		CharInfoBuffer m_CharData;
+		uint16_t m_LineHeight = 0;
 	};
 }

@@ -28,6 +28,8 @@ namespace BadgerGL
 
 		static const char* fileStatusDescription(FileStatus status);
 
+		BMFFileReader();
+
 		void setFileData(const CoreUtil::ConstBlob& data);
 		void setCharInfoBuffer(BitmapMaskFont::CharInfoBuffer* buffer);
 
@@ -43,7 +45,14 @@ namespace BadgerGL
 		// is not valid, this function does nothing.
 		void populateCharInfo();
 
+		uint16_t lineHeight() const;
+
 	private:
+		static constexpr size_t MAX_BLOCKS = 5;
+
+		uint m_BlockOffsets[MAX_BLOCKS];
+
+		void clearBlockOffsets();
 		FileStatus validateFileInternal();
 
 		FileStatus validateInfoBlock(const uint8_t*& fileData, size_t& fileLength);
@@ -56,5 +65,8 @@ namespace BadgerGL
 		FileStatus m_FileStatus = FileStatus::NoFileProvided;
 		uint8_t m_BlockFailedValidation = 0;
 		BitmapMaskFont::CharInfoBuffer* m_CharBuffer = nullptr;
+
+		uint32_t m_CharactersBlockOffset = 0;
+		uint32_t m_CommonBlockOffset = 0;
 	};
 }
