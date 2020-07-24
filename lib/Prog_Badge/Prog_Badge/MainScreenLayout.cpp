@@ -38,10 +38,12 @@ namespace Badge
 		addItemToTail(&m_PlaceholderCharacterImage);
 
 		m_MessageLabel.setRect(UIRect(UIPoint(0, m_Height - TEXT_AREA_HEIGHT), m_Width, TEXT_AREA_HEIGHT));
-		m_MessageLabel.setHorizontalAlignment(BadgerUI::HAlignment::Left);
+		m_MessageLabel.setHorizontalAlignment(BadgerUI::HAlignment::Centre);
 		m_MessageLabel.setVerticalAlignment(BadgerUI::VAlignment::Centre);
 		m_MessageLabel.setText("Testing");
 		m_MessageLabel.setFont(UIModule::fontDirectory().getFont(FontID::ArialStd));
+		m_MessageLabel.setFillColour(ColourProperty(ColourScheme::Colour_Background));
+		m_MessageLabel.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
 
 		addItemToTail(&m_MessageLabel);
 	}

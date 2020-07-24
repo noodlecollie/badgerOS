@@ -1,6 +1,22 @@
+#include <cmath>
+#include <Arduino.h>
 #include <BadgerGL/StringRenderer.h>
 #include "Label.h"
 
+namespace
+{
+	inline float offsetMod(float x, float y)
+	{
+		if ( x >= 0 )
+		{
+			return std::fmod(x, y);
+		}
+		else
+		{
+			return y - std::fmod(-x, y);
+		}
+	}
+}
 namespace BadgerUI
 {
 	Label::Label() :
@@ -66,18 +82,38 @@ namespace BadgerUI
 		m_VAlignment = align;
 	}
 
-	int16_t Label::xShift() const
+	UIPoint Label::positionAdjustment() const
 	{
-		return m_XShift;
+		return m_PositionAdjust;
 	}
 
-	void Label::setXShift(int16_t shift)
+	void Label::setPositionAdjustment(const UIPoint& adjust)
 	{
-		setPropertyIfDifferent(m_XShift, shift);
+		m_PositionAdjust = adjust;
+	}
+
+	float Label::scrollRate() const
+	{
+		return m_ScrollRatePPS;
+	}
+
+	void Label::setScrollRate(float pixPerSec)
+	{
+		m_ScrollRatePPS = pixPerSec;
+	}
+
+	void Label::resetScroll()
+	{
+		m_XShiftFromScroll = 0.0f;
 	}
 
 	void Label::delegatedUpdate(const UIUpdateContext& context)
 	{
+		if ( m_LastUpdate == 0 )
+		{
+			m_LastUpdate = millis();
+		}
+
 		if ( m_RecalculateStringWidth )
 		{
 			m_StringWidth = (m_Font && m_Text && *m_Text)
@@ -86,6 +122,13 @@ namespace BadgerUI
 
 			m_RecalculateStringWidth = false;
 		}
+
+		if ( m_ScrollRatePPS != 0.0f && m_StringWidth > 0 )
+		{
+			updateXShiftFromScroll();
+		}
+
+		m_LastUpdate = millis();
 	}
 
 	void Label::delegatedDraw(const UIDrawContext& context)
@@ -100,7 +143,18 @@ namespace BadgerUI
 			return;
 		}
 
-		const UIPoint adjustment(horizontalAlignmentShift() + m_XShift, verticalAlignmentShift());
+		const int16_t hAlignShift = horizontalAlignmentShift();
+		const float rectWidth = static_cast<float>(rect().width());
+		const float stringWidth = static_cast<float>(m_StringWidth);
+
+		// m_XShiftFromScroll is in the range [0   stringWidth + rectWidth).
+		// We want to add it to the existing X offset for horizontal alignment,
+		// and then perform a modulo on the offset.
+		float xShift = hAlignShift + m_XShiftFromScroll;
+		xShift = offsetMod(xShift + stringWidth, rectWidth + stringWidth) - stringWidth;
+		xShift += m_PositionAdjust.x();
+
+		const UIPoint adjustment(UIPoint(xShift, verticalAlignmentShift() + m_PositionAdjust.y()));
 
 		context.renderer->setFont(m_Font);
 		context.renderer->setPrimaryColour(m_TextColour.schemeColour(*context.colourScheme));
@@ -110,6 +164,25 @@ namespace BadgerUI
 	bool Label::shouldDrawBox() const
 	{
 		return drawStyle() != BadgerGL::ShapeDrawStyle::Outline || outlineWidth() > 0;
+	}
+
+	void Label::updateXShiftFromScroll()
+	{
+		const CoreUtil::TimevalMs elapsedTimeMs = millis() - m_LastUpdate;
+
+		if ( elapsedTimeMs < 1 )
+		{
+			return;
+		}
+
+		const float elapsedTimeSecs = static_cast<float>(elapsedTimeMs) / 1000.0f;
+		const float maxDistanceFromZero = static_cast<float>(rect().width() + m_StringWidth);
+		const float delta = m_ScrollRatePPS * elapsedTimeSecs;
+
+		float newXShift = m_XShiftFromScroll + delta;
+		newXShift = offsetMod(newXShift, maxDistanceFromZero);
+
+		setPropertyIfDifferent(m_XShiftFromScroll, newXShift);
 	}
 
 	// This is the number of pixels that the left of the string should be away
