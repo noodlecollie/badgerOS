@@ -1,4 +1,4 @@
-#include <CoreUtil/StringUtil.h>
+#include <StringLib/StringUtils.h>
 #include "StringRenderer.h"
 
 namespace BadgerGL
@@ -62,7 +62,7 @@ namespace BadgerGL
 
 		bool renderedCharacters = false;
 
-		for ( ; *str && targetRect.width() > 0; str = CoreUtil::nextCharUTF8(str) )
+		for ( ; *str && targetRect.width() > 0; str = StringLib::nextCharUTF8(str) )
 		{
 			const BitmapMaskFont::CharInfo* chInfo = m_Font->charData(str);
 
@@ -94,7 +94,7 @@ namespace BadgerGL
 
 		size_t width = 0;
 
-		for ( ; *str; str = CoreUtil::nextCharUTF8(str) )
+		for ( ; *str; str = StringLib::nextCharUTF8(str) )
 		{
 			const BitmapMaskFont::CharInfo* chInfo = m_Font->charData(str);
 

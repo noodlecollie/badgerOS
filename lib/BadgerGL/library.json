@@ -2,6 +2,7 @@
 	"dependencies":
 	[
 		{ "name": "CoreUtil" },
+		{ "name": "StringLib" },
 		{ "name": "BadgerMath" }
 	]
 }
