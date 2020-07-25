@@ -10,6 +10,7 @@
 		{ "name": "Wire" },
 		{ "name": "SPIFFS" },
 		{ "name": "FS" },
-		{ "name": "BadgerUI" }
+		{ "name": "BadgerUI" },
+		{ "name": "SerialConsole" }
 	]
 }

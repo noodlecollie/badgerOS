@@ -70,7 +70,7 @@ namespace StringLib
 		return strcat(string);
 	}
 
-	bool StringBuilder::snprintf(const char* format, ...)
+	bool StringBuilder::sprintf(const char* format, ...)
 	{
 		if ( !isValid() || !format )
 		{
@@ -80,13 +80,13 @@ namespace StringLib
 		va_list args;
 
 		va_start(args, format);
-		size_t result = vsnprintf(format, args);
+		size_t result = vsprintf(format, args);
 		va_end(args);
 
 		return result;
 	}
 
-	bool StringBuilder::vsnprintf(const char* format, va_list args)
+	bool StringBuilder::vsprintf(const char* format, va_list args)
 	{
 		if ( !isValid() || !format )
 		{
@@ -120,6 +120,17 @@ namespace StringLib
 		}
 
 		return vFormatInternal(m_Cursor, format, args);
+	}
+
+	bool StringBuilder::appendChar(char ch)
+	{
+		if ( !isValid() || writableCharsRemainingInternal() < 1 )
+		{
+			return false;
+		}
+
+		*(m_Cursor++) = ch;
+		return true;
 	}
 
 	bool StringBuilder::appendRepeatedChar(char ch, size_t count)

@@ -11,7 +11,7 @@ namespace StringLib
 	public:
 		// The buffer passed in is not owned by the StringBuilder. It is assumed that this
 		// buffer will exist for the entire time the StringBuilder is in use.
-		StringBuilder(char* buffer, size_t length);
+		StringBuilder(char* buffer = nullptr, size_t length = 0);
 
 		inline bool isValid() const
 		{
@@ -74,10 +74,11 @@ namespace StringLib
 		// before and after the operation.
 		bool strcat(const char* string);
 		bool strcpy(const char* string);
-		bool snprintf(const char* format, ...);
-		bool vsnprintf(const char* format, va_list args);
+		bool sprintf(const char* format, ...);
+		bool vsprintf(const char* format, va_list args);
 		bool appendFormat(const char* format, ...);
 		bool appendVFormat(const char* format, va_list args);
+		bool appendChar(char ch);
 		bool appendRepeatedChar(char ch, size_t count);
 
 		void clear();
@@ -153,6 +154,12 @@ namespace StringLib
 	inline StringBuilder& operator <<(StringBuilder& builder, float value)
 	{
 		builder.appendFormat("%f", value);
+		return builder;
+	}
+
+	inline StringBuilder& operator <<(StringBuilder& builder, char character)
+	{
+		builder.appendChar(character);
 		return builder;
 	}
 }
