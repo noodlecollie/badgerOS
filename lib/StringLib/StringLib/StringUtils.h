@@ -7,6 +7,7 @@ namespace StringLib
 	// Safe versions of the C library functions, which will always terminate the target string.
 	int snprintf_safe(char* buffer, size_t bufferSize, const char* format, ...);
 	int vsnprintf_safe(char* buffer, size_t bufferSize, const char* format, va_list args);
+	char* strncpy_safe(char* buffer, size_t bufferSize, const char* source, size_t maxSourceChars);
 
 	void condenseSpaces(char* str);
 	bool equal(const char* str1, const char* str2);
@@ -24,6 +25,11 @@ namespace StringLib
 	// These functions actually return success or failure, to be less infuriating.
 	bool toFloat(const char* string, float* out);
 	bool toInt(const char* string, int* out);
+
+	// Returns a pointer to the first instance of the given delimiter.
+	// If the delimiter is not found, returns a pointer to the string terminator.
+	// This assumes that the string is ASCII; UTF-8 is not yet supported.
+	const char* firstDelimiter(const char* string, char delimiter);
 
 	inline size_t bytesForUTF8Char(const char* str)
 	{

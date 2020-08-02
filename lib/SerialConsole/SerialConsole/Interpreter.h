@@ -9,7 +9,13 @@ namespace SerialConsole
 	class Interpreter
 	{
 	public:
-		using CommandCallback = std::function<void(const char*, StringLib::StringBuilder&)>;
+		enum CommandResult
+		{
+			InProgress,
+			Completed
+		};
+
+		using CommandCallback = std::function<CommandResult(const char*, StringLib::StringBuilder&)>;
 
 		void setReadBuffer(char* buffer, size_t size);
 		void setWriteBuffer(char* buffer, size_t size);
@@ -30,13 +36,22 @@ namespace SerialConsole
 
 		void loopRead();
 		void loopWrite();
-		void invokeCallback();
 		void eraseCommandTrailingNewlines();
+
+		// Returns true if the command completed.
+		// If false is returned, continueCommand() should be called again next loop().
+		bool initiateCommand();
+		bool continueCommand();
+
+		void prepareCommand();
+		void invokeCommand();
+		void completeCommand();
 
 		Buffer m_ReadBuffer;
 		Buffer m_WriteBuffer;
 		const char* m_WriteCursor = nullptr;
 		CommandCallback m_Callback;
+		CommandResult m_LastCommandResult = CommandResult::Completed;
 		State m_State = State::Reading;
 	};
 

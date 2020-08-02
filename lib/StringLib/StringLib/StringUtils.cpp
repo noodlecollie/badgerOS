@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cstdio>
+#include <algorithm>
 #include "StringUtils.h"
 
 namespace StringLib
@@ -144,6 +145,31 @@ namespace StringLib
 		return ensureVsnprintfTerminated(buffer, bufferSize, ::vsnprintf(buffer, bufferSize, format, args));
 	}
 
+	char* strncpy_safe(char* buffer, size_t bufferSize, const char* source, size_t maxSourceChars)
+	{
+		if ( !buffer || bufferSize < 1 || !source || maxSourceChars < 1 )
+		{
+			return buffer;
+		}
+
+		const size_t charsToCopy = std::min(bufferSize, maxSourceChars);
+		strncpy(buffer, source, charsToCopy);
+
+		if ( charsToCopy == bufferSize )
+		{
+			// We filled the buffer completely. Always make sure the last character is a null.
+			buffer[bufferSize - 1] = '\0';
+		}
+		else if ( buffer[charsToCopy - 1] != '\0' )
+		{
+			// We didn't fill the buffer, but the last character copied in was not a null.
+			// Make sure the next character on is a null.
+			buffer[charsToCopy] = '\0';
+		}
+
+		return buffer;
+	}
+
 	// Converts sequences of consecutive space characters to a single space.
 	void condenseSpaces(char* const str)
 	{
@@ -279,5 +305,20 @@ namespace StringLib
 
 		*out = value;
 		return true;
+	}
+
+	const char* firstDelimiter(const char* string, char delimiter)
+	{
+		if ( !string )
+		{
+			return nullptr;
+		}
+
+		while ( *string != delimiter && *string != '\0' )
+		{
+			++string;
+		}
+
+		return string;
 	}
 }

@@ -43,6 +43,12 @@ namespace SerialConsole
 
 	void Interpreter::loopRead()
 	{
+		if ( m_LastCommandResult != CommandResult::Completed )
+		{
+			continueCommand();
+			return;
+		}
+
 		for ( int availableBytes = Serial.available(); availableBytes > 0; --availableBytes )
 		{
 			const char ch = static_cast<char>(Serial.read());
@@ -66,12 +72,7 @@ namespace SerialConsole
 				// We read a full line. Execute the command.
 				// This call terminates the command string.
 				eraseCommandTrailingNewlines();
-				invokeCallback();
-
-				if ( m_WriteBuffer.strlen() > 0 )
-				{
-					m_State = State::Writing;
-				}
+				initiateCommand();
 
 				return;
 			}
@@ -114,16 +115,53 @@ namespace SerialConsole
 		}
 	}
 
-	void Interpreter::invokeCallback()
+	bool Interpreter::initiateCommand()
 	{
-		m_WriteBuffer.clear();
+		prepareCommand();
+		return continueCommand();
+	}
 
-		if ( m_Callback )
+	bool Interpreter::continueCommand()
+	{
+		invokeCommand();
+
+		if ( m_LastCommandResult != CommandResult::Completed )
 		{
-			m_Callback(m_ReadBuffer.string(), m_WriteBuffer);
+			return false;
 		}
 
+		completeCommand();
+		return true;
+	}
+
+	// Preparation before the first invocation of the command callback.
+	void Interpreter::prepareCommand()
+	{
+		m_WriteBuffer.clear();
+	}
+
+	// Invokes the command callback and stores the result.
+	void Interpreter::invokeCommand()
+	{
+		if ( m_Callback )
+		{
+			m_LastCommandResult = m_Callback(m_ReadBuffer.string(), m_WriteBuffer);
+		}
+		else
+		{
+			m_LastCommandResult = CommandResult::Completed;
+		}
+	}
+
+	// Called once the command returns the result Commandresult::Completed.
+	void Interpreter::completeCommand()
+	{
 		m_ReadBuffer.clear();
+
+		if ( m_WriteBuffer.strlen() > 0 )
+		{
+			m_State = State::Writing;
+		}
 	}
 
 	void Interpreter::eraseCommandTrailingNewlines()

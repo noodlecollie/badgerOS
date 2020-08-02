@@ -23,7 +23,23 @@ namespace Badge
 
 	void UIModuleResources::loop(CoreUtil::TimevalMs currentTime)
 	{
-		using namespace BadgerGL;
+		updateInput();
+
+		if ( !updateUI(currentTime) )
+		{
+			return;
+		}
+
+		renderUI();
+	}
+
+	void UIModuleResources::updateInput()
+	{
+		serialInterpreter.loop();
+	}
+
+	bool UIModuleResources::updateUI(CoreUtil::TimevalMs currentTime)
+	{
 		using namespace BadgerUI;
 
 		UIUpdateContext updateContext;
@@ -32,10 +48,13 @@ namespace Badge
 
 		mainScreen.updateItems(updateContext);
 
-		if ( mainScreen.dirtyState() == DrawableDirtyState::NotDirty )
-		{
-			return;
-		}
+		return mainScreen.dirtyState() != DrawableDirtyState::NotDirty;
+	}
+
+	void UIModuleResources::renderUI()
+	{
+		using namespace BadgerUI;
+		using namespace BadgerGL;
 
 		BitmapRenderer renderer(&screenBufferSurface);
 
