@@ -1,12 +1,12 @@
 #pragma once
 
-#include <BadgerUI/FontDirectory.h>
+#include "UIModuleResources.h"
 
 namespace Badge
 {
 	namespace UIModule
 	{
-		const BadgerUI::FontDirectory& fontDirectory();
+		const UIModuleResources& resourcesObject();
 
 		void setup();
 		void loop();

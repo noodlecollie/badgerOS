@@ -7,50 +7,50 @@ namespace BadgerUI
 	class ButtonInputRecorder
 	{
 	public:
-		inline bool IsPressed(uint32_t button) const
+		inline bool isPressed(uint32_t button) const
 		{
-			return IsPressed(button, m_CurrentButtons);
+			return isPressed(button, m_CurrentButtons);
 		}
 
-		inline bool IsReleased(uint32_t button) const
+		inline bool isReleased(uint32_t button) const
 		{
-			return !IsPressed(button);
+			return !isPressed(button);
 		}
 
-		inline bool WasPressedThisFrame(uint32_t button) const
+		inline bool wasPressedThisFrame(uint32_t button) const
 		{
-			return IsPressed(button) && !IsPressed(button, m_LastButtons);
+			return isPressed(button) && !isPressed(button, m_LastButtons);
 		}
 
-		inline bool WasReleasedThisFrame(uint32_t button) const
+		inline bool wasReleasedThisFrame(uint32_t button) const
 		{
-			return !IsPressed(button) && IsPressed(button, m_LastButtons);
+			return !isPressed(button) && isPressed(button, m_LastButtons);
 		}
 
-		inline void Clear()
+		inline void clear()
 		{
 			m_LastButtons = 0;
 			m_CurrentButtons = 0;
 		}
 
-		inline void AdvanceFrame()
+		inline void advanceFrame()
 		{
 			m_LastButtons = m_CurrentButtons;
 			m_CurrentButtons = 0;
 		}
 
-		inline void SetPressed(uint32_t button)
+		inline void setPressed(uint32_t button)
 		{
 			m_CurrentButtons |= button;
 		}
 
-		inline void SetReleased(uint32_t button)
+		inline void setReleased(uint32_t button)
 		{
 			m_CurrentButtons &= ~button;
 		}
 
 	private:
-		inline bool IsPressed(uint32_t button, uint32_t data) const
+		inline bool isPressed(uint32_t button, uint32_t data) const
 		{
 			return (data & button) != 0;
 		}
