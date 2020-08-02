@@ -4,6 +4,7 @@
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/BaseUIDrawable.h>
+#include <BadgerUI/ButtonInputRecorder.h>
 #include "UIModule.h"
 #include "MainScreenLayout.h"
 
@@ -18,6 +19,7 @@ namespace Badge
 		static BadgerUI::ColourScheme ColScheme;
 		static CoreUtil::TimevalMs LastUpdate = 0;
 		static BadgerUI::FontDirectory FontDirectory;
+		static BadgerUI::ButtonInputRecorder Buttons;
 
 		const BadgerUI::FontDirectory& fontDirectory()
 		{
@@ -52,6 +54,7 @@ namespace Badge
 
 			UIUpdateContext updateContext;
 			updateContext.currentTimeMs = currentTime;
+			updateContext.buttons = Buttons;
 
 			MainScreen.updateItems(updateContext);
 			LastUpdate = currentTime;

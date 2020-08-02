@@ -8,6 +8,7 @@
 #include "ColourScheme.h"
 #include "Types.h"
 #include "FontDirectory.h"
+#include "ButtonInputRecorder.h"
 
 namespace BadgerUI
 {
@@ -24,6 +25,10 @@ namespace BadgerUI
 		// Note that according to documentation, this overflows roughly every 50 days.
 		// Don't do any long-term timestamp recording with this.
 		CoreUtil::TimevalMs currentTimeMs = 0;
+
+		// Which buttons are currently pressed, and which were pressed on the previous
+		// update call.
+		ButtonInputRecorder buttons;
 	};
 
 	struct UIDrawContext
