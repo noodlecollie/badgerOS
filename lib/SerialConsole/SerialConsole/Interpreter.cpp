@@ -62,7 +62,7 @@ namespace SerialConsole
 
 				m_ReadBuffer.clear();
 				m_WriteBuffer.clear();
-				m_WriteBuffer.strcat("Read buffer overflow!\n");
+				m_WriteBuffer.strcat("Read buffer overflow!\r\n");
 				m_State = State::Writing;
 				return;
 			}
@@ -145,7 +145,7 @@ namespace SerialConsole
 	{
 		if ( m_Callback )
 		{
-			m_LastCommandResult = m_Callback(m_ReadBuffer.string(), m_WriteBuffer);
+			m_LastCommandResult = m_Callback(m_ReadBuffer.mutableBegin(), m_WriteBuffer);
 		}
 		else
 		{

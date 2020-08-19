@@ -6,7 +6,6 @@
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/BaseUIDrawable.h>
 #include <BadgerUI/ButtonInputRecorder.h>
-#include <SerialConsole/Interpreter.h>
 #include "MainScreenLayout.h"
 
 namespace Badge
@@ -23,10 +22,8 @@ namespace Badge
 		BadgerUI::ColourScheme colScheme;
 		BadgerUI::FontDirectory fontDirectory;
 		BadgerUI::ButtonInputRecorder buttons;
-		SerialConsole::StaticallyAllocatedInterpreter<128, 128> serialInterpreter;
 
 	private:
-		void updateInput();
 		bool updateUI(CoreUtil::TimevalMs currentTime);
 		void renderUI();
 	};

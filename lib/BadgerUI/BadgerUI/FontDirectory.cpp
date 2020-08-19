@@ -40,7 +40,7 @@ namespace BadgerUI
 				const uint8_t block = reader.idOfBlockThatFailedValidation();
 				const char* const description = BMFFileReader::fileStatusDescription(status);
 
-				Serial.printf("Font %u failed to load. Error: %s. (faulty block ID: %u)\n", index, description, block);
+				Serial.printf("Font %u failed to load. Error: %s. (faulty block ID: %u)\r\n", index, description, block);
 
 				success = false;
 				return;

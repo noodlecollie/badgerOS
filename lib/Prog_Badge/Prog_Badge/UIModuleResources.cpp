@@ -23,19 +23,12 @@ namespace Badge
 
 	void UIModuleResources::loop(CoreUtil::TimevalMs currentTime)
 	{
-		updateInput();
-
 		if ( !updateUI(currentTime) )
 		{
 			return;
 		}
 
 		renderUI();
-	}
-
-	void UIModuleResources::updateInput()
-	{
-		serialInterpreter.loop();
 	}
 
 	bool UIModuleResources::updateUI(CoreUtil::TimevalMs currentTime)

@@ -74,23 +74,23 @@ namespace SanityTest
 
 		if ( !SPIFFS.exists("/hello.txt") )
 		{
-			Serial.printf("/hello.txt does not exist.\n");
+			Serial.printf("/hello.txt does not exist.\r\n");
 			return;
 		}
 
-		Serial.printf("/hello.txt exists.\n");
+		Serial.printf("/hello.txt exists.\r\n");
 		File file = SPIFFS.open("/hello.txt", "r");
 
 		if ( !file )
 		{
-			Serial.printf("/hello.txt failed to open.\n");
+			Serial.printf("/hello.txt failed to open.\r\n");
 			return;
 		}
 
 		char data[32];
 		file.readBytes(data, sizeof(data));
 
-		Serial.printf("First 32 bytes of data: %s\n", data);
+		Serial.printf("First 32 bytes of data: %s\r\n", data);
 		file.close();
 	}
 
@@ -112,36 +112,36 @@ namespace SanityTest
 		//Serial.begin(config.serialConfig->baudRate);
 		PlatformConfig::initialiseSubsystem(&PlatformConfig::Config::serialConfig, &testDelegatedSerialInit);
 
-		Serial.printf("Sanity test initialising...\n");
-		Serial.printf("Version %s\n", PlatformConfig::Versions::VERSION_STRING_FULL);
-		Serial.printf("\n");
+		Serial.printf("Sanity test initialising...\r\n");
+		Serial.printf("Version %s\r\n", PlatformConfig::Versions::VERSION_STRING_FULL);
+		Serial.printf("\r\n");
 
-		Serial.printf("=== Chip select configuration ===\n");
-		Serial.printf("              OLED: %u\n", config.chipSelectConfig->oledScreenCSPin);
-		Serial.printf("\n");
+		Serial.printf("=== Chip select configuration ===\r\n");
+		Serial.printf("              OLED: %u\r\n", config.chipSelectConfig->oledScreenCSPin);
+		Serial.printf("\r\n");
 
-		Serial.printf("=== Serial configuration ===\n");
-		Serial.printf("         Baud rate: %u\n", config.serialConfig->baudRate);
-		Serial.printf("\n");
+		Serial.printf("=== Serial configuration ===\r\n");
+		Serial.printf("         Baud rate: %u\r\n", config.serialConfig->baudRate);
+		Serial.printf("\r\n");
 
-		Serial.printf("=== SSD1351 configuration ===\n");
-		Serial.printf("             Reset: %u\n", config.ssd1351Config->resetPin);
-		Serial.printf("      Data/command: %u\n", config.ssd1351Config->dataCommandPin);
-		Serial.printf("\n");
+		Serial.printf("=== SSD1351 configuration ===\r\n");
+		Serial.printf("             Reset: %u\r\n", config.ssd1351Config->resetPin);
+		Serial.printf("      Data/command: %u\r\n", config.ssd1351Config->dataCommandPin);
+		Serial.printf("\r\n");
 
-		Serial.printf("=== SPI configuration ===\n");
-		Serial.printf("         Data mode: %u\n", config.spiConfig->dataMode);
-		Serial.printf("         Bit order: %u\n", config.spiConfig->bitOrder);
-		Serial.printf("     Clock divider: %u\n", config.spiConfig->clockDivider);
-		Serial.printf("         Clock pin: %u\n", config.spiPinConfig->clockPin);
-		Serial.printf("          MISO pin: %u\n", config.spiPinConfig->misoPin);
-		Serial.printf("          MOSI pin: %u\n", config.spiPinConfig->mosiPin);
-		Serial.printf(" Write protect pin: %u\n", config.spiPinConfig->writeProtectPin);
-		Serial.printf("          Hold pin: %u\n", config.spiPinConfig->holdPin);
-		Serial.printf("\n");
+		Serial.printf("=== SPI configuration ===\r\n");
+		Serial.printf("         Data mode: %u\r\n", config.spiConfig->dataMode);
+		Serial.printf("         Bit order: %u\r\n", config.spiConfig->bitOrder);
+		Serial.printf("     Clock divider: %u\r\n", config.spiConfig->clockDivider);
+		Serial.printf("         Clock pin: %u\r\n", config.spiPinConfig->clockPin);
+		Serial.printf("          MISO pin: %u\r\n", config.spiPinConfig->misoPin);
+		Serial.printf("          MOSI pin: %u\r\n", config.spiPinConfig->mosiPin);
+		Serial.printf(" Write protect pin: %u\r\n", config.spiPinConfig->writeProtectPin);
+		Serial.printf("          Hold pin: %u\r\n", config.spiPinConfig->holdPin);
+		Serial.printf("\r\n");
 
-		Serial.printf("Screen buffer dimensions: %ux%u, bit depth %u.\n", ScreenBufferSurface.width(), ScreenBufferSurface.height(), ScreenBufferSurface.bitDepth());
-		Serial.printf("Screen buffer size: %u bytes.\n", ScreenBufferSurface.pixelDataSize());
+		Serial.printf("Screen buffer dimensions: %ux%u, bit depth %u.\r\n", ScreenBufferSurface.width(), ScreenBufferSurface.height(), ScreenBufferSurface.bitDepth());
+		Serial.printf("Screen buffer size: %u bytes.\r\n", ScreenBufferSurface.pixelDataSize());
 
 		PlatformConfig::chipSelectSetup(*config.chipSelectConfig);
 		PlatformConfig::spiSetup(*config.spiConfig);

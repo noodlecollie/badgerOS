@@ -26,7 +26,7 @@ namespace CoreUtil
 	{
 		if ( !condition )
 		{
-			Serial.printf("\n** ASSERTION FAILED: \"%s\" @ %s:%d. Message: %s\n", conditionStr, file, line, desc);
+			Serial.printf("\r\n** ASSERTION FAILED: \"%s\" @ %s:%d. Message: %s\r\n", conditionStr, file, line, desc);
 			Serial.flush();
 
 			bool ledOn = false;

@@ -15,7 +15,7 @@ namespace SerialConsole
 			Completed
 		};
 
-		using CommandCallback = std::function<CommandResult(const char*, StringLib::StringBuilder&)>;
+		using CommandCallback = std::function<CommandResult(char*, StringLib::StringBuilder&)>;
 
 		void setReadBuffer(char* buffer, size_t size);
 		void setWriteBuffer(char* buffer, size_t size);
