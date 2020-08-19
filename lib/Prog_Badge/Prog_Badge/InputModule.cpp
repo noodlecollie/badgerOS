@@ -6,19 +6,18 @@ namespace Badge
 	{
 		static Input::ButtonInputRecorder ButtonInput;
 
-		Input::ButtonInputRecorder& Buttons()
+		Input::ButtonInputRecorder& buttons()
 		{
 			return ButtonInput;
 		}
 
 		void setup()
 		{
-
 		}
 
 		void loop()
 		{
-
+			ButtonInput.advanceFrame();
 		}
 	}
 }

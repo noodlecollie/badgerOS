@@ -4,6 +4,7 @@
 #include "CommandModule.h"
 
 #include "Commands/Echo.h"
+#include "Commands/Btn.h"
 
 namespace Badge
 {
@@ -11,7 +12,8 @@ namespace Badge
 	{
 		const SerialConsole::CommandSwitcher::Command Commands[] =
 		{
-			{ "echo", &Commands::echo }
+			{ "echo", &Commands::echo },
+			{ "btn", &Commands::btn }
 		};
 
 		static SerialConsole::StaticallyAllocatedInterpreter<128, 128> CommandInterpreter;

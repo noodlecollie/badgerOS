@@ -267,44 +267,28 @@ namespace StringLib
 		return inIndex == 2 * inputLength;
 	}
 
-	bool toFloat(const char* string, float* out)
+	bool toFloat(const char* string, float& out)
 	{
-		float value = 0.0f;
-
-		if ( !string || !out )
+		if ( !string )
 		{
 			return false;
 		}
 
-		value = (float)atof(string);
+		out = (float)atof(string);
 
-		if ( value == 0.0f && !doesFirstNumericalPartOfStringRepresentZero(string, true) )
-		{
-			return false;
-		}
-
-		*out = value;
-		return true;
+		return out != 0.0f || doesFirstNumericalPartOfStringRepresentZero(string, true);
 	}
 
-	bool toInt(const char* string, int* out)
+	bool toInt(const char* string, int32_t& out)
 	{
-		int value = 0;
-
-		if ( !string || !out )
+		if ( !string )
 		{
 			return false;
 		}
 
-		value = atoi(string);
+		out = atoi(string);
 
-		if ( value == 0 && !doesFirstNumericalPartOfStringRepresentZero(string, false) )
-		{
-			return false;
-		}
-
-		*out = value;
-		return true;
+		return out != 0 || doesFirstNumericalPartOfStringRepresentZero(string, false);
 	}
 
 	const char* firstDelimiter(const char* string, char delimiter)

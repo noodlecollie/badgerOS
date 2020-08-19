@@ -38,7 +38,7 @@ namespace Badge
 
 		UIUpdateContext updateContext;
 		updateContext.currentTimeMs = currentTime;
-		updateContext.buttons = &InputModule::Buttons();
+		updateContext.buttons = &InputModule::buttons();
 
 		mainScreen.updateItems(updateContext);
 

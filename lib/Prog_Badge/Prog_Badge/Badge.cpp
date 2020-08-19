@@ -4,6 +4,7 @@
 #include "Badge.h"
 #include "UIModule.h"
 #include "CommandModule.h"
+#include "InputModule.h"
 
 namespace Badge
 {
@@ -55,6 +56,11 @@ namespace Badge
 			CommandModule::setup();
 		});
 
+		initialiseSubsystem("InputModule", [](const Config& config)
+		{
+			InputModule::setup();
+		});
+
 		initialiseSubsystem("Power measurement", &Config::powerConfig, &powerSetup);
 		initialiseSubsystem("Chip select pins", &Config::chipSelectConfig, &chipSelectSetup);
 		initialiseSubsystem("SPI setup", &Config::spiConfig, &spiSetup);
@@ -89,6 +95,7 @@ namespace Badge
 
 	void loop()
 	{
+		InputModule::loop();
 		CommandModule::loop();
 		UIModule::loop();
 	}

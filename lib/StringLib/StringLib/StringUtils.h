@@ -23,8 +23,8 @@ namespace StringLib
 
 	// The standard C functions return 0 if the string is not numerical.
 	// These functions actually return success or failure, to be less infuriating.
-	bool toFloat(const char* string, float* out);
-	bool toInt(const char* string, int* out);
+	bool toFloat(const char* string, float& out);
+	bool toInt(const char* string, int32_t& out);
 
 	// Returns a pointer to the first instance of the given delimiter.
 	// If the delimiter is not found, returns a pointer to the string terminator.
