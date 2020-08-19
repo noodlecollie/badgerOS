@@ -1,4 +1,5 @@
 #include "UIModuleResources.h"
+#include "InputModule.h"
 
 namespace Badge
 {
@@ -37,7 +38,7 @@ namespace Badge
 
 		UIUpdateContext updateContext;
 		updateContext.currentTimeMs = currentTime;
-		updateContext.buttons = buttons;
+		updateContext.buttons = &InputModule::Buttons();
 
 		mainScreen.updateItems(updateContext);
 

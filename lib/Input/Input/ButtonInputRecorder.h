@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace BadgerUI
+namespace Input
 {
 	class ButtonInputRecorder
 	{

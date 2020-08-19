@@ -11,6 +11,7 @@
 		{ "name": "SPIFFS" },
 		{ "name": "FS" },
 		{ "name": "BadgerUI" },
-		{ "name": "SerialConsole" }
+		{ "name": "SerialConsole" },
+		{ "name": "Input" }
 	]
 }

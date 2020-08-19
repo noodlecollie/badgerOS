@@ -5,7 +5,7 @@
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/BaseUIDrawable.h>
-#include <BadgerUI/ButtonInputRecorder.h>
+#include <Input/ButtonInputRecorder.h>
 #include "MainScreenLayout.h"
 
 namespace Badge
@@ -21,7 +21,6 @@ namespace Badge
 		MainScreenLayout mainScreen;
 		BadgerUI::ColourScheme colScheme;
 		BadgerUI::FontDirectory fontDirectory;
-		BadgerUI::ButtonInputRecorder buttons;
 
 	private:
 		bool updateUI(CoreUtil::TimevalMs currentTime);

@@ -5,10 +5,10 @@
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerGL/BitmapMaskBlitter.h>
+#include <Input/ButtonInputRecorder.h>
 #include "ColourScheme.h"
 #include "Types.h"
 #include "FontDirectory.h"
-#include "ButtonInputRecorder.h"
 
 namespace BadgerUI
 {
@@ -19,6 +19,7 @@ namespace BadgerUI
 		ContainerDirty	// If the item requires its container to be redrawn
 	};
 
+	// Pointers are guaranteed to be valid when an update call is made.
 	struct UIUpdateContext
 	{
 		// Number of miliseconds since the badge was turned on.
@@ -28,12 +29,12 @@ namespace BadgerUI
 
 		// Which buttons are currently pressed, and which were pressed on the previous
 		// update call.
-		ButtonInputRecorder buttons;
+		const Input::ButtonInputRecorder* buttons = nullptr;
 	};
 
+	// Pointers are guaranteed to be valid when a draw call is made.
 	struct UIDrawContext
 	{
-		// These items are guaranteed to be valid when a draw call is made.
 		const BadgerGL::BitmapSurface* screenBuffer = nullptr;
 		BadgerGL::BitmapRenderer* renderer = nullptr;
 		const ColourScheme* colourScheme = nullptr;
