@@ -3,6 +3,7 @@
 	[
 		{ "name": "CoreUtil" },
 		{ "name": "BadgerGL" },
-		{ "name": "BadgerMath" }
+		{ "name": "BadgerMath" },
+		{ "name": "Input" }
 	]
 }
