@@ -4,8 +4,10 @@
 namespace Badge
 {
 	UIModuleResources::UIModuleResources() :
-		mainScreen(SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT)
+		mainScreen(SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT),
+		charInfoScreen(SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT)
 	{
+		memset(m_Screens, 0, sizeof(m_Screens));
 	}
 
 	void UIModuleResources::setup()
@@ -19,20 +21,50 @@ namespace Badge
 		colScheme.setColour(ColourScheme::Colour_Secondary, col24To16(0xc0bcb5));
 
 		fontDirectory.loadAllFonts();
-		mainScreen.setup();
+
+		setUpScreen(mainScreen, MainScreen);
+		setUpScreen(charInfoScreen, CharacterInfoScreen);
+		setCurrentScreen(MainScreen);
+	}
+
+	UIModuleResources::ScreenID UIModuleResources::currentScreen() const
+	{
+		return m_CurrentScreen;
+	}
+
+	void UIModuleResources::setCurrentScreen(ScreenID id)
+	{
+		if ( id < InvalidScreen || id >= ScreenCount )
+		{
+			id = InvalidScreen;
+		}
+
+		m_CurrentScreen = id;
 	}
 
 	void UIModuleResources::loop(CoreUtil::TimevalMs currentTime)
 	{
-		if ( !updateUI(currentTime) )
+		bool shouldSendBuffer = false;
+		const bool currentScreenValid = m_CurrentScreen >= 0 && m_CurrentScreen < ScreenCount && m_Screens[m_CurrentScreen];
+
+		if ( currentScreenValid )
 		{
-			return;
+			BadgerUI::BaseLayout& screen = *(m_Screens[m_CurrentScreen]);
+			shouldSendBuffer = updateUI(screen, currentTime) && renderUI(screen);
+		}
+		else
+		{
+			screenBufferSurface.fill(0x0000);
+			shouldSendBuffer = true;
 		}
 
-		renderUI();
+		if ( shouldSendBuffer )
+		{
+			sendScreenBuffer();
+		}
 	}
 
-	bool UIModuleResources::updateUI(CoreUtil::TimevalMs currentTime)
+	bool UIModuleResources::updateUI(BadgerUI::BaseLayout& screen, CoreUtil::TimevalMs currentTime)
 	{
 		using namespace BadgerUI;
 
@@ -40,12 +72,12 @@ namespace Badge
 		updateContext.currentTimeMs = currentTime;
 		updateContext.buttons = &InputModule::buttons();
 
-		mainScreen.updateItems(updateContext);
+		screen.updateItems(updateContext);
 
-		return mainScreen.dirtyState() != DrawableDirtyState::NotDirty;
+		return screen.dirtyState() != DrawableDirtyState::NotDirty;
 	}
 
-	void UIModuleResources::renderUI()
+	bool UIModuleResources::renderUI(BadgerUI::BaseLayout& screen)
 	{
 		using namespace BadgerUI;
 		using namespace BadgerGL;
@@ -58,17 +90,17 @@ namespace Badge
 		drawContext.screenBuffer = &screenBufferSurface;
 		drawContext.fontDirectory = &fontDirectory;
 
-		switch ( mainScreen.dirtyState() )
+		switch ( screen.dirtyState() )
 		{
 			case DrawableDirtyState::ContainerDirty:
 			{
-				mainScreen.drawAllItems(drawContext);
+				screen.drawAllItems(drawContext);
 				break;
 			}
 
 			case DrawableDirtyState::ItemDirty:
 			{
-				mainScreen.drawDirtyItems(drawContext);
+				screen.drawDirtyItems(drawContext);
 				break;
 			}
 
@@ -78,13 +110,8 @@ namespace Badge
 			}
 		}
 
-		if ( renderer.dirtyArea().isNull() )
-		{
-			return;
-		}
-
 		// For now, just send the whole screen buffer if anything is dirty.
 		// This requires less overhead than converting the dirty area into consecutive bytes.
-		SSD1351::Driver.writeImage(CoreUtil::ConstBlob(screenBufferSurface.rawPixelData(), screenBufferSurface.pixelDataSize()));
+		return !renderer.dirtyArea().isNull();
 	}
 }

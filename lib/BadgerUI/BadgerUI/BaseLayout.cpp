@@ -70,6 +70,8 @@ namespace BadgerUI
 
 	void BaseLayout::updateItems(const UIUpdateContext& context)
 	{
+		preUpdate();
+
 		for ( BaseUIDrawable* item = m_ItemHead; item; item = item->next() )
 		{
 			item->update(context);
@@ -80,6 +82,16 @@ namespace BadgerUI
 				m_DirtyState = dirty;
 			}
 		}
+
+		postUpdate();
+	}
+
+	void BaseLayout::preUpdate()
+	{
+	}
+
+	void BaseLayout::postUpdate()
+	{
 	}
 
 	void BaseLayout::drawDirtyItems(const UIDrawContext& context)

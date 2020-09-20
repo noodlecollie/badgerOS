@@ -1,7 +1,9 @@
 #include <Resources/Images/PlaceholderChar.h>
 #include <Resources/Fonts/ArialStdFont.h>
 #include "MainScreenLayout.h"
-#include "UIModule.h"
+#include "../UIModule.h"
+#include "../InputModule.h"
+#include "../InputDefs.h"
 
 namespace Badge
 {
@@ -11,9 +13,7 @@ namespace Badge
 	static constexpr uint16_t TEXT_AREA_HEIGHT = 24;
 
 	MainScreenLayout::MainScreenLayout(uint16_t width, uint16_t height) :
-		BadgerUI::BaseLayout(),
-		m_Width(width),
-		m_Height(height)
+		BadgerUI::FixedDimensionLayout(width, height)
 	{
 	}
 
@@ -24,20 +24,20 @@ namespace Badge
 
 		m_StatusBarArea.setDrawStyle(ShapeDrawStyle::Filled);
 		m_StatusBarArea.setFillColour(ColourProperty(ColourScheme::Colour_BackgroundAlt));
-		m_StatusBarArea.setRect(UIRect(UIPoint(0, 0), m_Width, STATUS_AREA_HEIGHT));
+		m_StatusBarArea.setRect(UIRect(UIPoint(0, 0), layoutWidth(), STATUS_AREA_HEIGHT));
 		addItemToTail(&m_StatusBarArea);
 
 		m_MessageAreaSeparator.setDrawStyle(ShapeDrawStyle::Filled);
 		m_MessageAreaSeparator.setFillColour(ColourProperty(ColourScheme::Colour_Secondary));
-		m_MessageAreaSeparator.setRect(UIRect(UIPoint(0, m_Height - TEXT_AREA_HEIGHT - SEPARATOR_THICKNESS), m_Width, SEPARATOR_THICKNESS));
+		m_MessageAreaSeparator.setRect(UIRect(UIPoint(0, layoutHeight() - TEXT_AREA_HEIGHT - SEPARATOR_THICKNESS), layoutWidth(), SEPARATOR_THICKNESS));
 		addItemToTail(&m_MessageAreaSeparator);
 
 		m_PlaceholderCharacterImage.setBitmap(&Resources::PlaceholderChar::BITMAP);
 		m_PlaceholderCharacterImage.setPosition(UIPoint(0, STATUS_AREA_HEIGHT));
-		m_PlaceholderCharacterImage.setOverrideDimensions(UIDimensions(m_Width, m_MessageAreaSeparator.rect().min().y() - STATUS_AREA_HEIGHT));
+		m_PlaceholderCharacterImage.setOverrideDimensions(UIDimensions(layoutWidth(), m_MessageAreaSeparator.rect().min().y() - STATUS_AREA_HEIGHT));
 		addItemToTail(&m_PlaceholderCharacterImage);
 
-		m_MessageLabel.setRect(UIRect(UIPoint(0, m_Height - TEXT_AREA_HEIGHT), m_Width, TEXT_AREA_HEIGHT));
+		m_MessageLabel.setRect(UIRect(UIPoint(0, layoutHeight() - TEXT_AREA_HEIGHT), layoutWidth(), TEXT_AREA_HEIGHT));
 		m_MessageLabel.setHorizontalAlignment(BadgerUI::HAlignment::Centre);
 		m_MessageLabel.setVerticalAlignment(BadgerUI::VAlignment::Centre);
 		m_MessageLabel.setText("Testing");
@@ -46,5 +46,13 @@ namespace Badge
 		m_MessageLabel.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
 
 		addItemToTail(&m_MessageLabel);
+	}
+
+	void MainScreenLayout::preUpdate()
+	{
+		if ( InputModule::buttons().wasPressedThisFrame(Input::ButtonMain) )
+		{
+			UIModule::setCurrentScreen(UIModuleResources::ScreenID::CharacterInfoScreen);
+		}
 	}
 }

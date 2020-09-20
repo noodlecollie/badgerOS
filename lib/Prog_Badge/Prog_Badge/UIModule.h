@@ -1,5 +1,6 @@
 #pragma once
 
+#include <CoreUtil/TimeHelpers.h>
 #include "UIModuleResources.h"
 
 namespace Badge
@@ -9,6 +10,9 @@ namespace Badge
 		const UIModuleResources& resourcesObject();
 
 		void setup();
-		void loop();
+		void loop(CoreUtil::TimevalMs currentTime);
+
+		UIModuleResources::ScreenID currentScreen();
+		void setCurrentScreen(UIModuleResources::ScreenID id);
 	}
 }

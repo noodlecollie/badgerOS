@@ -8,7 +8,7 @@ namespace Badge
 {
 	namespace Commands
 	{
-		static constexpr CoreUtil::TimevalMs BUTTON_PRESS_INTERVAL_MS = 100;
+		static constexpr CoreUtil::TimevalMs BUTTON_PRESS_INTERVAL_MS = 200;
 
 		static int32_t PressedButtonID = -1;
 		static CoreUtil::TimevalMs LastPressTime = 0;
@@ -21,7 +21,7 @@ namespace Badge
 			{
 				output.appendFormat("Button %d released @ %u.\r\n", PressedButtonID, now);
 
-				InputModule::buttons().setReleased(PressedButtonID);
+				InputModule::buttons().setReleased(1 << PressedButtonID);
 				PressedButtonID = -1;
 				LastPressTime = 0;
 
@@ -35,7 +35,7 @@ namespace Badge
 		{
 			LastPressTime = millis();
 			PressedButtonID = buttonID;
-			InputModule::buttons().setPressed(PressedButtonID);
+			InputModule::buttons().setPressed(1 << PressedButtonID);
 
 			output.sprintf("Button %d pressed @ %u.\r\n", PressedButtonID, LastPressTime);
 

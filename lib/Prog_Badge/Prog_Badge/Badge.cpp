@@ -95,8 +95,20 @@ namespace Badge
 
 	void loop()
 	{
+		static constexpr CoreUtil::TimevalMs UPDATE_INTERVAL_MS = 100;
+		static CoreUtil::TimevalMs lastUpdate = 0;
+
+		const CoreUtil::TimevalMs currentTime = millis();
+
+		if ( currentTime - lastUpdate < UPDATE_INTERVAL_MS )
+		{
+			return;
+		}
+
 		InputModule::loop();
 		CommandModule::loop();
-		UIModule::loop();
+		UIModule::loop(currentTime);
+
+		lastUpdate = currentTime;
 	}
 }

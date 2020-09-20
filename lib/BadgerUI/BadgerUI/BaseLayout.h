@@ -22,6 +22,9 @@ namespace BadgerUI
 		void addItemToHead(BaseUIDrawable* item);
 		void addItemToTail(BaseUIDrawable* item);
 
+		virtual void preUpdate();
+		virtual void postUpdate();
+
 	private:
 		void drawItems(const UIDrawContext& context, bool forceDraw);
 

@@ -2,6 +2,12 @@
 #include <cstring>
 #include "Interpreter.h"
 
+#ifdef DEBUG_INTERPRETER
+#define DBGLOG(...) Serial.printf(__VA_ARGS__)
+#else
+#define DBGLOG(...)
+#endif
+
 namespace SerialConsole
 {
 	void Interpreter::setReadBuffer(char* buffer, size_t size)
@@ -117,12 +123,16 @@ namespace SerialConsole
 
 	bool Interpreter::initiateCommand()
 	{
+		DBGLOG("Interpreter::initiateCommand()\r\n");
+
 		prepareCommand();
 		return continueCommand();
 	}
 
 	bool Interpreter::continueCommand()
 	{
+		DBGLOG("Interpreter::continueCommand()\r\n");
+
 		invokeCommand();
 
 		if ( m_LastCommandResult != CommandResult::Completed )
@@ -137,12 +147,16 @@ namespace SerialConsole
 	// Preparation before the first invocation of the command callback.
 	void Interpreter::prepareCommand()
 	{
+		DBGLOG("Interpreter::prepareCommand()\r\n");
+
 		m_WriteBuffer.clear();
 	}
 
 	// Invokes the command callback and stores the result.
 	void Interpreter::invokeCommand()
 	{
+		DBGLOG("Interpreter::invokeCommand()\r\n");
+
 		if ( m_Callback )
 		{
 			m_LastCommandResult = m_Callback(m_ReadBuffer.mutableBegin(), m_WriteBuffer);
@@ -156,6 +170,8 @@ namespace SerialConsole
 	// Called once the command returns the result Commandresult::Completed.
 	void Interpreter::completeCommand()
 	{
+		DBGLOG("Interpreter::completeCommand()\r\n");
+
 		m_ReadBuffer.clear();
 
 		if ( m_WriteBuffer.strlen() > 0 )

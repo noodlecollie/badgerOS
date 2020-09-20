@@ -5,9 +5,7 @@ namespace Badge
 {
 	namespace UIModule
 	{
-		static constexpr CoreUtil::TimevalMs UPDATE_INTERVAL_MS = 100;
 		static UIModuleResources StaticResourcesObject;
-		static CoreUtil::TimevalMs LastUpdate = 0;
 
 		const UIModuleResources& resourcesObject()
 		{
@@ -19,17 +17,19 @@ namespace Badge
 			StaticResourcesObject.setup();
 		}
 
-		void loop()
+		void loop(CoreUtil::TimevalMs currentTime)
 		{
-			const CoreUtil::TimevalMs currentTime = millis();
-
-			if ( currentTime - LastUpdate < UPDATE_INTERVAL_MS )
-			{
-				return;
-			}
-
 			StaticResourcesObject.loop(currentTime);
-			LastUpdate = currentTime;
+		}
+
+		UIModuleResources::ScreenID currentScreen()
+		{
+			return StaticResourcesObject.currentScreen();
+		}
+
+		void setCurrentScreen(UIModuleResources::ScreenID id)
+		{
+			StaticResourcesObject.setCurrentScreen(id);
 		}
 	}
 }
