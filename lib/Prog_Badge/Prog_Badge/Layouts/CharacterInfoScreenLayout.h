@@ -11,7 +11,8 @@ namespace Badge
 	public:
 		CharacterInfoScreenLayout(uint16_t width, uint16_t height);
 
-		virtual void setup() override;
+	protected:
+		virtual void onSetup() override;
 
 	private:
 		void setLabelCommonProperties(BadgerUI::Label& label);

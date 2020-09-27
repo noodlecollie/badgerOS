@@ -13,10 +13,9 @@ namespace Badge
 	public:
 		MainScreenLayout(uint16_t width, uint16_t height);
 
-		virtual void setup() override;
-
 	protected:
-		virtual void preUpdate() override;
+		virtual void onSetup() override;
+		virtual void onPreUpdate() override;
 
 	private:
 		BadgerUI::Box m_StatusBarArea;

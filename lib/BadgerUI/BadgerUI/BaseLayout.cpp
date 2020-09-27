@@ -17,9 +17,14 @@ namespace BadgerUI
 		return m_DirtyState;
 	}
 
+	bool BaseLayout::isActive() const
+	{
+		return m_Active;
+	}
+
 	void BaseLayout::setup()
 	{
-		// Implemented in subclasses.
+		onSetup();
 	}
 
 	void BaseLayout::addItemToHead(BaseUIDrawable* item)
@@ -68,9 +73,31 @@ namespace BadgerUI
 		}
 	}
 
+	void BaseLayout::activate()
+	{
+		if ( m_Active )
+		{
+			return;
+		}
+
+		m_Active = true;
+		onActivate();
+	}
+
+	void BaseLayout::deactivate()
+	{
+		if ( !m_Active )
+		{
+			return;
+		}
+
+		onDeactivate();
+		m_Active = false;
+	}
+
 	void BaseLayout::updateItems(const UIUpdateContext& context)
 	{
-		preUpdate();
+		onPreUpdate();
 
 		for ( BaseUIDrawable* item = m_ItemHead; item; item = item->next() )
 		{
@@ -83,15 +110,7 @@ namespace BadgerUI
 			}
 		}
 
-		postUpdate();
-	}
-
-	void BaseLayout::preUpdate()
-	{
-	}
-
-	void BaseLayout::postUpdate()
-	{
+		onPostUpdate();
 	}
 
 	void BaseLayout::drawDirtyItems(const UIDrawContext& context)
@@ -115,5 +134,30 @@ namespace BadgerUI
 		}
 
 		m_DirtyState = NotDirty;
+	}
+
+	void BaseLayout::onSetup()
+	{
+		// Implemented in subclasses.
+	}
+
+	void BaseLayout::onActivate()
+	{
+		// Implemented in subclasses.
+	}
+
+	void BaseLayout::onDeactivate()
+	{
+		// Implemented in subclasses.
+	}
+
+	void BaseLayout::onPreUpdate()
+	{
+		// Implemented in subclasses.
+	}
+
+	void BaseLayout::onPostUpdate()
+	{
+		// Implemented in subclasses.
 	}
 }

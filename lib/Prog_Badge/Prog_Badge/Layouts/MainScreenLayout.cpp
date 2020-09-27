@@ -17,7 +17,7 @@ namespace Badge
 	{
 	}
 
-	void MainScreenLayout::setup()
+	void MainScreenLayout::onSetup()
 	{
 		using namespace BadgerUI;
 		using namespace BadgerGL;
@@ -41,14 +41,14 @@ namespace Badge
 		m_MessageLabel.setHorizontalAlignment(BadgerUI::HAlignment::Centre);
 		m_MessageLabel.setVerticalAlignment(BadgerUI::VAlignment::Centre);
 		m_MessageLabel.setText("Testing");
-		m_MessageLabel.setFont(UIModule::resourcesObject().fontDirectory.getFont(FontID::ArialStd));
+		m_MessageLabel.setFont(UIModule::resourcesObject().getFont(FontID::ArialStd));
 		m_MessageLabel.setFillColour(ColourProperty(ColourScheme::Colour_Background));
 		m_MessageLabel.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
 
 		addItemToTail(&m_MessageLabel);
 	}
 
-	void MainScreenLayout::preUpdate()
+	void MainScreenLayout::onPreUpdate()
 	{
 		if ( InputModule::buttons().wasPressedThisFrame(Input::ButtonMain) )
 		{

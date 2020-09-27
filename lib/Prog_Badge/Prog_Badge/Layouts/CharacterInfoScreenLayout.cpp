@@ -17,7 +17,7 @@ namespace Badge
 	{
 	}
 
-	void CharacterInfoScreenLayout::setup()
+	void CharacterInfoScreenLayout::onSetup()
 	{
 		using namespace BadgerUI;
 		using namespace BadgerGL;
@@ -45,7 +45,7 @@ namespace Badge
 		using namespace BadgerUI;
 		using namespace BadgerGL;
 
-		label.setFont(UIModule::resourcesObject().fontDirectory.getFont(FontID::ArialStd));
+		label.setFont(UIModule::resourcesObject().getFont(FontID::ArialStd));
 		label.setFillColour(ColourProperty(ColourScheme::Colour_Background));
 		label.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
 	}

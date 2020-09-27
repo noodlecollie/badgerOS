@@ -12,7 +12,11 @@ namespace BadgerUI
 
 		DrawableDirtyState dirtyState() const;
 
-		virtual void setup();
+		void setup();
+		void activate();
+		void deactivate();
+
+		bool isActive() const;
 
 		void updateItems(const UIUpdateContext& context);
 		void drawDirtyItems(const UIDrawContext& context);
@@ -22,8 +26,11 @@ namespace BadgerUI
 		void addItemToHead(BaseUIDrawable* item);
 		void addItemToTail(BaseUIDrawable* item);
 
-		virtual void preUpdate();
-		virtual void postUpdate();
+		virtual void onSetup();
+		virtual void onPreUpdate();
+		virtual void onPostUpdate();
+		virtual void onActivate();
+		virtual void onDeactivate();
 
 	private:
 		void drawItems(const UIDrawContext& context, bool forceDraw);
@@ -31,5 +38,6 @@ namespace BadgerUI
 		BaseUIDrawable* m_ItemHead = nullptr;
 		BaseUIDrawable* m_ItemTail = nullptr;
 		DrawableDirtyState m_DirtyState = ItemDirty;
+		bool m_Active = false;
 	};
 }
