@@ -16,14 +16,21 @@ namespace Badge
 	class UIModuleResources
 	{
 	public:
+#define SCREEN_ID_LIST \
+	LIST_ITEM(MainScreen = 0, "MainScreen") \
+	LIST_ITEM(CharacterInfoScreen, "CharacterInfoScreen")
+
+#define LIST_ITEM(value, name) value,
 		enum ScreenID
 		{
-			MainScreen = 0,
-			CharacterInfoScreen,
+			SCREEN_ID_LIST
 
 			ScreenCount,
 			InvalidScreen = -1
 		};
+#undef LIST_ITEM
+
+		static const char* screenName(ScreenID id);
 
 		UIModuleResources();
 

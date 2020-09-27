@@ -13,6 +13,8 @@ namespace Badge
 
 	protected:
 		virtual void onSetup() override;
+		virtual void onActivate() override;
+		virtual void onPreUpdate(const BadgerUI::UIUpdateContext& context) override;
 
 	private:
 		void setLabelCommonProperties(BadgerUI::Label& label);

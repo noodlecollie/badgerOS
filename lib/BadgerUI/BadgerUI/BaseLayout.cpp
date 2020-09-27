@@ -97,7 +97,7 @@ namespace BadgerUI
 
 	void BaseLayout::updateItems(const UIUpdateContext& context)
 	{
-		onPreUpdate();
+		onPreUpdate(context);
 
 		for ( BaseUIDrawable* item = m_ItemHead; item; item = item->next() )
 		{
@@ -110,7 +110,7 @@ namespace BadgerUI
 			}
 		}
 
-		onPostUpdate();
+		onPostUpdate(context);
 	}
 
 	void BaseLayout::drawDirtyItems(const UIDrawContext& context)
@@ -151,12 +151,12 @@ namespace BadgerUI
 		// Implemented in subclasses.
 	}
 
-	void BaseLayout::onPreUpdate()
+	void BaseLayout::onPreUpdate(const UIUpdateContext& context)
 	{
 		// Implemented in subclasses.
 	}
 
-	void BaseLayout::onPostUpdate()
+	void BaseLayout::onPostUpdate(const UIUpdateContext& context)
 	{
 		// Implemented in subclasses.
 	}

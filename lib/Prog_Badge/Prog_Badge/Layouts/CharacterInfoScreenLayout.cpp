@@ -4,6 +4,8 @@
 #include <BadgerUI/ColourScheme.h>
 #include "CharacterInfoScreenLayout.h"
 #include "../UIModule.h"
+#include "../InputModule.h"
+#include "../InputDefs.h"
 
 namespace Badge
 {
@@ -38,6 +40,25 @@ namespace Badge
 		setLabelCommonProperties(m_NameValue);
 		m_NameValue.setText("Sample Name");
 		addItemToTail(&m_NameValue);
+	}
+
+	void CharacterInfoScreenLayout::onActivate()
+	{
+		m_ButtonReleaseTime = 0;
+	}
+
+	void CharacterInfoScreenLayout::onPreUpdate(const BadgerUI::UIUpdateContext& context)
+	{
+		if ( (m_ButtonReleaseTime == 0 && context.buttons->isReleased(Input::ButtonMain)) ||
+			 context.buttons->wasReleasedThisFrame(Input::ButtonMain) )
+		{
+			m_ButtonReleaseTime = context.currentTimeMs;
+		}
+
+		if ( m_ButtonReleaseTime > 0 && context.currentTimeMs - m_ButtonReleaseTime >= DELAY_BEFORE_SCREEN_CHANGE_MS )
+		{
+			UIModule::setNextScreen(UIModuleResources::ScreenID::MainScreen);
+		}
 	}
 
 	void CharacterInfoScreenLayout::setLabelCommonProperties(BadgerUI::Label& label)

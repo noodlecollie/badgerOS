@@ -27,8 +27,8 @@ namespace BadgerUI
 		void addItemToTail(BaseUIDrawable* item);
 
 		virtual void onSetup();
-		virtual void onPreUpdate();
-		virtual void onPostUpdate();
+		virtual void onPreUpdate(const UIUpdateContext& context);
+		virtual void onPostUpdate(const UIUpdateContext& context);
 		virtual void onActivate();
 		virtual void onDeactivate();
 

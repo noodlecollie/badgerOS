@@ -87,7 +87,7 @@ namespace BadgerUI
 			BGRS_ASSERTD(layout->isActive(), "Layout was not activated before being updated.");
 
 			layout->updateItems(context);
-			return layout->dirtyState();
+			return dirtyState(*layout);
 		}
 
 		inline void renderActiveLayout(const UIDrawContext& context)
@@ -101,12 +101,7 @@ namespace BadgerUI
 
 			BGRS_ASSERTD(layout->isActive(), "Layout was not activated before being rendered.");
 
-			// Enforce that we draw everything if we haven't drawn this layout before.
-			const DrawableDirtyState dirtyState = m_LayoutRedrawRequired
-				? DrawableDirtyState::ContainerDirty
-				: layout->dirtyState();
-
-			switch ( dirtyState )
+			switch ( dirtyState(*layout) )
 			{
 				case DrawableDirtyState::ContainerDirty:
 				{
@@ -131,6 +126,11 @@ namespace BadgerUI
 		}
 
 	private:
+		inline DrawableDirtyState dirtyState(BaseLayout& layout)
+		{
+			return m_LayoutRedrawRequired ? DrawableDirtyState::ContainerDirty : layout.dirtyState();
+		}
+
 		inline BaseLayout* getLayout(int32_t index) const
 		{
 			return (index >= 0 && index < LAYOUT_COUNT) ? m_Layouts[index] : nullptr;

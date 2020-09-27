@@ -1,8 +1,24 @@
+#include <Arduino.h>
+#include <CoreUtil/ArrayUtil.h>
 #include "UIModuleResources.h"
 #include "InputModule.h"
 
 namespace Badge
 {
+	const char* UIModuleResources::screenName(ScreenID id)
+	{
+#define LIST_ITEM(value, name) name,
+		static constexpr const char* const SCREEN_NAMES[Badge::UIModuleResources::ScreenCount] =
+		{
+			SCREEN_ID_LIST
+		};
+#undef LIST_ITEM
+
+		return (id >= 0 && id < CoreUtil::arraySize(SCREEN_NAMES))
+			? SCREEN_NAMES[id]
+			: "Invalid";
+	}
+
 	UIModuleResources::UIModuleResources() :
 		m_MainScreen(SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT),
 		m_CharInfoScreen(SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT)
@@ -51,6 +67,7 @@ namespace Badge
 		// If the target screen is not set, swap to it.
 		if ( m_LayoutContainer.activeLayoutIndex() != m_NextScreenID )
 		{
+			Serial.printf("Changing active screen to '%s' (%d)\r\n", screenName(m_NextScreenID), m_NextScreenID);
 			m_LayoutContainer.setActiveLayoutIndex(m_NextScreenID);
 		}
 

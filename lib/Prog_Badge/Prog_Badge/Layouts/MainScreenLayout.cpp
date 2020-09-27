@@ -48,9 +48,9 @@ namespace Badge
 		addItemToTail(&m_MessageLabel);
 	}
 
-	void MainScreenLayout::onPreUpdate()
+	void MainScreenLayout::onPreUpdate(const BadgerUI::UIUpdateContext& context)
 	{
-		if ( InputModule::buttons().wasPressedThisFrame(Input::ButtonMain) )
+		if ( context.buttons->wasPressedThisFrame(Input::ButtonMain) )
 		{
 			UIModule::setNextScreen(UIModuleResources::ScreenID::CharacterInfoScreen);
 		}

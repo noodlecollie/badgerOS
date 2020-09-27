@@ -15,7 +15,7 @@ namespace Badge
 
 	protected:
 		virtual void onSetup() override;
-		virtual void onPreUpdate() override;
+		virtual void onPreUpdate(const BadgerUI::UIUpdateContext& context) override;
 
 	private:
 		BadgerUI::Box m_StatusBarArea;
