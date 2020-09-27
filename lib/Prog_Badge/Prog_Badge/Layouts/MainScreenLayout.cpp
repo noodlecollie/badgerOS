@@ -52,7 +52,7 @@ namespace Badge
 	{
 		if ( InputModule::buttons().wasPressedThisFrame(Input::ButtonMain) )
 		{
-			UIModule::setCurrentScreen(UIModuleResources::ScreenID::CharacterInfoScreen);
+			UIModule::setNextScreen(UIModuleResources::ScreenID::CharacterInfoScreen);
 		}
 	}
 }

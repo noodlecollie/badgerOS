@@ -31,7 +31,7 @@ namespace Badge
 		void loop(CoreUtil::TimevalMs currentTime);
 
 		ScreenID currentScreen() const;
-		void setCurrentScreen(ScreenID id);
+		void setNextScreen(ScreenID id);
 
 		const BadgerGL::BitmapMaskFont* getFont(BadgerUI::FontID id) const;
 
@@ -50,10 +50,14 @@ namespace Badge
 		bool updateUI(CoreUtil::TimevalMs currentTime);
 		bool renderUI();
 
+		// Resources
 		BadgerGL::Static65KBitmapSurface<SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT> m_ScreenBufferSurface;
-		BadgerUI::LayoutContainer<ScreenCount> m_LayoutContainer;
 		BadgerUI::ColourScheme m_ColScheme;
 		BadgerUI::FontDirectory m_FontDirectory;
+
+		// Screen management
+		BadgerUI::LayoutContainer<ScreenCount> m_LayoutContainer;
+		ScreenID m_NextScreenID = ScreenID::MainScreen;
 
 		// Screens
 		MainScreenLayout m_MainScreen;

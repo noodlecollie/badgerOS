@@ -23,7 +23,7 @@ namespace Badge
 
 		setUpScreen(m_MainScreen, MainScreen);
 		setUpScreen(m_CharInfoScreen, CharacterInfoScreen);
-		setCurrentScreen(MainScreen);
+		setNextScreen(MainScreen);
 	}
 
 	UIModuleResources::ScreenID UIModuleResources::currentScreen() const
@@ -31,14 +31,14 @@ namespace Badge
 		return static_cast<UIModuleResources::ScreenID>(m_LayoutContainer.activeLayoutIndex());
 	}
 
-	void UIModuleResources::setCurrentScreen(ScreenID id)
+	void UIModuleResources::setNextScreen(ScreenID id)
 	{
 		if ( id < InvalidScreen || id >= ScreenCount )
 		{
 			id = InvalidScreen;
 		}
 
-		m_LayoutContainer.setActiveLayoutIndex(id);
+		m_NextScreenID = id;
 	}
 
 	const BadgerGL::BitmapMaskFont* UIModuleResources::getFont(BadgerUI::FontID id) const
@@ -48,6 +48,12 @@ namespace Badge
 
 	void UIModuleResources::loop(CoreUtil::TimevalMs currentTime)
 	{
+		// If the target screen is not set, swap to it.
+		if ( m_LayoutContainer.activeLayoutIndex() != m_NextScreenID )
+		{
+			m_LayoutContainer.setActiveLayoutIndex(m_NextScreenID);
+		}
+
 		bool shouldSendBuffer = false;
 		const bool currentScreenValid = m_LayoutContainer.activeLayoutIsValid();
 

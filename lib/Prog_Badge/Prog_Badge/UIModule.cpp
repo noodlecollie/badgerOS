@@ -27,9 +27,9 @@ namespace Badge
 			return StaticResourcesObject.currentScreen();
 		}
 
-		void setCurrentScreen(UIModuleResources::ScreenID id)
+		void setNextScreen(UIModuleResources::ScreenID id)
 		{
-			StaticResourcesObject.setCurrentScreen(id);
+			StaticResourcesObject.setNextScreen(id);
 		}
 	}
 }

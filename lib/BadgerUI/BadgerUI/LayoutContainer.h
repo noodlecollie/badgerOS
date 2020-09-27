@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <CoreUtil/BgrsAssert.h>
 #include "BaseLayout.h"
 
 namespace BadgerUI
@@ -17,8 +18,8 @@ namespace BadgerUI
 			memset(m_Layouts, 0, sizeof(m_Layouts));
 		}
 
-		// Assumes that all added layouts are persistent for the lifetime
-		// of the container.
+		// Assumes that all layouts are persistent for the lifetime
+		// of this container, and that they are not added to any other containers.
 		inline void mapIndexToLayout(int32_t index, BaseLayout* layout)
 		{
 			if ( !layout || index < 0 || index >= LAYOUT_COUNT )
@@ -27,6 +28,24 @@ namespace BadgerUI
 			}
 
 			m_Layouts[index] = layout;
+		}
+
+		inline int32_t indexOfLayout(BaseLayout* layout) const
+		{
+			if ( !layout )
+			{
+				return -1;
+			}
+
+			for ( int32_t index = 0; index < LAYOUT_COUNT; ++index )
+			{
+				if ( m_Layouts[index] == layout )
+				{
+					return index;
+				}
+			}
+
+			return -1;
 		}
 
 		// Returns -1 if there is no active layout set.
@@ -65,6 +84,8 @@ namespace BadgerUI
 				return DrawableDirtyState::NotDirty;
 			}
 
+			BGRS_ASSERTD(layout->isActive(), "Layout was not activated before being updated.");
+
 			layout->updateItems(context);
 			return layout->dirtyState();
 		}
@@ -77,6 +98,8 @@ namespace BadgerUI
 			{
 				return;
 			}
+
+			BGRS_ASSERTD(layout->isActive(), "Layout was not activated before being rendered.");
 
 			// Enforce that we draw everything if we haven't drawn this layout before.
 			const DrawableDirtyState dirtyState = m_LayoutRedrawRequired

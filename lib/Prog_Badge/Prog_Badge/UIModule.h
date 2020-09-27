@@ -13,6 +13,6 @@ namespace Badge
 		void loop(CoreUtil::TimevalMs currentTime);
 
 		UIModuleResources::ScreenID currentScreen();
-		void setCurrentScreen(UIModuleResources::ScreenID id);
+		void setNextScreen(UIModuleResources::ScreenID id);
 	}
 }
