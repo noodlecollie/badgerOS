@@ -198,7 +198,7 @@ namespace BadgerUI
 
 			case HAlignment::Right:
 			{
-				return static_cast<int16_t>(m_StringWidth) - static_cast<int16_t>(rect().width());
+				return static_cast<int16_t>(rect().width()) - static_cast<int16_t>(m_StringWidth);
 			}
 
 			default:

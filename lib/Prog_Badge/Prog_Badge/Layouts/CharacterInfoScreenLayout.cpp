@@ -10,6 +10,7 @@
 namespace Badge
 {
 	static constexpr uint16_t PADDING = 5;
+	static constexpr uint16_t KEY_VALUE_SPACING = 2;
 	static constexpr uint16_t ROW_HEIGHT = 24;
 
 	static constexpr size_t DELAY_BEFORE_SCREEN_CHANGE_MS = 4000;
@@ -78,13 +79,13 @@ namespace Badge
 
 		const uint16_t yOffset = PADDING + (index * ROW_HEIGHT);
 		const uint16_t fullWidth = (layoutWidth() - (2 * PADDING));
-		const uint16_t halfWidth = fullWidth / 2;
+		const uint16_t keyWidth = fullWidth / 3;
 
-		key.setRect(UIRect(UIPoint(PADDING, yOffset), halfWidth, ROW_HEIGHT));
+		key.setRect(UIRect(UIPoint(PADDING, yOffset), keyWidth, ROW_HEIGHT));
 		key.setHorizontalAlignment(HAlignment::Right);
 		key.setVerticalAlignment(VAlignment::Centre);
 
-		value.setRect(UIRect(UIPoint(PADDING + halfWidth, yOffset), fullWidth - halfWidth, ROW_HEIGHT));
+		value.setRect(UIRect(UIPoint(PADDING + keyWidth + KEY_VALUE_SPACING, yOffset), fullWidth - keyWidth - KEY_VALUE_SPACING, ROW_HEIGHT));
 		value.setHorizontalAlignment(HAlignment::Left);
 		value.setVerticalAlignment(VAlignment::Centre);
 	}
