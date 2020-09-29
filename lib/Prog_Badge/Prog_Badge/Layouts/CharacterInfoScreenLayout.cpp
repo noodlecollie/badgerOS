@@ -66,7 +66,7 @@ namespace Badge
 		using namespace BadgerUI;
 		using namespace BadgerGL;
 
-		label.setFont(UIModule::resourcesObject().getFont(FontID::ArialStd));
+		label.setFont(UIModule::resourcesObject().getFont(FontID::ArialSmall));
 		label.setFillColour(ColourProperty(ColourScheme::Colour_Background));
 		label.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
 	}

@@ -1,6 +1,8 @@
 // Fonts:
 #include <Resources/Fonts/ArialStdFont.h>
 #include <Resources/Images/ArialStdBitmap.h>
+#include <Resources/Fonts/ArialSmallFont.h>
+#include <Resources/Images/ArialSmallBitmap.h>
 
 #include <Arduino.h>
 #include <BadgerGL/BMFFileReader.h>
@@ -18,6 +20,9 @@ namespace BadgerUI
 	{
 		item(FontID::ArialStd).fontBitmap = &Resources::ArialStdBitmap::BITMAP;
 		item(FontID::ArialStd).bmfData = Resources::ArialStdFont::BLOB;
+
+		item(FontID::ArialSmall).fontBitmap = &Resources::ArialSmallBitmap::BITMAP;
+		item(FontID::ArialSmall).bmfData = Resources::ArialSmallFont::BLOB;
 	}
 
 	void FontDirectory::loadAllFonts()

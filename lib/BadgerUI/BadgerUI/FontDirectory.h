@@ -10,6 +10,7 @@ namespace BadgerUI
 	enum class FontID
 	{
 		ArialStd,
+		ArialSmall,
 
 		Count
 	};
