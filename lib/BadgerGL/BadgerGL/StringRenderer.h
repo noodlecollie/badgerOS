@@ -20,7 +20,9 @@ namespace BadgerGL
 		size_t calculateStringWidth(const char* str) const;
 
 	private:
-		void drawCharacter(const BitmapMaskFont::CharInfo& chInfo, const Rect16& destRect) const;
+		void drawCharacter(const BitmapMaskFont::CharInfo& chInfo,
+						   const Rect16& destRect,
+						   const Point16& originAdjustment) const;
 
 		const BitmapMaskFont* m_Font = nullptr;
 		BitmapMaskBlitter* m_Blitter = nullptr;

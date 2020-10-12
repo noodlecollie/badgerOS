@@ -1,6 +1,13 @@
 #include <StringLib/StringUtils.h>
 #include "StringRenderer.h"
 
+// REMOVE ME
+#include <Arduino.h>
+static bool shouldLog = false;
+#define LOG(...) if ( shouldLog ) { Serial.printf(__VA_ARGS__); }
+#define FMT_RECT "(%d, %d) - (%d, %d)"
+#define ARG_RECT(r) (r.p0().x()), (r.p0().y()), (r.p1().x()), (r.p1().y())
+
 namespace BadgerGL
 {
 	size_t StringRenderer::calculateStringWidth(const BitmapMaskFont* font, const char* str)
@@ -64,6 +71,8 @@ namespace BadgerGL
 
 		for ( ; *str && targetRect.width() > 0; str = StringLib::nextCharUTF8(str) )
 		{
+			shouldLog = *str == 'Z';
+
 			const BitmapMaskFont::CharInfo* chInfo = m_Font->charData(str);
 
 			if ( !chInfo )
@@ -74,7 +83,11 @@ namespace BadgerGL
 			// Only bother drawing if the character is in the dest rect.
 			if ( targetRect.p0().x() + chInfo->imageRect.width() > leftDrawingBorder )
 			{
-				drawCharacter(*chInfo, targetRect);
+				// The actual position of the character may be left of the border,
+				// even if some of the character is drawn.
+				const int16_t leftShift = std::min<int16_t>(targetRect.p0().x() - leftDrawingBorder, 0);
+
+				drawCharacter(*chInfo, targetRect, Point16(leftShift, 0));
 				renderedCharacters = true;
 			}
 
@@ -109,17 +122,25 @@ namespace BadgerGL
 		return width;
 	}
 
-	void StringRenderer::drawCharacter(const BitmapMaskFont::CharInfo& chInfo, const Rect16& destRect) const
+	void StringRenderer::drawCharacter(const BitmapMaskFont::CharInfo& chInfo,
+									   const Rect16& destRect,
+									   const Point16& originAdjustment) const
 	{
 		Rect16 sourceRect(chInfo.imageRect.rect2DCast<Rect16>());
 
 		// Ensure that the portion of the character image that we get is reduced if drawing
 		// it would exceed the destination rectangle.
-		Rect16 clipRect(sourceRect.p0() - chInfo.drawOffset, destRect.width(), destRect.height());
+		const Point16 clipRectOrigin(sourceRect.p0() - chInfo.drawOffset - originAdjustment);
+		const Rect16 clipRect(clipRectOrigin, destRect.width(), destRect.height());
+		LOG("Source rect: " FMT_RECT "\r\n", ARG_RECT(sourceRect));
+		LOG("Clipping rect: " FMT_RECT "\r\n", ARG_RECT(clipRect));
+		LOG("With draw offset: (%d, %d)\r\n", chInfo.drawOffset.x(), chInfo.drawOffset.y());
+		LOG("With origin adjustment: (%d, %d)\r\n", originAdjustment.x(), originAdjustment.y());
 		BadgerMath::trimToBounds(sourceRect, clipRect);
+		LOG("Source rect after clipping: " FMT_RECT "\r\n", ARG_RECT(sourceRect));
 
 		m_Blitter->setSourceRect(sourceRect.rect2DCast<BitmapMaskBlitter::SurfaceRect>());
-		m_Blitter->setDestRect(Rect16(destRect.p0() + chInfo.drawOffset, 0, 0));
+		m_Blitter->setDestRect(Rect16(destRect.p0() + chInfo.drawOffset - originAdjustment, 0, 0));
 
 		m_Blitter->blit();
 	}
