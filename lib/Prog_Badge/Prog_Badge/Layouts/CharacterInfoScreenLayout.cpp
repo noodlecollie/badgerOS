@@ -10,7 +10,8 @@
 namespace Badge
 {
 	static constexpr uint16_t PADDING = 5;
-	static constexpr uint16_t KEY_VALUE_SPACING = 2;
+	static constexpr uint16_t KEY_COL_WIDTH = 41;
+	static constexpr uint16_t KEY_VALUE_SPACING = 5;
 	static constexpr uint16_t ROW_HEIGHT = 24;
 
 	static constexpr size_t DELAY_BEFORE_SCREEN_CHANGE_MS = 4000;
@@ -39,8 +40,24 @@ namespace Badge
 		addItemToTail(&m_NameKey);
 
 		setLabelCommonProperties(m_NameValue);
-		m_NameValue.setText("Sample Name");
+		m_NameValue.setText("Vesper");
 		addItemToTail(&m_NameValue);
+
+		setLabelCommonProperties(m_SpeciesKey);
+		m_SpeciesKey.setText("Species:");
+		addItemToTail(&m_SpeciesKey);
+
+		setLabelCommonProperties(m_SpeciesValue);
+		m_SpeciesValue.setText("Ermine");
+		addItemToTail(&m_SpeciesValue);
+
+		setLabelCommonProperties(m_SocialMediaKey);
+		m_SocialMediaKey.setText("Social:");
+		addItemToTail(&m_SocialMediaKey);
+
+		setLabelCommonProperties(m_SocialMediaValue);
+		m_SocialMediaValue.setText("@x6herbius");
+		addItemToTail(&m_SocialMediaValue);
 	}
 
 	void CharacterInfoScreenLayout::onActivate()
@@ -79,13 +96,12 @@ namespace Badge
 
 		const uint16_t yOffset = PADDING + (index * ROW_HEIGHT);
 		const uint16_t fullWidth = (layoutWidth() - (2 * PADDING));
-		const uint16_t keyWidth = fullWidth / 3;
 
-		key.setRect(UIRect(UIPoint(PADDING, yOffset), keyWidth, ROW_HEIGHT));
-		key.setHorizontalAlignment(HAlignment::Right);
+		key.setRect(UIRect(UIPoint(PADDING, yOffset), KEY_COL_WIDTH, ROW_HEIGHT));
+		key.setHorizontalAlignment(HAlignment::Left);
 		key.setVerticalAlignment(VAlignment::Centre);
 
-		value.setRect(UIRect(UIPoint(PADDING + keyWidth + KEY_VALUE_SPACING, yOffset), fullWidth - keyWidth - KEY_VALUE_SPACING, ROW_HEIGHT));
+		value.setRect(UIRect(UIPoint(PADDING + KEY_COL_WIDTH + KEY_VALUE_SPACING, yOffset), fullWidth - KEY_COL_WIDTH - KEY_VALUE_SPACING, ROW_HEIGHT));
 		value.setHorizontalAlignment(HAlignment::Left);
 		value.setVerticalAlignment(VAlignment::Centre);
 	}
