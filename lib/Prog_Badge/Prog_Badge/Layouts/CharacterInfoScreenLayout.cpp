@@ -14,7 +14,7 @@ namespace Badge
 	static constexpr uint16_t KEY_VALUE_SPACING = 5;
 	static constexpr uint16_t ROW_HEIGHT = 24;
 
-	static constexpr size_t DELAY_BEFORE_SCREEN_CHANGE_MS = 4000;
+	static constexpr size_t DELAY_BEFORE_SCREEN_CHANGE_MS = 5000;
 
 	CharacterInfoScreenLayout::CharacterInfoScreenLayout(uint16_t width, uint16_t height) :
 		BadgerUI::FixedDimensionLayout(width, height)
@@ -58,6 +58,13 @@ namespace Badge
 		setLabelCommonProperties(m_SocialMediaValue);
 		m_SocialMediaValue.setText("@x6herbius");
 		addItemToTail(&m_SocialMediaValue);
+
+		m_TimeoutBar.setRect(UIRect(UIPoint(0, layoutHeight() - PADDING), layoutWidth(), PADDING));
+		m_TimeoutBar.setBackgroundColour(ColourProperty(ColourScheme::Colour_Background));
+		m_TimeoutBar.setForegroundColour(ColourProperty(ColourScheme::Colour_Secondary));
+		m_TimeoutBar.setOutlineColour(ColourProperty(ColourScheme::Colour_Primary));
+		m_TimeoutBar.setFilledFraction(0.0f);
+		addItemToTail(&m_TimeoutBar);
 	}
 
 	void CharacterInfoScreenLayout::onActivate()
@@ -73,7 +80,22 @@ namespace Badge
 			m_ButtonReleaseTime = context.currentTimeMs;
 		}
 
-		if ( m_ButtonReleaseTime > 0 && context.currentTimeMs - m_ButtonReleaseTime >= DELAY_BEFORE_SCREEN_CHANGE_MS )
+		const CoreUtil::TimevalMs duration = context.currentTimeMs - m_ButtonReleaseTime;
+
+		if ( context.buttons->isPressed(Input::ButtonMain) )
+		{
+			m_TimeoutBar.setFilledFraction(1.0f);
+		}
+		else
+		{
+			const float filledFraction = (duration < DELAY_BEFORE_SCREEN_CHANGE_MS)
+				? 1.0f - (static_cast<float>(duration) / static_cast<float>(DELAY_BEFORE_SCREEN_CHANGE_MS))
+				: 0.0f;
+
+			m_TimeoutBar.setFilledFraction(filledFraction);
+		}
+
+		if ( m_ButtonReleaseTime > 0 && duration >= DELAY_BEFORE_SCREEN_CHANGE_MS )
 		{
 			UIModule::setNextScreen(UIModuleResources::ScreenID::MainScreen);
 		}

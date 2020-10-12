@@ -87,6 +87,33 @@ namespace BadgerMath
 			m_P1 += p;
 		}
 
+		inline void expand(ValueType deltaPerSide)
+		{
+			if ( deltaPerSide == 0 )
+			{
+				return;
+			}
+
+			ensureMinMaxOrdered();
+
+			for ( size_t index = 0; index < 2; ++index )
+			{
+				const size_t curDim = index == 0 ? width() : height();
+
+				if ( deltaPerSide < 0 && curDim < (-2 * deltaPerSide) )
+				{
+					const size_t reduction = curDim / 2;
+					m_P0[index] += reduction;
+					m_P1[index] = m_P0[index];
+				}
+				else
+				{
+					m_P0[index] -= deltaPerSide;
+					m_P1[index] += deltaPerSide;
+				}
+			}
+		}
+
 		inline Point min() const
 		{
 			return Point(std::min(m_P0.x(), m_P1.x()), std::min(m_P0.y(), m_P1.y()));

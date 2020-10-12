@@ -3,6 +3,7 @@
 #include <BadgerUI/FixedDimensionLayout.h>
 #include <BadgerUI/Label.h>
 #include <BadgerUI/Box.h>
+#include <BadgerUI/ProgressBar.h>
 
 namespace Badge
 {
@@ -30,6 +31,8 @@ namespace Badge
 
 		BadgerUI::Label m_SocialMediaKey;
 		BadgerUI::Label m_SocialMediaValue;
+
+		BadgerUI::ProgressBar m_TimeoutBar;
 
 		CoreUtil::TimevalMs m_ButtonReleaseTime = 0;
 	};
