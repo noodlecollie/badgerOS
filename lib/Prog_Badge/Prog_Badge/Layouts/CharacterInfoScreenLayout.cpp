@@ -6,6 +6,7 @@
 #include "../UIModule.h"
 #include "../InputModule.h"
 #include "../InputDefs.h"
+#include "../Languages/Languages.h"
 
 namespace Badge
 {
@@ -36,7 +37,7 @@ namespace Badge
 		setLabelRowPositions(2, m_SocialMediaKey, m_SocialMediaValue);
 
 		setLabelCommonProperties(m_NameKey);
-		m_NameKey.setText("Name:");
+		m_NameKey.setText(TR_CharacterInfo::LABEL_NAME);
 		addItemToTail(&m_NameKey);
 
 		setLabelCommonProperties(m_NameValue);
@@ -44,7 +45,7 @@ namespace Badge
 		addItemToTail(&m_NameValue);
 
 		setLabelCommonProperties(m_SpeciesKey);
-		m_SpeciesKey.setText("Species:");
+		m_SpeciesKey.setText(TR_CharacterInfo::LABEL_SPECIES);
 		addItemToTail(&m_SpeciesKey);
 
 		setLabelCommonProperties(m_SpeciesValue);
@@ -52,7 +53,7 @@ namespace Badge
 		addItemToTail(&m_SpeciesValue);
 
 		setLabelCommonProperties(m_SocialMediaKey);
-		m_SocialMediaKey.setText("Social:");
+		m_SocialMediaKey.setText(TR_CharacterInfo::LABEL_SOCIAL_MEDIA);
 		addItemToTail(&m_SocialMediaKey);
 
 		setLabelCommonProperties(m_SocialMediaValue);
