@@ -10,6 +10,13 @@ Requirements
 * Display battery status at all times.
 * Support different languages in UI.
 
+To do to complete this phase:
+
+* Update fonts to support different language characters. As part of this, check whether assets that are included in header files but not used are made part of the resulting binary.
+* Buy a LiPo battery that actually fits on the board.
+* Implement battery level checking and add an icon to the top bar.
+* Modify how layouts are displayed so that the top bar is persistent throughout all different screens.
+
 ### Phase 2 (Dynamic Data, Emotes)
 
 * Allow main character image, main scrolling message, and character information to be set by the user via a companion app on a connected phone. The information should be stored persistently on the badge.
