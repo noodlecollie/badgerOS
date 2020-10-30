@@ -37,7 +37,11 @@ To do to complete this phase:
 ## Hardware Requirements
 
 1.  ESP32 board - exact model TBD, depends on eventual requirements. Will require LiPoly battery connector + charging capability. For example: https://www.olimex.com/Products/IoT/ESP32/ESP32-DevKit-LiPo/open-source-hardware
-2.  Battery - for example, https://www.amazon.co.uk/gp/product/B07CYMYMS9. mAh is TBD, depending on power requirements.
+2.  Battery - for example, https://www.olimex.com/Products/Power/BATTERY-LIPO1400mAh/. mAh is TBD, depending on power requirements. For reference:
+    * The battery socket on the board is described as `SMD Header with top entry and 2mm step, with 2P positions`.
+    * The battery socket part number used is `CI0102M1VT0-LF` - data sheet is available at https://store.comet.bg/download-file.php?id=4895
+    * A connector that would fit into the socket has part number `CI0102S0000` - data sheet is available at https://store.comet.bg/download-file.php?id=2143
+    * An RS Components connector that could work is https://uk.rs-online.com/web/p/wire-housings-plugs/8201466/
 3.  Waveshare 1.5inch RGB OLED Display Module (128x128) - https://www.amazon.co.uk/Waveshare-1-5inch-RGB-OLED-Module/dp/B07DB5YFGW
 4.  2x push buttons - main and secondary, which could have different coloured caps to distinguish them. For example, buttons similar to https://coolcomponents.co.uk/collections/component-buttons/products/tactile-buttons-x4.
 5.  NFC reader - TBD
