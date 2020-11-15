@@ -43,7 +43,12 @@ To do to complete this phase:
     * A connector that would fit into the socket has part number `CI0102S0000` - data sheet is available at https://store.comet.bg/download-file.php?id=2143
     * An RS Components connector that could work is https://uk.rs-online.com/web/p/wire-housings-plugs/8201466/
 3.  Waveshare 1.5inch RGB OLED Display Module (128x128) - https://www.amazon.co.uk/Waveshare-1-5inch-RGB-OLED-Module/dp/B07DB5YFGW
+    * One other option could be https://shop.pimoroni.com/products/inky-impression - currently under evaluation.
 4.  2x push buttons - main and secondary, which could have different coloured caps to distinguish them. For example, buttons similar to https://coolcomponents.co.uk/collections/component-buttons/products/tactile-buttons-x4.
 5.  NFC reader - TBD
 6.  RFID to be read by other badges - TBD
 7.  Piezo buzzer - TBD
+
+## Other Ideas
+
+* If we go for a big shell to accommodate the large e-ink display, we could include a slot on the back of the shell for credit or room cards.
