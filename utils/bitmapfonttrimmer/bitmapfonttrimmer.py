@@ -67,14 +67,14 @@ def getLineHeight(contents):
 
 def trimAllCharOffsets(contents, outContents, yDelta):
 	offset, size = findBlockOffsetAndSize(contents, BLOCK_ID_CHARACTERS)
-	print("Chars block at offset", offset)
+	print(f"Chars block at file offset {offset}, size {size}")
 
 	for itemOffset in range(offset, offset + size, BLOCK_CHAR_STRUCT_SIZE):
 		charInfo = struct.unpack_from(FORMAT_BLOCK_CHAR, contents, itemOffset)
 		yOffset = charInfo[6]
 		yOffset += yDelta
 
-		print("Char", bytes([charInfo[0]]).decode("utf-8") if charInfo[0] < 256 else "<invalid>", "Y offset is now", yOffset)
+		print("Char", chr(charInfo[0]) if charInfo[0] < 0x10FFFF else "<invalid>", "Y offset is now", yOffset)
 
 		toWrite = tuple(charInfo[0:6] + (yOffset,) + charInfo[7:])
 		packedData = struct.pack(FORMAT_BLOCK_CHAR, *toWrite)
