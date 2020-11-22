@@ -1,5 +1,6 @@
 
 #include <CoreUtil/BgrsAssert.h>
+#include <StringLib/StringUtils.h>
 #include "BitmapMaskFont.h"
 
 namespace BadgerGL
@@ -58,8 +59,7 @@ namespace BadgerGL
 
 	const BitmapMaskFont::CharInfo* BitmapMaskFont::charData(const char* stringPtr) const
 	{
-		// TODO: Handle UTF-8 - we may need to refer to multiple bytes.
-		return stringPtr ? charData(static_cast<size_t>(*stringPtr)) : nullptr;
+		return stringPtr ? charData(StringLib::charCodePointUTF8(stringPtr)) : nullptr;
 	}
 
 	const BitmapMask* BitmapMaskFont::fontBitmap() const

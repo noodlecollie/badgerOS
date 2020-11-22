@@ -1,13 +1,6 @@
 #include <StringLib/StringUtils.h>
 #include "StringRenderer.h"
 
-// REMOVE ME
-#include <Arduino.h>
-static bool shouldLog = false;
-#define LOG(...) if ( shouldLog ) { Serial.printf(__VA_ARGS__); }
-#define FMT_RECT "(%d, %d) - (%d, %d)"
-#define ARG_RECT(r) (r.p0().x()), (r.p0().y()), (r.p1().x()), (r.p1().y())
-
 namespace BadgerGL
 {
 	size_t StringRenderer::calculateStringWidth(const BitmapMaskFont* font, const char* str)
@@ -71,8 +64,6 @@ namespace BadgerGL
 
 		for ( ; *str && targetRect.width() > 0; str = StringLib::nextCharUTF8(str) )
 		{
-			shouldLog = *str == 'Z';
-
 			const BitmapMaskFont::CharInfo* chInfo = m_Font->charData(str);
 
 			if ( !chInfo )
@@ -132,12 +123,7 @@ namespace BadgerGL
 		// it would exceed the destination rectangle.
 		const Point16 clipRectOrigin(sourceRect.p0() - chInfo.drawOffset - originAdjustment);
 		const Rect16 clipRect(clipRectOrigin, destRect.width(), destRect.height());
-		LOG("Source rect: " FMT_RECT "\r\n", ARG_RECT(sourceRect));
-		LOG("Clipping rect: " FMT_RECT "\r\n", ARG_RECT(clipRect));
-		LOG("With draw offset: (%d, %d)\r\n", chInfo.drawOffset.x(), chInfo.drawOffset.y());
-		LOG("With origin adjustment: (%d, %d)\r\n", originAdjustment.x(), originAdjustment.y());
 		BadgerMath::trimToBounds(sourceRect, clipRect);
-		LOG("Source rect after clipping: " FMT_RECT "\r\n", ARG_RECT(sourceRect));
 
 		m_Blitter->setSourceRect(sourceRect.rect2DCast<BitmapMaskBlitter::SurfaceRect>());
 		m_Blitter->setDestRect(Rect16(destRect.p0() + chInfo.drawOffset - originAdjustment, 0, 0));

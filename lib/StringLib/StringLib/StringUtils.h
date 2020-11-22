@@ -33,7 +33,7 @@ namespace StringLib
 
 	inline size_t bytesForUTF8Char(const char* str)
 	{
-		if ( !str )
+		if ( !str || !(*str) )
 		{
 			return 0;
 		}
@@ -59,6 +59,24 @@ namespace StringLib
 		return 1;
 	}
 
+	// Same as above, but checks for intervening nulls in case the string is malformed.
+	inline size_t bytesForUTF8CharSafe(const char* str)
+	{
+		if ( !str || !(*str) )
+		{
+			return 0;
+		}
+
+		size_t validChars = 0;
+
+		for ( const char* const end = str + bytesForUTF8Char(str); str < end && (*str); ++str )
+		{
+			++validChars;
+		}
+
+		return validChars;
+	}
+
 	inline const char* nextCharUTF8(const char* str)
 	{
 		if ( !str )
@@ -66,16 +84,69 @@ namespace StringLib
 			return nullptr;
 		}
 
-		// Double-check that there are no nulls in-between.
-		// If there are, we could end up running off the
-		// end of the string if it's malformed UTF-8.
-		const char* const end = str + bytesForUTF8Char(str);
+		return str + bytesForUTF8CharSafe(str);
+	}
 
-		while ( str < end && (*str) )
+	inline size_t charCodePointUTF8(const char* str)
+	{
+		switch ( bytesForUTF8Char(str) )
 		{
-			++str;
-		}
+			case 4:
+			{
+				if ( !str[1] || !str[2] || !str[3] )
+				{
+					// Malformed.
+					return 0;
+				}
 
-		return str;
+				// Bits [2:0] in first byte, bits [5:0] in second, third and fourth bytes.
+				return
+					((static_cast<size_t>(str[0]) & 0b00000111) << 18) |
+					((static_cast<size_t>(str[1]) & 0b00111111) << 12) |
+					((static_cast<size_t>(str[2]) & 0b00111111) << 6) |
+					(static_cast<size_t>(str[3]) & 0b00111111);
+			}
+
+			case 3:
+			{
+				if ( !str[1] || !str[2] )
+				{
+					// Malformed.
+					return 0;
+				}
+
+				// Bits [3:0] in first byte, bits [5:0] in second and third bytes.
+				return
+					((static_cast<size_t>(str[0]) & 0b00001111) << 12) |
+					((static_cast<size_t>(str[1]) & 0b00111111) << 6) |
+					(static_cast<size_t>(str[2]) & 0b00111111);
+			}
+
+			case 2:
+			{
+				if ( !str[1] )
+				{
+					// Malformed.
+					return 0;
+				}
+
+				// Bits [4:0] in first byte, bits [5:0] in second byte.
+				return
+					((static_cast<size_t>(str[0]) & 0b00011111) << 6) |
+					(static_cast<size_t>(str[1]) & 0b00111111);
+			}
+
+			case 1:
+			{
+				return static_cast<size_t>(*str);
+				break;
+			}
+
+			default:
+			{
+				// Invalid.
+				return 0;
+			}
+		}
 	}
 }
