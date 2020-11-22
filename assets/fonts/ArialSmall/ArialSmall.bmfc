@@ -5,7 +5,7 @@ fileVersion=1
 fontName=Arial
 fontFile=
 charSet=0
-fontSize=-20
+fontSize=-11
 aa=1
 scaleH=100
 useSmoothing=0
@@ -34,10 +34,10 @@ forceZero=0
 widthPaddingFactor=0.00
 
 # output file
-outWidth=256
-outHeight=128
+outWidth=128
+outHeight=88
 outBitDepth=8
-fontDescFormat=0
+fontDescFormat=2
 fourChnlPacked=0
 textureFormat=png
 textureCompression=0

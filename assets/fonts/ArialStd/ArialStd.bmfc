@@ -34,8 +34,8 @@ forceZero=0
 widthPaddingFactor=0.00
 
 # output file
-outWidth=128
-outHeight=128
+outWidth=256
+outHeight=94
 outBitDepth=8
 fontDescFormat=2
 fourChnlPacked=0
@@ -54,6 +54,6 @@ invB=0
 outlineThickness=0
 
 # selected chars
-chars=32-126
+chars=32-126,161-163,171,187,191-214,216-246,248-255,338-339
 
 # imported icon images
