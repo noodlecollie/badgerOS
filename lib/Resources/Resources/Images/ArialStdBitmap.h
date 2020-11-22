@@ -396,3 +396,4 @@ namespace Resources
 		static constexpr BadgerGL::BitmapMask BITMAP(WIDTH, HEIGHT, DATA);
 	}
 }
+
