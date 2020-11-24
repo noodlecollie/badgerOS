@@ -1,9 +1,9 @@
 #pragma once
 
 #include <CoreUtil/Blob.h>
-#include "BitmapMaskFont.h"
+#include <BadgerGL/FontCharacterGroupContainer.h>
 
-namespace BadgerGL
+namespace BadgerUI
 {
 #define BADGERGL_BMFFILEREADER_FILESTATUS_LIST \
 	LIST_ITEM(Valid = 0, "Valid") \
@@ -31,7 +31,7 @@ namespace BadgerGL
 		BMFFileReader();
 
 		void setFileData(const CoreUtil::ConstBlob& data);
-		void setCharInfoBuffer(BitmapMaskFont::CharInfoBuffer* buffer);
+		void setCharGroupContainer(BadgerGL::FontCharacterGroupContainer* container);
 
 		FileStatus validateFile();
 
@@ -64,7 +64,7 @@ namespace BadgerGL
 		CoreUtil::ConstBlob m_FileData;
 		FileStatus m_FileStatus = FileStatus::NoFileProvided;
 		uint8_t m_BlockFailedValidation = 0;
-		BitmapMaskFont::CharInfoBuffer* m_CharBuffer = nullptr;
+		BadgerGL::FontCharacterGroupContainer* m_CharGroupContainer = nullptr;
 
 		uint32_t m_CharactersBlockOffset = 0;
 		uint32_t m_CommonBlockOffset = 0;

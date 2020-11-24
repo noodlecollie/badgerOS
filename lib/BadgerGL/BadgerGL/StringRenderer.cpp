@@ -64,7 +64,7 @@ namespace BadgerGL
 
 		for ( ; *str && targetRect.width() > 0; str = StringLib::nextCharUTF8(str) )
 		{
-			const BitmapMaskFont::CharInfo* chInfo = m_Font->charData(str);
+			const FontCharacterInfo* chInfo = m_Font->characterInfo(str);
 
 			if ( !chInfo )
 			{
@@ -100,7 +100,7 @@ namespace BadgerGL
 
 		for ( ; *str; str = StringLib::nextCharUTF8(str) )
 		{
-			const BitmapMaskFont::CharInfo* chInfo = m_Font->charData(str);
+			const FontCharacterInfo* chInfo = m_Font->characterInfo(str);
 
 			if ( !chInfo )
 			{
@@ -113,7 +113,7 @@ namespace BadgerGL
 		return width;
 	}
 
-	void StringRenderer::drawCharacter(const BitmapMaskFont::CharInfo& chInfo,
+	void StringRenderer::drawCharacter(const FontCharacterInfo& chInfo,
 									   const Rect16& destRect,
 									   const Point16& originAdjustment) const
 	{

@@ -4,6 +4,7 @@
 #include <CoreUtil/EnumAddressableList.h>
 #include <CoreUtil/DataBuffer.h>
 #include <BadgerGL/BitmapMaskFont.h>
+#include <BadgerGL/FontCharacterGroupContainer.h>
 
 namespace BadgerUI
 {
@@ -15,14 +16,11 @@ namespace BadgerUI
 		Count
 	};
 
-	// This will need to be expanded later, when we add better character support.
-	using ASCIIFontDataBuffer = CoreUtil::StaticDataBuffer<BadgerGL::BitmapMaskFont::CharInfo, 128>;
-
 	struct FontDirectoryEntry
 	{
 		CoreUtil::ConstBlob bmfData;
 		const BadgerGL::BitmapMask* fontBitmap = nullptr;
-		ASCIIFontDataBuffer fontCharData;
+		BadgerGL::FontCharacterGroupContainer* charGroupContainer = nullptr;
 		BadgerGL::BitmapMaskFont fontObject;
 
 		inline bool isValid() const

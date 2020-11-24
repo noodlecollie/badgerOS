@@ -1,65 +1,35 @@
 
 #include <CoreUtil/BgrsAssert.h>
 #include <StringLib/StringUtils.h>
-#include "BitmapMaskFont.h"
+#include <BadgerGL/BitmapMaskFont.h>
 
 namespace BadgerGL
 {
-	BitmapMaskFont::BitmapMaskFont(const BitmapMask* fontBitmap, const CharInfoBuffer& charDataBuffer) :
+	BitmapMaskFont::BitmapMaskFont(const BitmapMask* fontBitmap, const FontCharacterGroupContainer* charContainer) :
 		m_FontBitmap(fontBitmap),
-		m_CharData(charDataBuffer)
+		m_CharContainer(charContainer)
 	{
 	}
 
 	bool BitmapMaskFont::isValid() const
 	{
-		return m_FontBitmap && m_FontBitmap->isValid() && m_CharData.isValid();
+		return m_FontBitmap && m_FontBitmap->isValid() && m_CharContainer;
 	}
 
-	size_t BitmapMaskFont::charCount() const
+	const FontCharacterInfo* BitmapMaskFont::characterInfo(size_t index) const
 	{
-		return m_CharData.elementCount();
-	}
-
-	BitmapMaskFont::CharInfo* BitmapMaskFont::charData(size_t index)
-	{
-		if ( index >= m_CharData.elementCount() && m_CharData.elementCount() > 0 )
+		if ( !m_CharContainer )
 		{
-			CharInfo* invalid = m_CharData.data(0);
-
-			if ( invalid->hasImage() )
-			{
-				return invalid;
-			}
+			return nullptr;
 		}
 
-		return m_CharData.data(index);
+		const FontCharacterInfo* charInfo = m_CharContainer->charInfo(index);
+		return charInfo ? charInfo : m_CharContainer->invalidGlyphInfo();
 	}
 
-	BitmapMaskFont::CharInfo* BitmapMaskFont::charData(const char* stringPtr)
+	const FontCharacterInfo* BitmapMaskFont::characterInfo(const char* stringPtr) const
 	{
-		// TODO: Handle UTF-8 - we may need to refer to multiple bytes.
-		return stringPtr ? charData(static_cast<size_t>(*stringPtr)) : nullptr;
-	}
-
-	const BitmapMaskFont::CharInfo* BitmapMaskFont::charData(size_t index) const
-	{
-		if ( index >= m_CharData.elementCount() && m_CharData.elementCount() > 0 )
-		{
-			const CharInfo* invalid = m_CharData.constData(0);
-
-			if ( invalid->hasImage() )
-			{
-				return invalid;
-			}
-		}
-
-		return m_CharData.constData(index);
-	}
-
-	const BitmapMaskFont::CharInfo* BitmapMaskFont::charData(const char* stringPtr) const
-	{
-		return stringPtr ? charData(StringLib::charCodePointUTF8(stringPtr)) : nullptr;
+		return stringPtr ? characterInfo(StringLib::charCodePointUTF8(stringPtr)) : nullptr;
 	}
 
 	const BitmapMask* BitmapMaskFont::fontBitmap() const
@@ -82,13 +52,13 @@ namespace BadgerGL
 		m_LineHeight = height;
 	}
 
-	const BitmapMaskFont::CharInfoBuffer& BitmapMaskFont::charDataBuffer() const
+	const FontCharacterGroupContainer* BitmapMaskFont::charContainer() const
 	{
-		return m_CharData;
+		return m_CharContainer;
 	}
 
-	void BitmapMaskFont::setCharDataBuffer(const CharInfoBuffer& buffer)
+	void BitmapMaskFont::setCharContainer(const FontCharacterGroupContainer* charContainer)
 	{
-		m_CharData = buffer;
+		m_CharContainer = charContainer;
 	}
 }

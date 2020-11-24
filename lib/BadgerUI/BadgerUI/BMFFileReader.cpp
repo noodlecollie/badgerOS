@@ -2,13 +2,13 @@
 #include <cstdint>
 #include <CoreUtil/BgrsAssert.h>
 #include <CoreUtil/ArrayUtil.h>
-#include "BMFFileReader.h"
+#include <BadgerUI/BMFFileReader.h>
 
 // TODO: This whole file could do with a good refactor.
 
 namespace
 {
-	using BadgerGL::BMFFileReader;
+	using BadgerUI::BMFFileReader;
 
 #define LIST_ITEM(enum, desc) desc,
 	static constexpr const char* const FILE_STATUS_DESCRIPTIONS[] =
@@ -128,7 +128,7 @@ namespace
 	}
 }
 
-namespace BadgerGL
+namespace BadgerUI
 {
 	const char* BMFFileReader::fileStatusDescription(FileStatus status)
 	{
@@ -152,14 +152,14 @@ namespace BadgerGL
 		clearBlockOffsets();
 	}
 
-	void BMFFileReader::setCharInfoBuffer(BitmapMaskFont::CharInfoBuffer* buffer)
+	void BMFFileReader::setCharGroupContainer(BadgerGL::FontCharacterGroupContainer* container)
 	{
-		m_CharBuffer = buffer;
+		m_CharGroupContainer = container;
 	}
 
 	void BMFFileReader::populateCharInfo()
 	{
-		if ( !m_CharBuffer || m_FileStatus != FileStatus::Valid )
+		if ( !m_CharGroupContainer || m_FileStatus != FileStatus::Valid )
 		{
 			return;
 		}
@@ -180,16 +180,16 @@ namespace BadgerGL
 				characterId = 0;
 			}
 
-			if ( characterId >= m_CharBuffer->elementCount() )
+			BadgerGL::FontCharacterInfo* charInfo = m_CharGroupContainer->charInfo(characterId);
+
+			if ( !charInfo )
 			{
+				// Character not supported by font.
 				continue;
 			}
 
-			BitmapMaskFont::CharInfo* charInfo = m_CharBuffer->data(characterId);
-			BGRS_ASSERT(charInfo, "Character info was not valid!");
-
-			charInfo->imageRect = BitmapMaskFont::SurfaceRect(character.x, character.y, character.x + character.width, character.y + character.height);
-			charInfo->drawOffset = Point16(character.xOffset, character.yOffset);
+			charInfo->imageRect = BadgerGL::BitmapMask::SurfaceRect(character.x, character.y, character.x + character.width, character.y + character.height);
+			charInfo->drawOffset = BadgerGL::Point16(character.xOffset, character.yOffset);
 			charInfo->advance = character.xAdvance;
 		}
 	}
