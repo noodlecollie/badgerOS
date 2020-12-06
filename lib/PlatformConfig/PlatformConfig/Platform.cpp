@@ -3,16 +3,24 @@
 
 namespace PlatformConfig
 {
-	static Config LocalConfig;
+	static ConfigArgs LocalConfigArgs;
+	static ConfigData LocalConfigData;
 
-	void initialiseConfig(ConfigFactoryFunc factoryFunc)
+	void initialiseConfig(ConfigInitFunc initFunc, const ConfigArgs& args)
 	{
-		BGRS_ASSERT(factoryFunc, "Config factory function was not valid.");
-		factoryFunc(LocalConfig);
+		BGRS_ASSERT(initFunc, "Config init function was not valid.");
+
+		LocalConfigArgs = args;
+		initFunc(LocalConfigArgs, LocalConfigData);
 	}
 
-	const Config& globalConfig()
+	const ConfigArgs& globalConfigArgs()
 	{
-		return LocalConfig;
+		return LocalConfigArgs;
+	}
+
+	const ConfigData& globalConfigData()
+	{
+		return LocalConfigData;
 	}
 }

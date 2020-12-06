@@ -20,7 +20,10 @@
 
 void setup()
 {
-	PlatformConfig::initialiseConfig(BOARD_CONFIG_FACTORY_FUNC(BOARD_NAME));
+	PlatformConfig::ConfigArgs args;
+	PROG_NAME::getPlatformConfigArgs(args);
+
+	PlatformConfig::initialiseConfig(BOARD_CONFIG_FACTORY_FUNC(BOARD_NAME), args);
 	PROG_NAME::setup();
 }
 

@@ -1,35 +1,23 @@
 #pragma once
 
 #include <CoreUtil/BgrsAssert.h>
-#include <SSD1351/OLEDDriver.h>
-#include "Serial.h"
-#include "SPI.h"
-#include "ChipSelect.h"
-#include "Power.h"
+#include <PlatformConfig/ConfigArgs.h>
+#include <PlatformConfig/ConfigData.h>
 
 namespace PlatformConfig
 {
-	struct Config
-	{
-		const SSD1351::OLEDDriver::Config* ssd1351Config;
-		const SerialConfig* serialConfig;
-		const SPIConfig* spiConfig;
-		const SPIPinConfig* spiPinConfig;
-		const ChipSelectConfig* chipSelectConfig;
-		const PowerConfig* powerConfig;
-	};
+	using ConfigInitFunc = void (*)(const ConfigArgs&, ConfigData&);
 
-	using ConfigFactoryFunc = void (*)(Config&);
-
-	void initialiseConfig(ConfigFactoryFunc factoryFunc);
-	const Config& globalConfig();
+	void initialiseConfig(ConfigInitFunc factoryFunc, const ConfigArgs& args);
+	const ConfigArgs& globalConfigArgs();
+	const ConfigData& globalConfigData();
 
 	template<typename T>
-	static inline const T& globalConfigItem(const T* Config::* configEntryPtr)
+	static inline const T& globalConfigItem(const T* ConfigData::* configEntryPtr)
 	{
 		BGRS_ASSERT(configEntryPtr, "No config entry pointer was provided.");
 
-		const Config& config = globalConfig();
+		const ConfigData& config = globalConfigData();
 		const T* configEntry = config.*configEntryPtr;
 
 		BGRS_ASSERT(configEntry, "Specified config entry was not valid.");
@@ -37,7 +25,7 @@ namespace PlatformConfig
 	}
 
 	template<typename T, typename FUNC>
-	static inline void initialiseSubsystem(const T* Config::* configEntryPtr, const FUNC& initFunc)
+	static inline void initialiseSubsystem(const T* ConfigData::* configEntryPtr, const FUNC& initFunc)
 	{
 		BGRS_ASSERT(initFunc, "No initialisation function was provided.");
 

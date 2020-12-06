@@ -34,16 +34,20 @@ namespace PlatformConfig
 
 	namespace OlimexESP32
 	{
-		void getConfig(Config& config)
+		void getConfig(const ConfigArgs& args, ConfigData& data)
 		{
-			memset(&config, 0, sizeof(config));
+			memset(&data, 0, sizeof(data));
 
-			config.ssd1351Config = &SSD1351_CONFIG;
-			config.serialConfig = &SERIAL_CONFIG;
-			config.spiConfig = &SPI_CONFIG;
-			config.spiPinConfig = &SPI_PIN_CONFIG_VSPI;
-			config.chipSelectConfig = &CHIP_SELECT_CONFIG;
-			config.powerConfig = &POWER_CONFIG;
+			if ( args.display == DisplayType::SSD1351 )
+			{
+				data.ssd1351Config = &SSD1351_CONFIG;
+			}
+
+			data.serialConfig = &SERIAL_CONFIG;
+			data.spiConfig = &SPI_CONFIG;
+			data.spiPinConfig = &SPI_PIN_CONFIG_VSPI;
+			data.chipSelectConfig = &CHIP_SELECT_CONFIG;
+			data.powerConfig = &POWER_CONFIG;
 		}
 	}
 }

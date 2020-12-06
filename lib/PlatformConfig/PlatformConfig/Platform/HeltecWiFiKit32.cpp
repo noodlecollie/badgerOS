@@ -28,14 +28,18 @@ namespace PlatformConfig
 
 	namespace HeltecWiFiKit32
 	{
-		void getConfig(Config& config)
+		void getConfig(const ConfigArgs& args, ConfigData& data)
 		{
-			memset(&config, 0, sizeof(config));
+			memset(&data, 0, sizeof(data));
 
-			config.ssd1351Config = &SSD1351_CONFIG;
-			config.serialConfig = &SERIAL_CONFIG;
-			config.spiConfig = &SPI_CONFIG;
-			config.chipSelectConfig = &CHIP_SELECT_CONFIG;
+			if ( args.display == DisplayType::SSD1351 )
+			{
+				data.ssd1351Config = &SSD1351_CONFIG;
+			}
+
+			data.serialConfig = &SERIAL_CONFIG;
+			data.spiConfig = &SPI_CONFIG;
+			data.chipSelectConfig = &CHIP_SELECT_CONFIG;
 		}
 	}
 }

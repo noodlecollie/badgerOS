@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../Platform.h"
+#include <PlatformConfig/Platform.h>
 
 namespace PlatformConfig
 {
 	namespace OlimexESP32
 	{
-		void getConfig(Config& config);
+		void getConfig(const ConfigArgs& args, ConfigData& data);
 	}
 }

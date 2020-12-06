@@ -99,55 +99,63 @@ namespace SSD1351SanityTest
 		Serial.begin(config.baudRate);
 	}
 
+	void getPlatformConfigArgs(PlatformConfig::ConfigArgs& args)
+	{
+		args.display = PlatformConfig::DisplayType::SSD1351;
+	}
+
 	void setup()
 	{
-		const PlatformConfig::Config& config = PlatformConfig::globalConfig();
+		const PlatformConfig::ConfigData& configData = PlatformConfig::globalConfigData();
 
-		BGRS_ASSERT(config.ssd1351Config, "SSD1351 config is required.");
-		BGRS_ASSERT(config.serialConfig, "Serial config is required.");
-		BGRS_ASSERT(config.spiConfig, "SPI config is required.");
-		BGRS_ASSERT(config.spiPinConfig, "SPI pin config is required.");
-		BGRS_ASSERT(config.chipSelectConfig, "Chip select config is required.");
+		BGRS_ASSERT(configData.ssd1351Config, "SSD1351 config is required.");
+		BGRS_ASSERT(configData.serialConfig, "Serial config is required.");
+		BGRS_ASSERT(configData.spiConfig, "SPI config is required.");
+		BGRS_ASSERT(configData.spiPinConfig, "SPI pin config is required.");
+		BGRS_ASSERT(configData.chipSelectConfig, "Chip select config is required.");
 
-		//Serial.begin(config.serialConfig->baudRate);
-		PlatformConfig::initialiseSubsystem(&PlatformConfig::Config::serialConfig, &testDelegatedSerialInit);
+		PlatformConfig::initialiseSubsystem(&PlatformConfig::ConfigData::serialConfig, &testDelegatedSerialInit);
 
 		Serial.printf("Sanity test initialising...\r\n");
 		Serial.printf("Version %s\r\n", PlatformConfig::Versions::VERSION_STRING_FULL);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== Chip select configuration ===\r\n");
-		Serial.printf("              OLED: %u\r\n", config.chipSelectConfig->displayCSPin);
+		Serial.printf("              OLED: %u\r\n", configData.chipSelectConfig->displayCSPin);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== Serial configuration ===\r\n");
-		Serial.printf("         Baud rate: %u\r\n", config.serialConfig->baudRate);
+		Serial.printf("         Baud rate: %u\r\n", configData.serialConfig->baudRate);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== SSD1351 configuration ===\r\n");
-		Serial.printf("             Reset: %u\r\n", config.ssd1351Config->resetPin);
-		Serial.printf("      Data/command: %u\r\n", config.ssd1351Config->dataCommandPin);
+		Serial.printf("             Reset: %u\r\n", configData.ssd1351Config->resetPin);
+		Serial.printf("      Data/command: %u\r\n", configData.ssd1351Config->dataCommandPin);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== SPI configuration ===\r\n");
-		Serial.printf("         Data mode: %u\r\n", config.spiConfig->dataMode);
-		Serial.printf("         Bit order: %u\r\n", config.spiConfig->bitOrder);
-		Serial.printf("     Clock divider: %u\r\n", config.spiConfig->clockDivider);
-		Serial.printf("         Clock pin: %u\r\n", config.spiPinConfig->clockPin);
-		Serial.printf("          MISO pin: %u\r\n", config.spiPinConfig->misoPin);
-		Serial.printf("          MOSI pin: %u\r\n", config.spiPinConfig->mosiPin);
-		Serial.printf(" Write protect pin: %u\r\n", config.spiPinConfig->writeProtectPin);
-		Serial.printf("          Hold pin: %u\r\n", config.spiPinConfig->holdPin);
+		Serial.printf("         Data mode: %u\r\n", configData.spiConfig->dataMode);
+		Serial.printf("         Bit order: %u\r\n", configData.spiConfig->bitOrder);
+		Serial.printf("     Clock divider: %u\r\n", configData.spiConfig->clockDivider);
+		Serial.printf("         Clock pin: %u\r\n", configData.spiPinConfig->clockPin);
+		Serial.printf("          MISO pin: %u\r\n", configData.spiPinConfig->misoPin);
+		Serial.printf("          MOSI pin: %u\r\n", configData.spiPinConfig->mosiPin);
+		Serial.printf(" Write protect pin: %u\r\n", configData.spiPinConfig->writeProtectPin);
+		Serial.printf("          Hold pin: %u\r\n", configData.spiPinConfig->holdPin);
 		Serial.printf("\r\n");
 
 		Serial.printf("Screen buffer dimensions: %ux%u, bit depth %u.\r\n", ScreenBufferSurface.width(), ScreenBufferSurface.height(), ScreenBufferSurface.bitDepth());
 		Serial.printf("Screen buffer size: %u bytes.\r\n", ScreenBufferSurface.pixelDataSize());
 
-		PlatformConfig::chipSelectSetup(*config.chipSelectConfig);
-		PlatformConfig::spiSetup(*config.spiConfig);
+		PlatformConfig::chipSelectSetup(*configData.chipSelectConfig);
+		PlatformConfig::spiSetup(*configData.spiConfig);
 
-		SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->displayCSPin);
-		SSD1351::Driver.initialise(*config.ssd1351Config);
+		SPI.begin(configData.spiPinConfig->clockPin,
+				  configData.spiPinConfig->misoPin,
+				  configData.spiPinConfig->mosiPin,
+				  configData.chipSelectConfig->displayCSPin);
+
+		SSD1351::Driver.initialise(*configData.ssd1351Config);
 
 		prepareTestImage();
 		testFileSystem();
