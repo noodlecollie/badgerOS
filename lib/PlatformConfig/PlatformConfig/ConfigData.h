@@ -10,7 +10,11 @@ namespace PlatformConfig
 {
 	struct ConfigData
 	{
-		const SSD1351::OLEDDriver::Config* ssd1351Config;
+		union
+		{
+			const SSD1351::OLEDDriver::Config* ssd1351;
+		} displayConfig;
+
 		const SerialConfig* serialConfig;
 		const SPIConfig* spiConfig;
 		const SPIPinConfig* spiPinConfig;

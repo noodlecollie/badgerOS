@@ -107,9 +107,11 @@ namespace SSD1351SanityTest
 	void setup()
 	{
 		const PlatformConfig::ConfigInstance& configInstance = PlatformConfig::globalConfig();
+		const PlatformConfig::ConfigArgs& configArgs = configInstance.args();
 		const PlatformConfig::ConfigData& configData = configInstance.data();
 
-		BGRS_ASSERT(configData.ssd1351Config, "SSD1351 config is required.");
+		BGRS_ASSERT(configArgs.display == PlatformConfig::DisplayType::SSD1351, "SSD1351 display must be used.");
+		BGRS_ASSERT(configInstance.ssd1351Config(), "SSD1351 config is required.");
 		BGRS_ASSERT(configData.serialConfig, "Serial config is required.");
 		BGRS_ASSERT(configData.spiConfig, "SPI config is required.");
 		BGRS_ASSERT(configData.spiPinConfig, "SPI pin config is required.");
@@ -130,8 +132,8 @@ namespace SSD1351SanityTest
 		Serial.printf("\r\n");
 
 		Serial.printf("=== SSD1351 configuration ===\r\n");
-		Serial.printf("             Reset: %u\r\n", configData.ssd1351Config->resetPin);
-		Serial.printf("      Data/command: %u\r\n", configData.ssd1351Config->dataCommandPin);
+		Serial.printf("             Reset: %u\r\n", configInstance.ssd1351Config()->resetPin);
+		Serial.printf("      Data/command: %u\r\n", configInstance.ssd1351Config()->dataCommandPin);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== SPI configuration ===\r\n");
@@ -156,7 +158,7 @@ namespace SSD1351SanityTest
 				  configData.spiPinConfig->mosiPin,
 				  configData.chipSelectConfig->displayCSPin);
 
-		SSD1351::Driver.initialise(*configData.ssd1351Config);
+		SSD1351::Driver.initialise(*configInstance.ssd1351Config());
 
 		prepareTestImage();
 		testFileSystem();

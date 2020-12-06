@@ -8,20 +8,29 @@ namespace PlatformConfig
 	class ConfigInstance
 	{
 	public:
-		ConfigInstance(const ConfigArgs& args, const ConfigData& data) :
+		inline ConfigInstance(const ConfigArgs& args, const ConfigData& data) :
 			m_Args(args),
 			m_Data(data)
 		{
 		}
 
-		const ConfigArgs& args() const
+		inline const ConfigArgs& args() const
 		{
 			return m_Args;
 		}
 
-		const ConfigData& data() const
+		inline const ConfigData& data() const
 		{
 			return m_Data;
+		}
+
+		// Helpers:
+
+		inline const SSD1351::OLEDDriver::Config* ssd1351Config() const
+		{
+			return m_Args.display == DisplayType::SSD1351
+				? m_Data.displayConfig.ssd1351
+				: nullptr;
 		}
 
 	private:

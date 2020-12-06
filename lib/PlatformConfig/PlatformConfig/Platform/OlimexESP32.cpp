@@ -40,7 +40,7 @@ namespace PlatformConfig
 
 			if ( args.display == DisplayType::SSD1351 )
 			{
-				data.ssd1351Config = &SSD1351_CONFIG;
+				data.displayConfig.ssd1351 = &SSD1351_CONFIG;
 			}
 
 			data.serialConfig = &SERIAL_CONFIG;

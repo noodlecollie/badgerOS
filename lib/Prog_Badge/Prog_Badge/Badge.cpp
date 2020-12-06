@@ -20,6 +20,25 @@ namespace Badge
 		Serial.printf(" Done. (%.2fs)\r\n", static_cast<float>(duration) / 1000.0f);
 	}
 
+	template<typename T, typename FUNC>
+	static inline void initialiseSubsystem(const char* stage, const T* (PlatformConfig::ConfigInstance::* instanceFunc)() const, const FUNC& initFunc)
+	{
+		Serial.printf("  * %s...", stage);
+		const CoreUtil::TimevalMs startTime = millis();
+
+		BGRS_ASSERT(instanceFunc, "No config instance function was provided!");
+
+		const PlatformConfig::ConfigInstance& instance = PlatformConfig::globalConfig();
+		const T* item = (instance.*instanceFunc)();
+
+		BGRS_ASSERT(item, "Config item was null!");
+
+		initFunc(*item);
+
+		const CoreUtil::TimevalMs duration = millis() - startTime;
+		Serial.printf(" Done. (%.2fs)\r\n", static_cast<float>(duration) / 1000.0f);
+	}
+
 	template<typename FUNC>
 	static inline void initialiseSubsystem(const char* stage, const FUNC& initFunc)
 	{
@@ -71,7 +90,7 @@ namespace Badge
 			SPI.begin(spiPinConfig->clockPin, spiPinConfig->misoPin, spiPinConfig->mosiPin, chipSelectConfig->displayCSPin);
 		});
 
-		initialiseSubsystem("OLED", &ConfigData::ssd1351Config, [](const SSD1351::OLEDDriver::Config& config)
+		initialiseSubsystem("OLED", &PlatformConfig::ConfigInstance::ssd1351Config, [](const SSD1351::OLEDDriver::Config& config)
 		{
 			SSD1351::Driver.initialise(config);
 		});
