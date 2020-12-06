@@ -58,12 +58,12 @@ The rest of the definitions apply to the UC8159 (7-colour) display.
 
 ### Pin Config
 
-| Type               | Pin |
-| :----------------- | :-- |
-| Chip Select (SPI)  | 8   |
-| Data/Command (SPI) | 22  |
-| Reset              | 27  |
-| Busy               | 17  |
+| Type               | GPIO Pin |
+| :----------------- | :------- |
+| Chip Select (SPI)  | 8        |
+| Data/Command (SPI) | 22       |
+| Reset              | 27       |
+| Busy               | 17       |
 
 ### Chip Select Channel
 
@@ -245,3 +245,24 @@ To send pixels to the display, the above setup function is called. Once complete
 ```
 
 As the display is e-ink, the power does not need to be left on.
+
+## Raspberry Pi Pinouts
+
+https://pinout.xyz/pinout/inky_phat has a useful diagram of the Raspberry Pi GPIO pins used by the Inky pHAT (which the 7-colour display should also use). Note that these pinouts are consequently mirrored horizontally when looking at the underside of the Inky.
+
+SPI0 is used to send commands to the display. I2C is not applicable to this display. 3.3v and 5v are both required.
+
+The full set of pins used is:
+
+| Type               | Pi Pinout                            | Heltec Pinout   |
+| :----------------- | :----------------------------------- | :-------------- |
+| 3.3v               | 1                                    | 3.3v            |
+| 5v                 | 2                                    | 5v              |
+| Ground             | One of: 6, 9, 14, 20, 25, 30, 34, 39 | Ground          |
+| SPI0 Chip Select 0 | GPIO 8                               | GPIO 5          |
+| SPI0 MISO          | GPIO 9                               | GPIO 19         |
+| SPI0 MOSI          | GPIO 10                              | GPIO 23         |
+| SPI0 SCLK          | GPIO 11                              | GPIO 18         |
+| Busy               | GPIO 17                              | Undecided       |
+| Data/Command       | GPIO 22                              | GPIO 16         |
+| Reset              | GPIO 27                              | GPIO 27         |
