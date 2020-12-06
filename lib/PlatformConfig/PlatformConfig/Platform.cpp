@@ -5,6 +5,7 @@ namespace PlatformConfig
 {
 	static ConfigArgs LocalConfigArgs;
 	static ConfigData LocalConfigData;
+	static ConfigInstance LocalInstance(LocalConfigArgs, LocalConfigData);
 
 	void initialiseConfig(ConfigInitFunc initFunc, const ConfigArgs& args)
 	{
@@ -14,13 +15,8 @@ namespace PlatformConfig
 		initFunc(LocalConfigArgs, LocalConfigData);
 	}
 
-	const ConfigArgs& globalConfigArgs()
+	const ConfigInstance& globalConfig()
 	{
-		return LocalConfigArgs;
-	}
-
-	const ConfigData& globalConfigData()
-	{
-		return LocalConfigData;
+		return LocalInstance;
 	}
 }

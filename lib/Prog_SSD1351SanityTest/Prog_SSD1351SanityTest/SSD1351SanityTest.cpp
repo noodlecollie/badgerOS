@@ -106,7 +106,8 @@ namespace SSD1351SanityTest
 
 	void setup()
 	{
-		const PlatformConfig::ConfigData& configData = PlatformConfig::globalConfigData();
+		const PlatformConfig::ConfigInstance& configInstance = PlatformConfig::globalConfig();
+		const PlatformConfig::ConfigData& configData = configInstance.data();
 
 		BGRS_ASSERT(configData.ssd1351Config, "SSD1351 config is required.");
 		BGRS_ASSERT(configData.serialConfig, "Serial config is required.");

@@ -26,7 +26,7 @@ namespace Badge
 		Serial.printf("  * %s...", stage);
 		const CoreUtil::TimevalMs startTime = millis();
 
-		initFunc(PlatformConfig::globalConfigData());
+		initFunc();
 
 		const CoreUtil::TimevalMs duration = millis() - startTime;
 		Serial.printf(" Done. (%.2fs)\r\n", static_cast<float>(duration) / 1000.0f);
@@ -51,27 +51,24 @@ namespace Badge
 
 		const CoreUtil::TimevalMs initStartTime = millis();
 
-		initialiseSubsystem("CommandModule", [](const ConfigData& config)
-		{
-			CommandModule::setup();
-		});
-
-		initialiseSubsystem("InputModule", [](const ConfigData& config)
-		{
-			InputModule::setup();
-		});
+		initialiseSubsystem("CommandModule", &CommandModule::setup);
+		initialiseSubsystem("InputModule", &InputModule::setup);
 
 		initialiseSubsystem("Power measurement", &ConfigData::powerConfig, &powerSetup);
 		initialiseSubsystem("Chip select pins", &ConfigData::chipSelectConfig, &chipSelectSetup);
 		initialiseSubsystem("SPI setup", &ConfigData::spiConfig, &spiSetup);
 
-		initialiseSubsystem("SPI begin", [](const ConfigData& config)
+		initialiseSubsystem("SPI begin", []()
 		{
 			// Ensure that these exist.
 			globalConfigItem(&ConfigData::spiPinConfig);
 			globalConfigItem(&ConfigData::chipSelectConfig);
 
-			SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->displayCSPin);
+			const ConfigData& data = globalConfig().data();
+			const SPIPinConfig* spiPinConfig = data.spiPinConfig;
+			const ChipSelectConfig* chipSelectConfig = data.chipSelectConfig;
+
+			SPI.begin(spiPinConfig->clockPin, spiPinConfig->misoPin, spiPinConfig->mosiPin, chipSelectConfig->displayCSPin);
 		});
 
 		initialiseSubsystem("OLED", &ConfigData::ssd1351Config, [](const SSD1351::OLEDDriver::Config& config)
@@ -79,10 +76,7 @@ namespace Badge
 			SSD1351::Driver.initialise(config);
 		});
 
-		initialiseSubsystem("UIModule", [](const ConfigData& config)
-		{
-			UIModule::setup();
-		});
+		initialiseSubsystem("UIModule", &UIModule::setup);
 
 		const CoreUtil::TimevalMs initDuration = millis() - initStartTime;
 		Serial.printf("Initialisation complete. (%.2fs)\r\n", static_cast<float>(initDuration) / 1000.0f);
