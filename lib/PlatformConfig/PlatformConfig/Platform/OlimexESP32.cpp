@@ -21,6 +21,13 @@ namespace PlatformConfig
 		.dataCommandPin = 16
 	};
 
+	static constexpr InkyImpression::Driver::Config INKY_IMPRESSION_CONFIG =
+	{
+		.resetPin = 27,
+		.dataCommandPin = 16,
+		.busyPin = 33
+	};
+
 	static constexpr ChipSelectConfig CHIP_SELECT_CONFIG =
 	{
 		.displayCSPin = 5
@@ -38,9 +45,24 @@ namespace PlatformConfig
 		{
 			memset(&data, 0, sizeof(data));
 
-			if ( args.display == DisplayType::SSD1351 )
+			switch ( args.display )
 			{
-				data.displayConfig.ssd1351 = &SSD1351_CONFIG;
+				case DisplayType::SSD1351:
+				{
+					data.displayConfig.ssd1351 = &SSD1351_CONFIG;
+					break;
+				}
+
+				case DisplayType::InkyImpression:
+				{
+					data.displayConfig.inkyImpression = &INKY_IMPRESSION_CONFIG;
+					break;
+				}
+
+				default:
+				{
+					break;
+				}
 			}
 
 			data.serialConfig = &SERIAL_CONFIG;

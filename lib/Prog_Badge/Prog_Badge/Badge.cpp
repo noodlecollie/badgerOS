@@ -51,7 +51,12 @@ namespace Badge
 		Serial.printf(" Done. (%.2fs)\r\n", static_cast<float>(duration) / 1000.0f);
 	}
 
-	static void initSubsystems()
+	void getPlatformConfigArgs(PlatformConfig::ConfigArgs& args)
+	{
+		args.display = PlatformConfig::DisplayType::SSD1351;
+	}
+
+	void setup()
 	{
 		using namespace PlatformConfig;
 
@@ -99,16 +104,6 @@ namespace Badge
 
 		const CoreUtil::TimevalMs initDuration = millis() - initStartTime;
 		Serial.printf("Initialisation complete. (%.2fs)\r\n", static_cast<float>(initDuration) / 1000.0f);
-	}
-
-	void getPlatformConfigArgs(PlatformConfig::ConfigArgs& args)
-	{
-		args.display = PlatformConfig::DisplayType::SSD1351;
-	}
-
-	void setup()
-	{
-		initSubsystems();
 	}
 
 	void loop()
