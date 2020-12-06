@@ -13,6 +13,6 @@ namespace PlatformConfig
 
 	void chipSelectSetup(const ChipSelectConfig& config)
 	{
-		setPinMode(config.oledScreenCSPin, OUTPUT);
+		setPinMode(config.displayCSPin, OUTPUT);
 	}
 }

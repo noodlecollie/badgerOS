@@ -1,6 +1,6 @@
 #pragma once
 
-namespace SanityTest
+namespace SSD1351SanityTest
 {
 	void setup();
 	void loop();

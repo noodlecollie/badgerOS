@@ -2,7 +2,7 @@
 #include <Resources/Images/Missing.h>
 #include "TestCardLayout.h"
 
-namespace SanityTest
+namespace SSD1351SanityTest
 {
 	TestCardLayout::TestCardLayout() :
 		BadgerUI::BaseLayout()

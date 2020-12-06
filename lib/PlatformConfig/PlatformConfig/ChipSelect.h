@@ -6,7 +6,7 @@ namespace PlatformConfig
 {
 	struct ChipSelectConfig
 	{
-		int8_t oledScreenCSPin;
+		int8_t displayCSPin;
 	};
 
 	void chipSelectSetup(const ChipSelectConfig& config);

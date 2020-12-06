@@ -5,7 +5,7 @@
 #include <BadgerUI/Bitmap.h>
 #include <BadgerUI/UIDrawableAlias.h>
 
-namespace SanityTest
+namespace SSD1351SanityTest
 {
 	class TestCardLayout : public BadgerUI::BaseLayout
 	{

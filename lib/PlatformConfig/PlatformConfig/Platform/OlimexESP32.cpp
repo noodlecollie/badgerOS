@@ -23,7 +23,7 @@ namespace PlatformConfig
 
 	static constexpr ChipSelectConfig CHIP_SELECT_CONFIG =
 	{
-		.oledScreenCSPin = 5
+		.displayCSPin = 5
 	};
 
 	static constexpr PowerConfig POWER_CONFIG =

@@ -11,10 +11,10 @@
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/ColourScheme.h>
 
-#include "SanityTest.h"
+#include "SSD1351SanityTest.h"
 #include "TestCardLayout.h"
 
-namespace SanityTest
+namespace SSD1351SanityTest
 {
 	static BadgerGL::Static65KBitmapSurface<SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT> ScreenBufferSurface;
 
@@ -117,7 +117,7 @@ namespace SanityTest
 		Serial.printf("\r\n");
 
 		Serial.printf("=== Chip select configuration ===\r\n");
-		Serial.printf("              OLED: %u\r\n", config.chipSelectConfig->oledScreenCSPin);
+		Serial.printf("              OLED: %u\r\n", config.chipSelectConfig->displayCSPin);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== Serial configuration ===\r\n");
@@ -146,7 +146,7 @@ namespace SanityTest
 		PlatformConfig::chipSelectSetup(*config.chipSelectConfig);
 		PlatformConfig::spiSetup(*config.spiConfig);
 
-		SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->oledScreenCSPin);
+		SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->displayCSPin);
 		SSD1351::Driver.initialise(*config.ssd1351Config);
 
 		prepareTestImage();

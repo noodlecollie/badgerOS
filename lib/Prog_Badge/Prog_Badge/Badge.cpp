@@ -71,7 +71,7 @@ namespace Badge
 			globalConfigItem(&Config::spiPinConfig);
 			globalConfigItem(&Config::chipSelectConfig);
 
-			SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->oledScreenCSPin);
+			SPI.begin(config.spiPinConfig->clockPin, config.spiPinConfig->misoPin, config.spiPinConfig->mosiPin, config.chipSelectConfig->displayCSPin);
 		});
 
 		initialiseSubsystem("OLED", &Config::ssd1351Config, [](const SSD1351::OLEDDriver::Config& config)

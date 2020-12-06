@@ -23,7 +23,7 @@ namespace PlatformConfig
 
 	static constexpr ChipSelectConfig CHIP_SELECT_CONFIG =
 	{
-		.oledScreenCSPin = 5
+		.displayCSPin = 5
 	};
 
 	namespace HeltecWiFiKit32
