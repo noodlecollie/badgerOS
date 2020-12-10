@@ -1,0 +1,15 @@
+{
+	"dependencies":
+	[
+		{ "name": "PlatformConfig" },
+		{ "name": "BadgerGL" },
+		{ "name": "Resources" },
+		{ "name": "InkyImpression" },
+		{ "name": "CoreUtil" },
+		{ "name": "SPI" },
+		{ "name": "Wire" },
+		{ "name": "SPIFFS" },
+		{ "name": "FS" },
+		{ "name": "BadgerUI" }
+	]
+}
