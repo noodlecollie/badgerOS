@@ -19,7 +19,7 @@ namespace BadgerGL
 		FilledOutline	// Outline is drawn in primary colour, and interior is filled with secondary colour.
 	};
 
-	static constexpr uint8_t bitDepthToByteDepth(uint8_t bitDepth)
+	static constexpr size_t bitDepthToByteDepth(size_t bitDepth)
 	{
 		return (bitDepth + 7) / 8;
 	}
