@@ -263,6 +263,6 @@ The full set of pins used is:
 | SPI0 MISO          | GPIO 9                               | GPIO 19         |
 | SPI0 MOSI          | GPIO 10                              | GPIO 23         |
 | SPI0 SCLK          | GPIO 11                              | GPIO 18         |
-| Busy               | GPIO 17                              | Undecided       |
+| Busy               | GPIO 17                              | GPIO 35         |
 | Data/Command       | GPIO 22                              | GPIO 16         |
 | Reset              | GPIO 27                              | GPIO 27         |

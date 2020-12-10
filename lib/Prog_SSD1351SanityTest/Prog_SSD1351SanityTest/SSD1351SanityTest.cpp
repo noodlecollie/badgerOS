@@ -110,14 +110,14 @@ namespace SSD1351SanityTest
 		const PlatformConfig::ConfigArgs& configArgs = configInstance.args();
 		const PlatformConfig::ConfigData& configData = configInstance.data();
 
+		BGRS_ASSERT(configData.serialConfig, "Serial config is required.");
+		PlatformConfig::initialiseSubsystem(&PlatformConfig::ConfigData::serialConfig, &testDelegatedSerialInit);
+
 		BGRS_ASSERT(configArgs.display == PlatformConfig::DisplayType::SSD1351, "SSD1351 display must be used.");
 		BGRS_ASSERT(configInstance.ssd1351Config(), "SSD1351 config is required.");
-		BGRS_ASSERT(configData.serialConfig, "Serial config is required.");
 		BGRS_ASSERT(configData.spiConfig, "SPI config is required.");
 		BGRS_ASSERT(configData.spiPinConfig, "SPI pin config is required.");
 		BGRS_ASSERT(configData.chipSelectConfig, "Chip select config is required.");
-
-		PlatformConfig::initialiseSubsystem(&PlatformConfig::ConfigData::serialConfig, &testDelegatedSerialInit);
 
 		Serial.printf("Sanity test initialising...\r\n");
 		Serial.printf("Version %s\r\n", PlatformConfig::Versions::VERSION_STRING_FULL);

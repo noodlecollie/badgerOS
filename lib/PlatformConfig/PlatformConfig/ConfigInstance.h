@@ -33,6 +33,13 @@ namespace PlatformConfig
 				: nullptr;
 		}
 
+		inline const InkyImpression::InkyDriver::Config* inkyImpressionConfig() const
+		{
+			return m_Args.display == DisplayType::InkyImpression
+				? m_Data.displayConfig.inkyImpression
+				: nullptr;
+		}
+
 	private:
 		const ConfigArgs& m_Args;
 		const ConfigData& m_Data;

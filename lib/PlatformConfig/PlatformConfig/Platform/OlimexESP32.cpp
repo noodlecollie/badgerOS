@@ -21,11 +21,11 @@ namespace PlatformConfig
 		.dataCommandPin = 16
 	};
 
-	static constexpr InkyImpression::Driver::Config INKY_IMPRESSION_CONFIG =
+	static constexpr InkyImpression::InkyDriver::Config INKY_IMPRESSION_CONFIG =
 	{
 		.resetPin = 27,
 		.dataCommandPin = 16,
-		.busyPin = 33
+		.busyPin = 35
 	};
 
 	static constexpr ChipSelectConfig CHIP_SELECT_CONFIG =

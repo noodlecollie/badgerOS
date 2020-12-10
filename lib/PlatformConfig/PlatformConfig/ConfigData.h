@@ -6,7 +6,7 @@
 #include <PlatformConfig/Power.h>
 
 #include <SSD1351/OLEDDriver.h>
-#include <InkyImpression/Driver.h>
+#include <InkyImpression/InkyDriver.h>
 
 namespace PlatformConfig
 {
@@ -15,7 +15,7 @@ namespace PlatformConfig
 		union
 		{
 			const SSD1351::OLEDDriver::Config* ssd1351;
-			const InkyImpression::Driver::Config* inkyImpression;
+			const InkyImpression::InkyDriver::Config* inkyImpression;
 		} displayConfig;
 
 		const SerialConfig* serialConfig;

@@ -4,7 +4,7 @@
 
 namespace InkyImpression
 {
-	class Driver
+	class InkyDriver
 	{
 	public:
 		struct Config
@@ -13,5 +13,9 @@ namespace InkyImpression
 			uint8_t dataCommandPin;
 			uint8_t busyPin;
 		};
+
+		void initialise(const Config& cfg);
 	};
+
+	extern InkyDriver Driver;
 }
