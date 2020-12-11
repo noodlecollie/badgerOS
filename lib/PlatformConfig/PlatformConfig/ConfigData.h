@@ -10,6 +10,7 @@
 
 namespace PlatformConfig
 {
+	// Per-board config
 	struct ConfigData
 	{
 		union

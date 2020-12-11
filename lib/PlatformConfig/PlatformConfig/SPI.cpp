@@ -6,6 +6,14 @@ namespace PlatformConfig
 	{
 		SPI.setDataMode(config.dataMode);
 		SPI.setBitOrder(config.bitOrder);
-		SPI.setClockDivider(config.clockDivider);
+
+		if ( config.clockMode == SPIConfig::ClockRateMode::Frequency )
+		{
+			SPI.setFrequency(config.clockValue);
+		}
+		else
+		{
+			SPI.setClockDivider(config.clockValue);
+		}
 	}
 }

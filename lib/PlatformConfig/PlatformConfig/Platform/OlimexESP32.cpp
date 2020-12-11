@@ -4,7 +4,6 @@
 namespace PlatformConfig
 {
 	static constexpr SerialConfig SERIAL_CONFIG = SERIAL_CONFIG_DEFAULT;
-	static constexpr SPIConfig SPI_CONFIG = SPI_CONFIG_DEFAULT;
 
 	static constexpr SPIPinConfig SPI_PIN_CONFIG_VSPI =
 	{
@@ -66,7 +65,7 @@ namespace PlatformConfig
 			}
 
 			data.serialConfig = &SERIAL_CONFIG;
-			data.spiConfig = &SPI_CONFIG;
+			data.spiConfig = args.userSPIConfig ? args.userSPIConfig : &SPI_CONFIG_DEFAULT;
 			data.spiPinConfig = &SPI_PIN_CONFIG_VSPI;
 			data.chipSelectConfig = &CHIP_SELECT_CONFIG;
 			data.powerConfig = &POWER_CONFIG;

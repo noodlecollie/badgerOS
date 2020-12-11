@@ -250,19 +250,21 @@ As the display is e-ink, the power does not need to be left on.
 
 https://pinout.xyz/pinout/inky_phat has a useful diagram of the Raspberry Pi GPIO pins used by the Inky pHAT (which the 7-colour display should also use). Note that these pinouts are consequently mirrored horizontally when looking at the underside of the Inky.
 
-SPI0 is used to send commands to the display. I2C is not applicable to this display. 3.3v and 5v are both required.
+SPI0 is used to send commands to the display. I2C is used to read the EEPROM, but we can probably do without this as we already know what the display type is.
+
+3.3v and 5v lines are both required.
 
 The full set of pins used is:
 
-| Type               | Pi Pinout                            | Heltec Pinout   |
+| Type               | Pi Pinout                            | Olimex Pinout   |
 | :----------------- | :----------------------------------- | :-------------- |
 | 3.3v               | 1                                    | 3.3v            |
 | 5v                 | 2                                    | 5v              |
 | Ground             | One of: 6, 9, 14, 20, 25, 30, 34, 39 | Ground          |
-| SPI0 Chip Select 0 | GPIO 8                               | GPIO 5          |
-| SPI0 MISO          | GPIO 9                               | GPIO 19         |
-| SPI0 MOSI          | GPIO 10                              | GPIO 23         |
-| SPI0 SCLK          | GPIO 11                              | GPIO 18         |
-| Busy               | GPIO 17                              | GPIO 35         |
-| Data/Command       | GPIO 22                              | GPIO 16         |
-| Reset              | GPIO 27                              | GPIO 27         |
+| SPI0 Chip Select 0 | GPIO 8 (24)                          | GPIO 5          |
+| SPI0 MISO          | GPIO 9 (21)                          | GPIO 19         |
+| SPI0 MOSI          | GPIO 10 (19)                         | GPIO 23         |
+| SPI0 SCLK          | GPIO 11 (23)                         | GPIO 18         |
+| Busy               | GPIO 17 (11)                         | GPIO 35         |
+| Data/Command       | GPIO 22 (15)                         | GPIO 16         |
+| Reset              | GPIO 27 (13)                         | GPIO 27         |

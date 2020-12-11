@@ -1,5 +1,7 @@
 #pragma once
 
+#include <PlatformConfig/SPI.h>
+
 namespace PlatformConfig
 {
 	enum class DisplayType
@@ -9,8 +11,10 @@ namespace PlatformConfig
 		InkyImpression
 	};
 
+	// Per-project config
 	struct ConfigArgs
 	{
 		DisplayType display = DisplayType::None;
+		const SPIConfig* userSPIConfig = nullptr;
 	};
 }

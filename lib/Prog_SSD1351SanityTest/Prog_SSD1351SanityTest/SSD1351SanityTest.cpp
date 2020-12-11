@@ -124,7 +124,7 @@ namespace SSD1351SanityTest
 		Serial.printf("\r\n");
 
 		Serial.printf("=== Chip select configuration ===\r\n");
-		Serial.printf("              OLED: %u\r\n", configData.chipSelectConfig->displayCSPin);
+		Serial.printf("           Display: %u\r\n", configData.chipSelectConfig->displayCSPin);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== Serial configuration ===\r\n");
@@ -139,7 +139,8 @@ namespace SSD1351SanityTest
 		Serial.printf("=== SPI configuration ===\r\n");
 		Serial.printf("         Data mode: %u\r\n", configData.spiConfig->dataMode);
 		Serial.printf("         Bit order: %u\r\n", configData.spiConfig->bitOrder);
-		Serial.printf("     Clock divider: %u\r\n", configData.spiConfig->clockDivider);
+		Serial.printf("        Clock mode: %s\r\n", configData.spiConfig->clockMode == PlatformConfig::SPIConfig::ClockRateMode::Divider ? "divider" : "frequency");
+		Serial.printf("       Clock value: %u\r\n", configData.spiConfig->clockValue);
 		Serial.printf("         Clock pin: %u\r\n", configData.spiPinConfig->clockPin);
 		Serial.printf("          MISO pin: %u\r\n", configData.spiPinConfig->misoPin);
 		Serial.printf("          MOSI pin: %u\r\n", configData.spiPinConfig->mosiPin);

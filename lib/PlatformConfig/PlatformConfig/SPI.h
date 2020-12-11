@@ -8,9 +8,16 @@ namespace PlatformConfig
 {
 	struct SPIConfig
 	{
+		enum class ClockRateMode
+		{
+			Divider,
+			Frequency
+		};
+
 		uint8_t dataMode;
 		uint8_t bitOrder;
-		uint32_t clockDivider;
+		ClockRateMode clockMode;
+		uint32_t clockValue;
 	};
 
 	struct SPIPinConfig
@@ -26,7 +33,8 @@ namespace PlatformConfig
 	{
 		.dataMode = SPI_MODE0,
 		.bitOrder = MSBFIRST,
-		.clockDivider = SPI_CLOCK_DIV2
+		.clockMode = SPIConfig::ClockRateMode::Divider,
+		.clockValue = SPI_CLOCK_DIV2
 	};
 
 	void spiSetup(const SPIConfig& config);

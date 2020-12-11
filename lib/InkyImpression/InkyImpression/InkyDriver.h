@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <CoreUtil/TimeHelpers.h>
 
 namespace InkyImpression
 {
@@ -15,6 +16,15 @@ namespace InkyImpression
 		};
 
 		void initialise(const Config& cfg);
+		bool isReady(CoreUtil::TimevalMs blockingTimeoutMS = 0, CoreUtil::TimevalMs delayIntervalMS = 10) const;
+
+	private:
+		void setUpPins();
+		void defaultDeviceInit();
+		void assertReady() const;
+
+		Config m_Config;
+		bool m_HasConfig = false;
 	};
 
 	extern InkyDriver Driver;
