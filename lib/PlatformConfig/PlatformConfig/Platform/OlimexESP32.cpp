@@ -32,6 +32,12 @@ namespace PlatformConfig
 		.displayCSPin = 5
 	};
 
+	static constexpr I2CConfig I2C_CONFIG =
+	{
+		.dataPin = 21,
+		.clockPin = 22
+	};
+
 	static constexpr PowerConfig POWER_CONFIG =
 	{
 		.batteryLevelPin = 35,
@@ -68,6 +74,7 @@ namespace PlatformConfig
 			data.spiConfig = args.userSPIConfig ? args.userSPIConfig : &SPI_CONFIG_DEFAULT;
 			data.spiPinConfig = &SPI_PIN_CONFIG_VSPI;
 			data.chipSelectConfig = &CHIP_SELECT_CONFIG;
+			data.i2cConfig = &I2C_CONFIG;
 			data.powerConfig = &POWER_CONFIG;
 		}
 	}

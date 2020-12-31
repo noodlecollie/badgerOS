@@ -2,6 +2,7 @@
 
 #include <PlatformConfig/Serial.h>
 #include <PlatformConfig/SPI.h>
+#include <PlatformConfig/I2C.h>
 #include <PlatformConfig/ChipSelect.h>
 #include <PlatformConfig/Power.h>
 
@@ -23,6 +24,7 @@ namespace PlatformConfig
 		const SPIConfig* spiConfig;
 		const SPIPinConfig* spiPinConfig;
 		const ChipSelectConfig* chipSelectConfig;
+		const I2CConfig* i2cConfig;
 		const PowerConfig* powerConfig;
 	};
 }
