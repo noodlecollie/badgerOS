@@ -39,7 +39,7 @@ namespace InkyImpression
 
 	bool InkyDriver::isReady(CoreUtil::TimevalMs blockingTimeoutMS, CoreUtil::TimevalMs delayIntervalMS) const
 	{
-		bool ready = digitalRead(m_Config.busyPin) == LOW;
+		bool ready = digitalRead(m_Config.busyPin) == HIGH;
 
 		if ( blockingTimeoutMS < 1 )
 		{
@@ -51,7 +51,7 @@ namespace InkyImpression
 		do
 		{
 			delay(delayIntervalMS);
-			ready = digitalRead(m_Config.busyPin) == LOW;
+			ready = digitalRead(m_Config.busyPin) == HIGH;
 		}
 		while ( !ready && (blockingTimeoutMS == CoreUtil::DURATION_INFINITE || millis() - startTime < blockingTimeoutMS) );
 
