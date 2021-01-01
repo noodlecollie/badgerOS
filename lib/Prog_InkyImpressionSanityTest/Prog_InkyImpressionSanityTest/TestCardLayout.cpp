@@ -5,8 +5,7 @@
 
 namespace InkyImpressionSanityTest
 {
-	TestCardLayout::TestCardLayout() :
-		BadgerUI::BaseLayout()
+	void TestCardLayout::init(const BadgerUI::FontDirectory& fontDir)
 	{
 		using namespace BadgerUI;
 		using namespace BadgerGL;
@@ -23,5 +22,15 @@ namespace InkyImpressionSanityTest
 		m_FilledOutlineBox.setFillColour(ColourProperty(ColourScheme::Colour_Secondary));
 		m_FilledOutlineBox.setOutlineWidth(2);
 		addItemToTail(&m_FilledOutlineBox);
+
+		m_Label.setFont(fontDir.getFont(FontID::ArialStd));
+		m_Label.setRect(UIRect(UIPoint(150, 204), 300, 40));
+		m_Label.setFillColour(ColourProperty(ColourScheme::Colour_Background));
+		m_Label.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
+		m_Label.setTextColour(ColourProperty(ColourScheme::Colour_Custom, InkyImpression::COL_BLACK));
+		m_Label.setHorizontalAlignment(HAlignment::Centre);
+		m_Label.setVerticalAlignment(VAlignment::Centre);
+		m_Label.setText("Good riddance, 2020!");
+		addItemToTail(&m_Label);
 	}
 }

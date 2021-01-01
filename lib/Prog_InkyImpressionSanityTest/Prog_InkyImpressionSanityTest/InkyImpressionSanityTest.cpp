@@ -7,6 +7,8 @@
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/ColourScheme.h>
+#include <BadgerUI/FontDirectory.h>
+#include <Input/ButtonInputRecorder.h>
 
 #include "InkyImpressionSanityTest.h"
 #include "TestCardLayout.h"
@@ -19,6 +21,7 @@ namespace InkyImpressionSanityTest
 	static BadgerGL::BitmapRenderer LocalBitmapRenderer(&LocalBitmapSurface);
 	static BadgerUI::ColourScheme LocalColourScheme;
 	static TestCardLayout LocalTestCardLayout;
+	static BadgerUI::FontDirectory LocalFontDirectory;
 
 	static uint8_t displayPixelCallback(uint32_t pixelIndex)
 	{
@@ -52,9 +55,21 @@ namespace InkyImpressionSanityTest
 		using namespace BadgerUI;
 		using namespace BadgerGL;
 
+		LocalFontDirectory.loadAllFonts();
+
 		LocalColourScheme.setColour(ColourScheme::Colour_Background, InkyImpression::COL_WHITE);
 		LocalColourScheme.setColour(ColourScheme::Colour_Primary, InkyImpression::COL_RED);
 		LocalColourScheme.setColour(ColourScheme::Colour_Secondary, InkyImpression::COL_BLUE);
+
+		LocalTestCardLayout.init(LocalFontDirectory);
+
+		UIUpdateContext updateContext;
+		updateContext.currentTimeMs = millis();
+
+		Input::ButtonInputRecorder buttonInput;
+		updateContext.buttons = &buttonInput;
+
+		LocalTestCardLayout.updateItems(updateContext);
 	}
 
 	void getPlatformConfigArgs(PlatformConfig::ConfigArgs& args)
