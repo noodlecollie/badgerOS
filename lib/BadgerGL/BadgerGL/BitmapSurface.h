@@ -588,6 +588,7 @@ namespace BadgerGL
 
 		static constexpr uint16_t WIDTH = W;
 		static constexpr uint16_t HEIGHT = H;
+		static constexpr size_t PIXEL_COUNT = WIDTH * HEIGHT;
 		static constexpr PixelFormatId PIXEL_FORMAT_ID = F;
 		static constexpr const PixelFormat& PIXEL_FORMAT = *SUPPORTED_PIXEL_FORMATS[PIXEL_FORMAT_ID];
 

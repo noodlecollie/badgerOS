@@ -35,7 +35,7 @@ namespace BadgerUI
 		}
 
 		const BadgerGL::Point16 oldDrawingOffset = context.renderer->drawingOffset();
-		context.renderer->setDrawingOffset(position());
+		context.renderer->setDrawingOffset(oldDrawingOffset + position());
 
 		m_Target->draw(context);
 
