@@ -7,6 +7,11 @@ namespace InkyImpression
 {
 	static constexpr size_t DISPLAY_WIDTH = 600;
 	static constexpr size_t DISPLAY_HEIGHT = 448;
+	static constexpr size_t DISPLAY_DEPTH_BYTES = sizeof(uint8_t);
+	static constexpr size_t DISPLAY_DEPTH_BITS = 3;
+	static constexpr size_t DISPLAY_IMAGE_ROW_BYTES = DISPLAY_WIDTH * DISPLAY_DEPTH_BYTES;
+	static constexpr size_t DISPLAY_IMAGE_SIZE_BYTES = DISPLAY_WIDTH * DISPLAY_HEIGHT * DISPLAY_DEPTH_BYTES;
+	static constexpr size_t DISPLAY_RAM_SIZE_BYTES = DISPLAY_IMAGE_SIZE_BYTES / 2;	// 1 byte caters for two pixels
 
 	static constexpr uint8_t COL_BLACK = 0;
 	static constexpr uint8_t COL_WHITE = 1;

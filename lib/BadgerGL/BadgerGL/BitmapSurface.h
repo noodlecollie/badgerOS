@@ -579,9 +579,8 @@ namespace BadgerGL
 		}
 	};
 
-	// Useful as a framebuffer for the SSD1351 OLED.
-	template<uint16_t W, uint16_t H>
-	class Static65KBitmapSurface : public BitmapSurface
+	template<uint16_t W, uint16_t H, PixelFormatId F>
+	class StaticBitmapSurface : public BitmapSurface
 	{
 	public:
 		using BitmapInitialiser = BitmapSurface::BitmapInitialiser;
@@ -589,23 +588,25 @@ namespace BadgerGL
 
 		static constexpr uint16_t WIDTH = W;
 		static constexpr uint16_t HEIGHT = H;
-		static constexpr const PixelFormat& PIXEL_FORMAT = PIXELFORMAT_65K;
+		static constexpr PixelFormatId PIXEL_FORMAT_ID = F;
+		static constexpr const PixelFormat& PIXEL_FORMAT = *SUPPORTED_PIXEL_FORMATS[PIXEL_FORMAT_ID];
 
-		inline Static65KBitmapSurface() :
-			Static65KBitmapSurface(BitmapInitialiser(WIDTH, HEIGHT, &PIXEL_FORMAT, m_StaticData), PaletteInitialiser())
+		inline StaticBitmapSurface() :
+			StaticBitmapSurface(BitmapInitialiser(WIDTH, HEIGHT, &PIXEL_FORMAT, m_StaticData), PaletteInitialiser())
 		{
 		}
 
 	protected:
-		inline Static65KBitmapSurface(const PaletteInitialiser& palette) :
-			Static65KBitmapSurface(BitmapInitialiser(WIDTH, HEIGHT, &PIXEL_FORMAT, m_StaticData), palette)
+		inline StaticBitmapSurface(const PaletteInitialiser& palette) :
+			StaticBitmapSurface(BitmapInitialiser(WIDTH, HEIGHT, &PIXEL_FORMAT, m_StaticData), palette)
 		{
 		}
 
 	private:
-		inline Static65KBitmapSurface(const BitmapInitialiser& bitmap, const PaletteInitialiser& palette) :
+		inline StaticBitmapSurface(const BitmapInitialiser& bitmap, const PaletteInitialiser& palette) :
 			BitmapSurface(bitmap, palette)
 		{
+			static_assert(PIXEL_FORMAT_ID < PixelFormat__Count, "Pixel format ID was not in range.");
 			static_assert(PIXEL_FORMAT.totalBitDepth() <= BitmapSurface::MAX_BIT_DEPTH, "Bit depth exceeded maximum depth.");
 
 			static_assert(WIDTH > 0, "Width was zero.");
@@ -615,4 +616,12 @@ namespace BadgerGL
 
 		uint8_t m_StaticData[WIDTH * HEIGHT * PIXEL_FORMAT.totalByteDepth()];
 	};
+
+	// Useful as a framebuffer for the SSD1351 OLED.
+	template<uint16_t W, uint16_t H>
+	using Static65KBitmapSurface = StaticBitmapSurface<W, H, PixelFormat_65K>;
+
+	// Useful as a framebuffer for the InkyImpression display.
+	template<uint16_t W, uint16_t H>
+	using StaticPalettedBitmapSurface = StaticBitmapSurface<W, H, PixelFormat_Mono256>;
 }

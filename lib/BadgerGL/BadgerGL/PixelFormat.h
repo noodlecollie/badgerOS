@@ -5,9 +5,9 @@
 
 namespace BadgerGL
 {
-	enum PixelFormatId
+	enum PixelFormatId : unsigned
 	{
-		PixelFormat_0RGB,
+		PixelFormat_0RGB = 0,
 		PixelFormat_RGB0,
 		PixelFormat_65K,
 		PixelFormat_Mono256,	// For palettes
@@ -69,5 +69,11 @@ namespace BadgerGL
 		.channelBitDepth = { 8 }
 	};
 
-	const PixelFormat* getPixelFormat(PixelFormatId id);
+	static constexpr const PixelFormat* const SUPPORTED_PIXEL_FORMATS[PixelFormat__Count] =
+	{
+		nullptr,	// 0RGB
+		nullptr,	// RGB0
+		&PIXELFORMAT_65K,
+		&PIXELFORMAT_MONO256
+	};
 };

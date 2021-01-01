@@ -101,19 +101,7 @@ namespace InkyImpression
 		// All other bits ignored?
 		writeCommand(Command::PowerOffSequenceSetting, 0x00); // PFS_1_FRAME
 
-		// Remove this once we've tested:
-		writeCommand(Command::DataStartTransmission1);
-		writeTestScreenData();
-		assertReady();
-
-		setDisplayOn(true);
-		assertReady();
-
-		writeCommand(Command::DisplayRefresh);
-		assertReady();
-
 		setDisplayOn(false);
-		assertReady();
 	}
 
 	bool InkyDriver::isReady(CoreUtil::TimevalMs blockingTimeoutMS, CoreUtil::TimevalMs delayIntervalMS) const
@@ -140,6 +128,31 @@ namespace InkyImpression
 	void InkyDriver::setDisplayOn(bool turnOn)
 	{
 		writeCommand(turnOn ? Command::PowerOn : Command::PowerOff);
+	}
+
+	void InkyDriver::writeImage(const CoreUtil::ConstBlob& data)
+	{
+		BGRS_ASSERT(data.length() == DISPLAY_IMAGE_SIZE_BYTES, "Image size did not match display dimensions.");
+
+		writeCommand(Command::DataStartTransmission1);
+
+		// This is slower than bulk-transferring a pre-bitmashed image, but the delay here should
+		// be insignificant compared to the time we have to wait for the display to refresh.
+		for ( uint32_t index = 0; index < DISPLAY_IMAGE_SIZE_BYTES; index += 2 )
+		{
+			SPI.transfer(((*data.constBytes(index) & COL_MASK) << 4) | (*data.constBytes(index + 1) & COL_MASK));
+		}
+
+		assertReady();
+
+		setDisplayOn(true);
+		assertReady();
+
+		writeCommand(Command::DisplayRefresh);
+		assertReady();
+
+		setDisplayOn(false);
+		assertReady();
 	}
 
 	void InkyDriver::assertReady() const
@@ -239,22 +252,6 @@ namespace InkyImpression
 		SPI.transfer(static_cast<uint8_t>(cmd));
 		digitalWrite(m_Config.dataCommandPin, HIGH);
 		SPI.transferBytes(const_cast<uint8_t*>(data), nullptr, length);
-		digitalWrite(m_Config.dataCommandPin, LOW);
-	}
-
-	void InkyDriver::writeTestScreenData()
-	{
-		digitalWrite(m_Config.dataCommandPin, HIGH);
-
-		for ( size_t rowIndex = 0; rowIndex < DISPLAY_HEIGHT; ++rowIndex )
-		{
-			for ( size_t colIndex = 0; colIndex < DISPLAY_WIDTH / 2; ++colIndex )
-			{
-				const uint8_t col = (rowIndex % 8);
-				SPI.transfer((col << 4) | col);
-			}
-		}
-
 		digitalWrite(m_Config.dataCommandPin, LOW);
 	}
 }
