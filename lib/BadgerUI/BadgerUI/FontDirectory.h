@@ -5,6 +5,7 @@
 #include <CoreUtil/DataBuffer.h>
 #include <BadgerGL/BitmapMaskFont.h>
 #include <BadgerGL/FontCharacterGroupContainer.h>
+#include <BadgerUI/FontData/BaseFontData.h>
 
 namespace BadgerUI
 {
@@ -16,26 +17,7 @@ namespace BadgerUI
 		Count
 	};
 
-	struct FontDirectoryEntry
-	{
-		CoreUtil::ConstBlob bmfData;
-		const BadgerGL::BitmapMask* fontBitmap = nullptr;
-		BadgerGL::FontCharacterGroupContainer* charGroupContainer = nullptr;
-		BadgerGL::BitmapMaskFont fontObject;
-
-		inline bool isValid() const
-		{
-			// fontObject.isValid() also checks char data and bitmap.
-			return bmfData.isValid() && fontObject.isValid();
-		}
-	};
-
-	// Annoying to have to type out more than once.
-	using FontDirectoryBase = CoreUtil::EnumAddressableList<FontDirectoryEntry, FontID, FontID::Count>;
-
-
-	// TODO: Add addressable list as member rather than inheriting?
-	class FontDirectory : private FontDirectoryBase
+	class FontDirectory
 	{
 	public:
 		FontDirectory();
@@ -44,6 +26,16 @@ namespace BadgerUI
 		const BadgerGL::BitmapMaskFont* getFont(FontID id) const;
 
 	private:
+		using FontList = CoreUtil::EnumAddressableList<BaseFontData*, FontID, FontID::Count>;
+
 		void initialiseEntries();
+
+		template<typename T>
+		inline void addMapping(FontID id)
+		{
+			m_FontList.item(id) = &T::staticInstance();
+		}
+
+		FontList m_FontList;
 	};
 }

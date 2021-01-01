@@ -1,11 +1,11 @@
-#include <CoreUtil/ArrayUtil.h>
-#include <Resources/Images/Missing.h>
+#include <BadgerUI/FontData/ArialStdFontData.h>
 #include <InkyImpression/Defs.h>
 #include "TestCardLayout.h"
 
 namespace InkyImpressionSanityTest
 {
-	void TestCardLayout::init(const BadgerUI::FontDirectory& fontDir)
+	TestCardLayout::TestCardLayout() :
+		BadgerUI::BaseLayout()
 	{
 		using namespace BadgerUI;
 		using namespace BadgerGL;
@@ -23,7 +23,7 @@ namespace InkyImpressionSanityTest
 		m_FilledOutlineBox.setOutlineWidth(2);
 		addItemToTail(&m_FilledOutlineBox);
 
-		m_Label.setFont(fontDir.getFont(FontID::ArialStd));
+		m_Label.setFont(&ArialStdFontData::staticInstance().fontObject());
 		m_Label.setRect(UIRect(UIPoint(150, 204), 300, 40));
 		m_Label.setFillColour(ColourProperty(ColourScheme::Colour_Background));
 		m_Label.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);

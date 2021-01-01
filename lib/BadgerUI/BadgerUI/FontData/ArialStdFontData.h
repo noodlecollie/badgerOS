@@ -1,17 +1,20 @@
 #pragma once
 
-#include <BadgerGL/FontCharacterGroupContainer.h>
+#include <BadgerUI/FontData/BaseFontData.h>
 #include <BadgerGL/StaticDataFontCharacterGroup.h>
+#include <Resources/Fonts/ArialStdFont.h>
+#include <Resources/Images/ArialStdBitmap.h>
 
 namespace BadgerUI
 {
-	class ArialStdFontData : public BadgerGL::FontCharacterGroupContainer
+	class ArialStdFontData : public BaseFontData, public StaticFontData<ArialStdFontData>
 	{
 	public:
-		static ArialStdFontData* StaticInstance();
-
 		inline ArialStdFontData()
 		{
+			setFontBitmap(&Resources::ArialStdBitmap::BITMAP);
+			setBMFData(Resources::ArialStdFont::BLOB);
+
 			addGroup(&m_InvalidGlyph);
 			addGroup(&m_Group1);
 			addGroup(&m_Group2);

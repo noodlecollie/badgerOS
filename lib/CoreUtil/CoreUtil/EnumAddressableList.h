@@ -15,6 +15,14 @@ namespace CoreUtil
 
 		static constexpr size_t ITEM_COUNT = static_cast<size_t>(COUNT);
 
+		inline EnumAddressableList(bool zeroAllItems = false)
+		{
+			if ( zeroAllItems )
+			{
+				memset(m_Items, 0, sizeof(m_Items));
+			}
+		}
+
 		inline T& item(EnumType index)
 		{
 			BGRS_ASSERTD(static_cast<uint32_t>(index) < ITEM_COUNT, "Enum value was out of range.");
@@ -59,15 +67,6 @@ namespace CoreUtil
 		inline const T& operator [](EnumType index) const
 		{
 			return item(index);
-		}
-
-	protected:
-		inline EnumAddressableList(bool zeroAllItems = false)
-		{
-			if ( zeroAllItems )
-			{
-				memset(m_Items, 0, sizeof(m_Items));
-			}
 		}
 
 	private:

@@ -61,8 +61,6 @@ namespace InkyImpressionSanityTest
 		LocalColourScheme.setColour(ColourScheme::Colour_Primary, InkyImpression::COL_RED);
 		LocalColourScheme.setColour(ColourScheme::Colour_Secondary, InkyImpression::COL_BLUE);
 
-		LocalTestCardLayout.init(LocalFontDirectory);
-
 		UIUpdateContext updateContext;
 		updateContext.currentTimeMs = millis();
 

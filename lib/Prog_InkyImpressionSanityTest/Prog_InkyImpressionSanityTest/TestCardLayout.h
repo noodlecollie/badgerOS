@@ -10,7 +10,7 @@ namespace InkyImpressionSanityTest
 	class TestCardLayout : public BadgerUI::BaseLayout
 	{
 	public:
-		void init(const BadgerUI::FontDirectory& fontDir);
+		TestCardLayout();
 
 	private:
 		BadgerUI::Box m_Border;

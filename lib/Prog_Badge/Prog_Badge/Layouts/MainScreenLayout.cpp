@@ -1,5 +1,6 @@
 #include <Resources/Images/PlaceholderChar.h>
 #include <Resources/Fonts/ArialStdFont.h>
+#include <BadgerUI/FontData/ArialStdFontData.h>
 #include "MainScreenLayout.h"
 #include "../UIModule.h"
 #include "../InputModule.h"
@@ -41,7 +42,7 @@ namespace Badge
 		m_MessageLabel.setHorizontalAlignment(BadgerUI::HAlignment::Centre);
 		m_MessageLabel.setVerticalAlignment(BadgerUI::VAlignment::Centre);
 		m_MessageLabel.setText("Testing");
-		m_MessageLabel.setFont(UIModule::resourcesObject().getFont(FontID::ArialStd));
+		m_MessageLabel.setFont(&BadgerUI::ArialStdFontData::staticInstance().fontObject());
 		m_MessageLabel.setFillColour(ColourProperty(ColourScheme::Colour_Background));
 		m_MessageLabel.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
 

@@ -1,70 +1,43 @@
-// Fonts:
-#include <Resources/Fonts/ArialStdFont.h>
-#include <Resources/Images/ArialStdBitmap.h>
-#include <BadgerUI/FontData/ArialStdFontData.h>
-
-#include <Resources/Fonts/ArialSmallFont.h>
-#include <Resources/Images/ArialSmallBitmap.h>
-#include <BadgerUI/FontData/ArialSmallFontData.h>
-
 #include <Arduino.h>
 #include <BadgerUI/BMFFileReader.h>
 #include "FontDirectory.h"
 
+// Fonts:
+#include <BadgerUI/FontData/ArialStdFontData.h>
+#include <BadgerUI/FontData/ArialSmallFontData.h>
+
 namespace BadgerUI
 {
 	FontDirectory::FontDirectory() :
-		FontDirectoryBase()
+		m_FontList(true)
 	{
-		initialiseEntries();
 	}
 
-	void FontDirectory::initialiseEntries()
+	const BadgerGL::BitmapMaskFont* FontDirectory::getFont(FontID id) const
 	{
-		item(FontID::ArialStd).charGroupContainer = ArialStdFontData::StaticInstance();
-		item(FontID::ArialStd).fontBitmap = &Resources::ArialStdBitmap::BITMAP;
-		item(FontID::ArialStd).bmfData = Resources::ArialStdFont::BLOB;
-
-		item(FontID::ArialSmall).charGroupContainer = ArialSmallFontData::StaticInstance();
-		item(FontID::ArialSmall).fontBitmap = &Resources::ArialSmallBitmap::BITMAP;
-		item(FontID::ArialSmall).bmfData = Resources::ArialSmallFont::BLOB;
+		const BaseFontData* entry = m_FontList.item(id);
+		return entry ? &entry->fontObject() : nullptr;
 	}
 
 	void FontDirectory::loadAllFonts()
 	{
 		using namespace BadgerGL;
 
+		initialiseEntries();
+
 		bool success = true;
 
-		forEach([&success](uint32_t index, FontDirectoryEntry& item)
+		m_FontList.forEach([&success](uint32_t index, BaseFontData* item)
 		{
-			BMFFileReader reader;
-
-			reader.setCharGroupContainer(item.charGroupContainer);
-			reader.setFileData(item.bmfData);
-
-			const BMFFileReader::FileStatus status = reader.validateFile();
-
-			if ( status != BMFFileReader::FileStatus::Valid )
+			if ( !item )
 			{
-				const uint8_t block = reader.idOfBlockThatFailedValidation();
-				const char* const description = BMFFileReader::fileStatusDescription(status);
-
-				Serial.printf("Font %u failed to load. Error: %s. (Faulty block ID: %u)\r\n", index, description, block);
-
+				Serial.printf("Font %u was not initialised before loading.", index);
 				success = false;
-				return;
 			}
-
-			reader.populateCharInfo();
-
-			item.fontObject.setLineHeight(reader.lineHeight());
-			item.fontObject.setCharContainer(item.charGroupContainer);
-			item.fontObject.setFontBitmap(item.fontBitmap);
-
-			if ( !item.fontObject.isValid() )
+			else if ( !item->initialise() )
 			{
 				Serial.printf("Font %u was not valid after loading font data.", index);
+				success = false;
 			}
 		});
 
@@ -74,8 +47,9 @@ namespace BadgerUI
 		}
 	}
 
-	const BadgerGL::BitmapMaskFont* FontDirectory::getFont(FontID id) const
+	void FontDirectory::initialiseEntries()
 	{
-		return &item(id).fontObject;
+		addMapping<ArialStdFontData>(FontID::ArialStd);
+		addMapping<ArialSmallFontData>(FontID::ArialSmall);
 	}
 }
