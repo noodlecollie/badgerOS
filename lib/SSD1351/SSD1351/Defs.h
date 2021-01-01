@@ -10,7 +10,7 @@ namespace SSD1351
 	static constexpr size_t OLED_DEPTH_BYTES = sizeof(uint16_t);
 	static constexpr size_t OLED_RAM_SIZE_BYTES = OLED_WIDTH * OLED_HEIGHT * OLED_DEPTH_BYTES;
 
-	enum class Command
+	enum class Command : uint8_t
 	{
 		SetColumn = 0x15,
 		SetRow = 0x75,

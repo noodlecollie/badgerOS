@@ -250,7 +250,7 @@ As the display is e-ink, the power does not need to be left on.
 
 https://pinout.xyz/pinout/inky_phat has a useful diagram of the Raspberry Pi GPIO pins used by the Inky pHAT (which the 7-colour display should also use). Note that these pinouts are consequently mirrored horizontally when looking at the underside of the Inky.
 
-SPI0 is used to send commands to the display, and I2C is used to read the EEPROM to ask for identity information.
+SPI0 is used to send commands to the display, and I2C is used to read the EEPROM to ask for identity information. However, we shouldn't need to access the I2C because we already know the model of the display.
 
 3.3v and 5v lines are both required, and at least one ground is required (when testing,
 
