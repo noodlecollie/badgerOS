@@ -1,21 +1,14 @@
 Requirements
 ============
 
-## Behavioural Requirements Overview
+## Behavioural Requirements (OLED)
 
 ### Phase 1 (Core Functionality)
 
 * Display main character image and main scrolling message.
 * Temporarily display character information when requested: name, species, social media handle. Once finished displaying this information, fall back to displaying the main image and message.
-* Display battery status at all times.
+* Display battery status at all times. (Note that this requires Rev B/C of the Olimex board!)
 * Support different languages in UI.
-
-To do to complete this phase:
-
-* Update fonts to support different language characters. As part of this, check whether assets that are included in header files but not used are made part of the resulting binary.
-* Buy a LiPo battery that actually fits on the board.
-* Implement battery level checking and add an icon to the top bar.
-* Modify how layouts are displayed so that the top bar is persistent throughout all different screens.
 
 ### Phase 2 (Dynamic Data, Emotes)
 
@@ -34,9 +27,30 @@ To do to complete this phase:
 * Allow the user to view the previous connection logs stored on the badge.
 * Allow the user to clear connection logs stored on the badge.
 
-## Hardware Requirements
+## Behavioural Requirements (E-Ink)
 
-1.  ESP32 board - exact model TBD, depends on eventual requirements. Will require LiPoly battery connector + charging capability. For example: https://www.olimex.com/Products/IoT/ESP32/ESP32-DevKit-LiPo/open-source-hardware
+### Phase 1 (Core Functionality)
+
+* Display placeholder image with instructions on how to set badge image (eg. "Press and hold button to enable Bluetooth").
+* Display instructions in appropriate language.
+* Display battery status at all times. (Note that this requires Rev B/C of the Olimex board!)
+
+### Phase 2 (Dynamic Data)
+
+* Allow the badge to be connected to a phone via Bluetooth. The badge should be made discoverable by pressing and holding button D for two seconds, and should display this state (along with any pairing code) on the screen.
+* Allow main image to be set by the user via a companion app on a connected phone. The image should be streamed directly to the display, as there will likely not be enough memory to store it on the badge.
+* Allow an optional message to be specified and positioned on the image before sending from the phone.
+* Allow an optional QR code to be specified and positioned on the image before sending from the phone.
+
+### Phase 3 (Slideshow)
+
+* Allow the image on the badge to be periodically updated from the connected phone, as long as it remains connected via Bluetooth. At least 4 different images should be available to set.
+* Allow images to be cycled sequentially or randomly.
+* Allow images to be cycled every 30s, 1m, 2m, 5m, 10m or 30m.
+
+## Hardware Requirements (OLED)
+
+1.  ESP32 board with LiPoly battery connector and charging capability: https://www.olimex.com/Products/IoT/ESP32/ESP32-DevKit-LiPo/open-source-hardware
 2.  Battery - for example, https://www.olimex.com/Products/Power/BATTERY-LIPO1400mAh/. mAh is TBD, depending on power requirements. For reference:
     * The battery socket on the board is described as `SMD Header with top entry and 2mm step, with 2P positions`.
     * The battery socket part number used is `CI0102M1VT0-LF` - data sheet is available at https://store.comet.bg/download-file.php?id=4895
@@ -49,6 +63,14 @@ To do to complete this phase:
 6.  RFID to be read by other badges - TBD
 7.  Piezo buzzer - TBD
 
-## Other Ideas
+## Hardware Requirements (E-Ink)
 
-* If we go for a big shell to accommodate the large e-ink display, we could include a slot on the back of the shell for credit or room cards.
+1.  ESP32 board with LiPoly battery connector and charging capability: https://www.olimex.com/Products/IoT/ESP32/ESP32-DevKit-LiPo/open-source-hardware
+2.  Battery - for example, https://www.olimex.com/Products/Power/BATTERY-LIPO1400mAh/. mAh is TBD, depending on power requirements. For reference:
+    * The battery socket on the board is described as `SMD Header with top entry and 2mm step, with 2P positions`.
+    * The battery socket part number used is `CI0102M1VT0-LF` - data sheet is available at https://store.comet.bg/download-file.php?id=4895
+    * A connector that would fit into the socket has part number `CI0102S0000` - data sheet is available at https://store.comet.bg/download-file.php?id=2143
+    * An RS Components connector that could work is https://uk.rs-online.com/web/p/wire-housings-plugs/8201466/
+3.  Pimoroni Inky Impression 7-colour e-ink display: https://shop.pimoroni.com/products/inky-impression
+
+We could include a slot on the back of the shell for credit or room cards.
