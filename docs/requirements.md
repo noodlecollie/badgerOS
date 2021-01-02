@@ -74,3 +74,10 @@ Requirements
 3.  Pimoroni Inky Impression 7-colour e-ink display: https://shop.pimoroni.com/products/inky-impression
 
 We could include a slot on the back of the shell for credit or room cards.
+
+## Other Considerations
+
+Other ESP32 boards with batteries:
+
+* [TT-GO T-DISPLAY ESP32 LCD DIY Enthusiast Development Board](https://www.aliexpress.com/item/4000296985840.html?spm=a2g0o.productlist.0.0.5a486445uI9mbz&algo_pvid=e92254e3-2add-4353-8763-6905f6204d17&algo_expid=e92254e3-2add-4353-8763-6905f6204d17-8&btsid=2100bdec16096037741002720e4db9&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_) ($10.02)
+* [ESP32_Bat_Pro Battery Charging Breakout and Development Board](https://www.ezsbc.com/product/esp32_bat-battery-charging-pro/) ($13.95)
