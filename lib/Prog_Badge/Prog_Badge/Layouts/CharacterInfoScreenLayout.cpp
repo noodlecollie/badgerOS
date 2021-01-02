@@ -1,7 +1,6 @@
 #include <Arduino.h>
-#include <BadgerUI/FontDirectory.h>
 #include <BadgerUI/ColourScheme.h>
-#include <BadgerUI/FontData/ArialSmallFontData.h>
+#include <BadgerUI/Fonts/ArialSmallFont.h>
 #include "CharacterInfoScreenLayout.h"
 #include "../UIModule.h"
 #include "../InputModule.h"
@@ -107,7 +106,7 @@ namespace Badge
 		using namespace BadgerUI;
 		using namespace BadgerGL;
 
-		label.setFont(&BadgerUI::ArialSmallFontData::staticInstance().fontObject());
+		label.setFont(&Fonts::ArialSmall);
 		label.setFillColour(ColourProperty(ColourScheme::Colour_Background));
 		label.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);
 	}

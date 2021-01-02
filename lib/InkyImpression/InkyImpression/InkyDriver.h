@@ -20,7 +20,7 @@ namespace InkyImpression
 
 		void initialise(const Config& cfg);
 
-		// Provided data must be DISPLAY_IMAGE_SIZE_BYTES in length.
+		// Provided data must be INKY_DISPLAY_IMAGE_SIZE_BYTES in length.
 		void writeImage(const CoreUtil::ConstBlob& data);
 
 		// Write the image scanning from left to right, top to bottom.
@@ -32,7 +32,7 @@ namespace InkyImpression
 
 			beginWriteImage();
 
-			for ( uint32_t pixelIndex = 0; pixelIndex < DISPLAY_IMAGE_SIZE_BYTES; pixelIndex += 2 )
+			for ( uint32_t pixelIndex = 0; pixelIndex < INKY_DISPLAY_IMAGE_SIZE_BYTES; pixelIndex += 2 )
 			{
 				writeImagePixelPair(callback(pixelIndex), callback(pixelIndex + 1));
 			}

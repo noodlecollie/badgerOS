@@ -36,8 +36,8 @@ namespace InkyImpression
 		assertReady();
 
 		{
-			const uint16_t width = DISPLAY_WIDTH;
-			const uint16_t height = DISPLAY_HEIGHT;
+			const uint16_t width = INKY_DISPLAY_WIDTH;
+			const uint16_t height = INKY_DISPLAY_HEIGHT;
 
 			writeCommand(Command::TCONResolution,
 						 (height & 0x0300) >> 8,
@@ -132,13 +132,13 @@ namespace InkyImpression
 
 	void InkyDriver::writeImage(const CoreUtil::ConstBlob& data)
 	{
-		BGRS_ASSERT(data.length() == DISPLAY_IMAGE_SIZE_BYTES, "Image size did not match display dimensions.");
+		BGRS_ASSERT(data.length() == INKY_DISPLAY_IMAGE_SIZE_BYTES, "Image size did not match display dimensions.");
 
 		beginWriteImage();
 
 		// This is slower than bulk-transferring a pre-bitmashed image, but the delay here should
 		// be insignificant compared to the time we have to wait for the display to refresh.
-		for ( uint32_t index = 0; index < DISPLAY_IMAGE_SIZE_BYTES; index += 2 )
+		for ( uint32_t index = 0; index < INKY_DISPLAY_IMAGE_SIZE_BYTES; index += 2 )
 		{
 			writeImagePixelPair(*data.constBytes(index), *data.constBytes(index + 1));
 		}

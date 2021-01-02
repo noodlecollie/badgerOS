@@ -6,7 +6,6 @@
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/BaseUIDrawable.h>
 #include <BadgerUI/LayoutContainer.h>
-#include <BadgerUI/FontDirectory.h>
 #include <Input/ButtonInputRecorder.h>
 #include "Layouts/MainScreenLayout.h"
 #include "Layouts/CharacterInfoScreenLayout.h"
@@ -40,8 +39,6 @@ namespace Badge
 		ScreenID currentScreen() const;
 		void setNextScreen(ScreenID id);
 
-		const BadgerGL::BitmapMaskFont* getFont(BadgerUI::FontID id) const;
-
 	private:
 		inline void setUpScreen(BadgerUI::BaseLayout& screen, ScreenID id)
 		{
@@ -60,7 +57,6 @@ namespace Badge
 		// Resources
 		BadgerGL::Static65KBitmapSurface<SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT> m_ScreenBufferSurface;
 		BadgerUI::ColourScheme m_ColScheme;
-		BadgerUI::FontDirectory m_FontDirectory;
 
 		// Screen management
 		BadgerUI::LayoutContainer<ScreenCount> m_LayoutContainer;

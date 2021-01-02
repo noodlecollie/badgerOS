@@ -13,7 +13,6 @@ namespace BadgerGL
 		FontCharacterInfo* invalidGlyphInfo();
 		const FontCharacterInfo* invalidGlyphInfo() const;
 
-	protected:
 		void addGroup(FontCharacterGroup* group);
 
 	private:

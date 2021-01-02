@@ -7,7 +7,6 @@
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/ColourScheme.h>
-#include <BadgerUI/FontDirectory.h>
 #include <Input/ButtonInputRecorder.h>
 
 #include "InkyImpressionSanityTest.h"
@@ -15,13 +14,12 @@
 
 namespace InkyImpressionSanityTest
 {
-	using BitmapSurface = BadgerGL::StaticPalettedBitmapSurface<InkyImpression::DISPLAY_WIDTH, 4>;
+	using BitmapSurface = BadgerGL::StaticPalettedBitmapSurface<InkyImpression::INKY_DISPLAY_WIDTH, 4>;
 
 	static BitmapSurface LocalBitmapSurface;
 	static BadgerGL::BitmapRenderer LocalBitmapRenderer(&LocalBitmapSurface);
 	static BadgerUI::ColourScheme LocalColourScheme;
 	static TestCardLayout LocalTestCardLayout;
-	static BadgerUI::FontDirectory LocalFontDirectory;
 
 	static uint8_t displayPixelCallback(uint32_t pixelIndex)
 	{
@@ -36,7 +34,7 @@ namespace InkyImpressionSanityTest
 
 			LocalBitmapSurface.fill(LocalColourScheme.colour(ColourScheme::Colour_Background));
 
-			const int16_t baseRow = pixelIndex / InkyImpression::DISPLAY_WIDTH;
+			const int16_t baseRow = pixelIndex / InkyImpression::INKY_DISPLAY_WIDTH;
 			LocalBitmapRenderer.setDrawingOffset(Point16(0, -baseRow));
 
 			UIDrawContext drawContext;
@@ -54,8 +52,6 @@ namespace InkyImpressionSanityTest
 	{
 		using namespace BadgerUI;
 		using namespace BadgerGL;
-
-		LocalFontDirectory.loadAllFonts();
 
 		LocalColourScheme.setColour(ColourScheme::Colour_Background, InkyImpression::COL_WHITE);
 		LocalColourScheme.setColour(ColourScheme::Colour_Primary, InkyImpression::COL_RED);

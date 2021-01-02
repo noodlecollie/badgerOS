@@ -3,7 +3,6 @@
 #include <BadgerUI/BaseLayout.h>
 #include <BadgerUI/Box.h>
 #include <BadgerUI/Label.h>
-#include <BadgerUI/FontDirectory.h>
 
 namespace InkyImpressionSanityTest
 {

@@ -8,7 +8,6 @@
 #include <Input/ButtonInputRecorder.h>
 #include "ColourScheme.h"
 #include "Types.h"
-#include "FontDirectory.h"
 
 namespace BadgerUI
 {
@@ -38,7 +37,6 @@ namespace BadgerUI
 		const BadgerGL::BitmapSurface* screenBuffer = nullptr;
 		BadgerGL::BitmapRenderer* renderer = nullptr;
 		const ColourScheme* colourScheme = nullptr;
-		const FontDirectory* fontDirectory = nullptr;
 	};
 
 	class BaseUIDrawable

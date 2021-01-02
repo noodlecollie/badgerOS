@@ -35,8 +35,6 @@ namespace Badge
 		m_ColScheme.setColour(ColourScheme::Colour_Primary, col24To16(0xfdfffc));
 		m_ColScheme.setColour(ColourScheme::Colour_Secondary, col24To16(0xc0bcb5));
 
-		m_FontDirectory.loadAllFonts();
-
 		setUpScreen(m_MainScreen, MainScreen);
 		setUpScreen(m_CharInfoScreen, CharacterInfoScreen);
 		setNextScreen(MainScreen);
@@ -55,11 +53,6 @@ namespace Badge
 		}
 
 		m_NextScreenID = id;
-	}
-
-	const BadgerGL::BitmapMaskFont* UIModuleResources::getFont(BadgerUI::FontID id) const
-	{
-		return m_FontDirectory.getFont(id);
 	}
 
 	void UIModuleResources::loop(CoreUtil::TimevalMs currentTime)
@@ -112,7 +105,6 @@ namespace Badge
 		drawContext.colourScheme = &m_ColScheme;
 		drawContext.renderer = &renderer;
 		drawContext.screenBuffer = &m_ScreenBufferSurface;
-		drawContext.fontDirectory = &m_FontDirectory;
 
 		m_LayoutContainer.renderActiveLayout(drawContext);
 
