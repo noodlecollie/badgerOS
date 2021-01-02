@@ -10,6 +10,7 @@
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
 #include <BadgerUI/ColourScheme.h>
+#include <BluetoothSerial.h>
 
 #include "SSD1351SanityTest.h"
 #include "TestCardLayout.h"
@@ -17,6 +18,7 @@
 namespace SSD1351SanityTest
 {
 	static BadgerGL::Static65KBitmapSurface<SSD1351::OLED_WIDTH, SSD1351::OLED_HEIGHT> ScreenBufferSurface;
+	static BluetoothSerial BTSerial;
 
 	static void prepareTestImage()
 	{
@@ -164,7 +166,10 @@ namespace SSD1351SanityTest
 		prepareTestImage();
 		testFileSystem();
 
-		Serial.println("Sanity test initialised.");
+		BTSerial.begin("BadgerBluetooth");
+		Serial.printf("Bluetooth initialised as 'BadgerBluetooth'.\r\n");
+
+		Serial.print("Sanity test initialised.\r\n");
 
 		SSD1351::Driver.clearScreen(0x0000);
 		delay(500);
@@ -177,5 +182,23 @@ namespace SSD1351SanityTest
 
 	void loop()
 	{
+		static bool btDataAvailableLastFrame = false;
+
+		if ( BTSerial.available() )
+		{
+			if ( !btDataAvailableLastFrame )
+			{
+				Serial.printf("Data received on Bluetooth: ");
+			}
+
+			Serial.write(BTSerial.read());
+			btDataAvailableLastFrame = true;
+		}
+		else
+		{
+			btDataAvailableLastFrame = false;
+		}
+
+		delay(20);
 	}
 }
