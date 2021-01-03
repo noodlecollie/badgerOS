@@ -224,7 +224,7 @@ namespace StringLib
 		}
 		else
 		{
-			if ( result > remainingSpace - 1 )
+			if ( static_cast<size_t>(result) > remainingSpace - 1 )
 			{
 				result = remainingSpace - 1;
 			}

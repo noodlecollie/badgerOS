@@ -72,6 +72,7 @@ Requirements
     * A connector that would fit into the socket has part number `CI0102S0000` - data sheet is available at https://store.comet.bg/download-file.php?id=2143
     * An RS Components connector that could work is https://uk.rs-online.com/web/p/wire-housings-plugs/8201466/
 3.  Pimoroni Inky Impression 7-colour e-ink display: https://shop.pimoroni.com/products/inky-impression
+    * Note that this requires 5v for operation! **LiPo batteries may not be able to supply this!** We need to investigate some more.
 
 We could include a slot on the back of the shell for credit or room cards.
 
@@ -81,3 +82,9 @@ Other ESP32 boards with batteries:
 
 * [TT-GO T-DISPLAY ESP32 LCD DIY Enthusiast Development Board](https://www.aliexpress.com/item/4000296985840.html?spm=a2g0o.productlist.0.0.5a486445uI9mbz&algo_pvid=e92254e3-2add-4353-8763-6905f6204d17&algo_expid=e92254e3-2add-4353-8763-6905f6204d17-8&btsid=2100bdec16096037741002720e4db9&ws_ab_test=searchweb0_0,searchweb201602_,searchweb201603_) ($10.02)
 * [ESP32_Bat_Pro Battery Charging Breakout and Development Board](https://www.ezsbc.com/product/esp32_bat-battery-charging-pro/) ($13.95)
+
+Other displays:
+
+* [3.5 inch resistive touch screen](https://electropeak.com/3-5-inch-full-color-touch-tft-lcd-for-arduino) ($14.09)
+* [2.8 inch TFT LCD](https://shop.pimoroni.com/products/2-8-tft-lcd-with-touchscreen-breakout-board-w-microsd-socket) (£28.20)
+* [4 inch LCD](https://shop.pimoroni.com/products/hyperpixel-4-square?variant=30138251477075) (£60 with touch, £54 without)

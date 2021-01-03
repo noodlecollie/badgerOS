@@ -19,7 +19,7 @@ namespace StringLib
 			return false;
 		}
 
-		for ( const char* ch = string; *ch && (ch - string) < maxLength; ++ch )
+		for ( const char* ch = string; *ch && static_cast<size_t>(ch - string) < maxLength; ++ch )
 		{
 			if (isspace(*ch))
 			{
@@ -115,7 +115,7 @@ namespace StringLib
 	{
 		if ( buffer && bufferSize > 0 )
 		{
-			if ( vsnprintfResult >= bufferSize )
+			if ( static_cast<size_t>(vsnprintfResult) >= bufferSize )
 			{
 				// String was not automatically terminated (boo, CLib).
 				buffer[bufferSize - 1] = '\0';

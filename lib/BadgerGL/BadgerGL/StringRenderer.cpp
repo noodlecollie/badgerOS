@@ -72,7 +72,7 @@ namespace BadgerGL
 			}
 
 			// Only bother drawing if the character is in the dest rect.
-			if ( targetRect.p0().x() + chInfo->imageRect.width() > leftDrawingBorder )
+			if ( targetRect.p0().x() + static_cast<int16_t>(chInfo->imageRect.width()) > leftDrawingBorder )
 			{
 				// The actual position of the character may be left of the border,
 				// even if some of the character is drawn.

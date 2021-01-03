@@ -107,7 +107,7 @@ namespace BadgerUI
 		m_XShiftFromScroll = 0.0f;
 	}
 
-	void Label::delegatedUpdate(const UIUpdateContext& context)
+	void Label::delegatedUpdate(const UIUpdateContext&)
 	{
 		if ( m_LastUpdate == 0 )
 		{

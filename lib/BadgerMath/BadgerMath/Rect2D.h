@@ -100,7 +100,7 @@ namespace BadgerMath
 			{
 				const size_t curDim = index == 0 ? width() : height();
 
-				if ( deltaPerSide < 0 && curDim < (-2 * deltaPerSide) )
+				if ( deltaPerSide < 0 && curDim < static_cast<size_t>(2 * (-deltaPerSide)) )
 				{
 					const size_t reduction = curDim / 2;
 					m_P0[index] += reduction;

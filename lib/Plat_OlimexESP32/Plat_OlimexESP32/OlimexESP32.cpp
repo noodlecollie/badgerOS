@@ -1,8 +1,10 @@
 #include <cstring>
-#include "OlimexESP32.h"
+#include <Plat_OlimexESP32/OlimexESP32.h>
 
-namespace PlatformConfig
+namespace OlimexESP32
 {
+	using namespace PlatformConfig;
+
 	static constexpr SerialConfig SERIAL_CONFIG = SERIAL_CONFIG_DEFAULT;
 
 	static constexpr SPIPinConfig SPI_PIN_CONFIG_VSPI =
@@ -44,38 +46,35 @@ namespace PlatformConfig
 		.externalPowerSensePin = 39
 	};
 
-	namespace OlimexESP32
+	void getConfig(const ConfigArgs& args, ConfigData& data)
 	{
-		void getConfig(const ConfigArgs& args, ConfigData& data)
+		memset(&data, 0, sizeof(data));
+
+		switch ( args.display )
 		{
-			memset(&data, 0, sizeof(data));
-
-			switch ( args.display )
+			case DisplayType::SSD1351:
 			{
-				case DisplayType::SSD1351:
-				{
-					data.displayConfig.ssd1351 = &SSD1351_CONFIG;
-					break;
-				}
-
-				case DisplayType::InkyImpression:
-				{
-					data.displayConfig.inkyImpression = &INKY_IMPRESSION_CONFIG;
-					break;
-				}
-
-				default:
-				{
-					break;
-				}
+				data.displayConfig.ssd1351 = &SSD1351_CONFIG;
+				break;
 			}
 
-			data.serialConfig = &SERIAL_CONFIG;
-			data.spiConfig = args.userSPIConfig ? args.userSPIConfig : &SPI_CONFIG_DEFAULT;
-			data.spiPinConfig = &SPI_PIN_CONFIG_VSPI;
-			data.chipSelectConfig = &CHIP_SELECT_CONFIG;
-			data.i2cConfig = &I2C_CONFIG;
-			data.powerConfig = &POWER_CONFIG;
+			case DisplayType::InkyImpression:
+			{
+				data.displayConfig.inkyImpression = &INKY_IMPRESSION_CONFIG;
+				break;
+			}
+
+			default:
+			{
+				break;
+			}
 		}
+
+		data.serialConfig = &SERIAL_CONFIG;
+		data.spiConfig = args.userSPIConfig ? args.userSPIConfig : &SPI_CONFIG_DEFAULT;
+		data.spiPinConfig = &SPI_PIN_CONFIG_VSPI;
+		data.chipSelectConfig = &CHIP_SELECT_CONFIG;
+		data.i2cConfig = &I2C_CONFIG;
+		data.powerConfig = &POWER_CONFIG;
 	}
 }

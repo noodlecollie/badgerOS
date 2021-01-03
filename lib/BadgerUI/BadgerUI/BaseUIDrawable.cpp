@@ -52,12 +52,12 @@ namespace BadgerUI
 		return m_DirtyState;
 	}
 
-	void BaseUIDrawable::delegatedUpdate(const UIUpdateContext& context)
+	void BaseUIDrawable::delegatedUpdate(const UIUpdateContext&)
 	{
 		// Nothing
 	}
 
-	void BaseUIDrawable::delegatedDraw(const UIDrawContext& context)
+	void BaseUIDrawable::delegatedDraw(const UIDrawContext&)
 	{
 		// Nothing
 	}

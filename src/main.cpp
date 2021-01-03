@@ -2,8 +2,9 @@
 // and cut down on the boilerplate code for starting the program.
 #define PROG_HEADER_PREFIX(progName) Prog_##progName
 #define PROG_HEADER_PATH(progName) <PROG_HEADER_PREFIX(progName)/progName.h>
-#define BOARD_HEADER_PATH(boardName) <PlatformConfig/Platform/boardName.h>
-#define BOARD_CONFIG_FACTORY_FUNC(boardName) (&PlatformConfig::boardName::getConfig)
+#define BOARD_HEADER_PREFIX(boardName) Plat_##boardName
+#define BOARD_HEADER_PATH(boardName) <BOARD_HEADER_PREFIX(boardName)/boardName.h>
+#define BOARD_CONFIG_FACTORY_FUNC(boardName) (&boardName::getConfig)
 
 #ifndef PROG_NAME
 #error No PROG_NAME defined!

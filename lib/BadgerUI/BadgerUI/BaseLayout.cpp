@@ -151,12 +151,12 @@ namespace BadgerUI
 		// Implemented in subclasses.
 	}
 
-	void BaseLayout::onPreUpdate(const UIUpdateContext& context)
+	void BaseLayout::onPreUpdate(const UIUpdateContext&)
 	{
 		// Implemented in subclasses.
 	}
 
-	void BaseLayout::onPostUpdate(const UIUpdateContext& context)
+	void BaseLayout::onPostUpdate(const UIUpdateContext&)
 	{
 		// Implemented in subclasses.
 	}

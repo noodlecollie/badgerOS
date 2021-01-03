@@ -86,7 +86,7 @@ namespace BadgerUI
 		inline bool operator ==(const ColourProperty& other) const
 		{
 			// If this is a custom colour, the value must match too.
-			return m_Id == other.m_Id && (m_Id != m_CustomColour || m_CustomColour == other.m_CustomColour);
+			return m_Id == other.m_Id && (m_Id != ColourScheme::Colour_Custom || m_CustomColour == other.m_CustomColour);
 		}
 
 		inline bool operator !=(const ColourProperty& other) const

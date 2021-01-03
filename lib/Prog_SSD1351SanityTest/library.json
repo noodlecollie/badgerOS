@@ -10,7 +10,6 @@
 		{ "name": "Wire" },
 		{ "name": "SPIFFS" },
 		{ "name": "FS" },
-		{ "name": "BadgerUI" },
-		{ "name": "BluetoothSerial" }
+		{ "name": "BadgerUI" }
 	]
 }

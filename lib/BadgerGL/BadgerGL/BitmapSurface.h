@@ -151,7 +151,7 @@ namespace BadgerGL
 
 		inline bool isValid() const
 		{
-			return m_Dimensions.x() > 0 && m_Dimensions.y() > 0 && m_PixelFormat > 0 && m_Pixels;
+			return m_Dimensions.x() > 0 && m_Dimensions.y() > 0 && m_PixelFormat && m_Pixels;
 		}
 
 		inline bool hasPalette() const
