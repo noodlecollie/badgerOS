@@ -9,31 +9,12 @@
 namespace Badge
 {
 	template<typename T, typename FUNC>
-	static inline void initialiseSubsystem(const char* stage, const T* PlatformConfig::ConfigData::* configEntryPtr, const FUNC& initFunc)
+	static inline void initialiseSubsystem(const char* stage, const FUNC& initFunc)
 	{
 		Serial.printf("  * %s...", stage);
 		const CoreUtil::TimevalMs startTime = millis();
 
-		initialiseSubsystem(configEntryPtr, initFunc);
-
-		const CoreUtil::TimevalMs duration = millis() - startTime;
-		Serial.printf(" Done. (%.2fs)\r\n", static_cast<float>(duration) / 1000.0f);
-	}
-
-	template<typename T, typename FUNC>
-	static inline void initialiseSubsystem(const char* stage, const T* (PlatformConfig::ConfigInstance::* instanceFunc)() const, const FUNC& initFunc)
-	{
-		Serial.printf("  * %s...", stage);
-		const CoreUtil::TimevalMs startTime = millis();
-
-		BGRS_ASSERT(instanceFunc, "No config instance function was provided!");
-
-		const PlatformConfig::ConfigInstance& instance = PlatformConfig::globalConfig();
-		const T* item = (instance.*instanceFunc)();
-
-		BGRS_ASSERT(item, "Config item was null!");
-
-		initFunc(*item);
+		PlatformConfig::globalConfig()->initialiseSubsystem<T>(initFunc);
 
 		const CoreUtil::TimevalMs duration = millis() - startTime;
 		Serial.printf(" Done. (%.2fs)\r\n", static_cast<float>(duration) / 1000.0f);
@@ -59,8 +40,9 @@ namespace Badge
 	void setup()
 	{
 		using namespace PlatformConfig;
+		const PlatformConfigObject* configObject = globalConfig();
 
-		initialiseSubsystem(&ConfigData::serialConfig, [](const SerialConfig& config)
+		configObject->initialiseSubsystem<SerialConfig>([](const SerialConfig& config)
 		{
 			Serial.begin(config.baudRate);
 			Serial.flush();
@@ -78,24 +60,18 @@ namespace Badge
 		initialiseSubsystem("CommandModule", &CommandModule::setup);
 		initialiseSubsystem("InputModule", &InputModule::setup);
 
-		initialiseSubsystem("Power measurement", &ConfigData::powerConfig, &powerSetup);
-		initialiseSubsystem("Chip select pins", &ConfigData::chipSelectConfig, &chipSelectSetup);
-		initialiseSubsystem("SPI setup", &ConfigData::spiConfig, &spiSetup);
+		initialiseSubsystem<ChipSelectConfig>("Chip select pins", &chipSelectSetup);
+		initialiseSubsystem<SPIConfig>("SPI setup",  &spiSetup);
 
-		initialiseSubsystem("SPI begin", []()
+		initialiseSubsystem("SPI begin", [configObject]()
 		{
-			// Ensure that these exist.
-			globalConfigItem(&ConfigData::spiPinConfig);
-			globalConfigItem(&ConfigData::chipSelectConfig);
-
-			const ConfigData& data = globalConfig().data();
-			const SPIPinConfig* spiPinConfig = data.spiPinConfig;
-			const ChipSelectConfig* chipSelectConfig = data.chipSelectConfig;
+			const SPIPinConfig* spiPinConfig = configObject->getElement<SPIPinConfig>();
+			const ChipSelectConfig* chipSelectConfig = configObject->getElement<ChipSelectConfig>();
 
 			SPI.begin(spiPinConfig->clockPin, spiPinConfig->misoPin, spiPinConfig->mosiPin, chipSelectConfig->displayCSPin);
 		});
 
-		initialiseSubsystem("OLED", &PlatformConfig::ConfigInstance::ssd1351Config, [](const SSD1351::OLEDDriver::Config& config)
+		initialiseSubsystem<PlatformConfigObject::SSD1351Config>("OLED", [](const PlatformConfigObject::SSD1351Config& config)
 		{
 			SSD1351::Driver.initialise(config);
 		});

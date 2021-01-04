@@ -4,19 +4,19 @@
 namespace PlatformConfig
 {
 	static ConfigArgs LocalConfigArgs;
-	static ConfigData LocalConfigData;
-	static ConfigInstance LocalInstance(LocalConfigArgs, LocalConfigData);
+	static const PlatformConfigObject* LocalConfigObject = nullptr;
 
-	void initialiseConfig(ConfigInitFunc initFunc, const ConfigArgs& args)
+	void initialiseConfig(PlatformConfigObject* configObject, const ConfigArgs& args)
 	{
-		BGRS_ASSERT(initFunc, "Config init function was not valid.");
+		BGRS_ASSERT(configObject, "Config object was not valid.");
 
 		LocalConfigArgs = args;
-		initFunc(LocalConfigArgs, LocalConfigData);
+		LocalConfigObject = configObject;
+		configObject->initialise(args);
 	}
 
-	const ConfigInstance& globalConfig()
+	const PlatformConfigObject* globalConfig()
 	{
-		return LocalInstance;
+		return LocalConfigObject;
 	}
 }

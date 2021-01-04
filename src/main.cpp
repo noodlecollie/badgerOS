@@ -4,7 +4,6 @@
 #define PROG_HEADER_PATH(progName) <PROG_HEADER_PREFIX(progName)/progName.h>
 #define BOARD_HEADER_PREFIX(boardName) Plat_##boardName
 #define BOARD_HEADER_PATH(boardName) <BOARD_HEADER_PREFIX(boardName)/boardName.h>
-#define BOARD_CONFIG_FACTORY_FUNC(boardName) (&boardName::getConfig)
 
 #ifndef PROG_NAME
 #error No PROG_NAME defined!
@@ -24,7 +23,9 @@ void setup()
 	PlatformConfig::ConfigArgs args;
 	PROG_NAME::getPlatformConfigArgs(args);
 
-	PlatformConfig::initialiseConfig(BOARD_CONFIG_FACTORY_FUNC(BOARD_NAME), args);
+	PlatformConfig::PlatformConfigObject* const configObject = BOARD_NAME::getConfigObject();
+	PlatformConfig::initialiseConfig(configObject, args);
+
 	PROG_NAME::setup();
 }
 

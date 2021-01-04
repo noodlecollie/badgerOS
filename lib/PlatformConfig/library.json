@@ -1,7 +1,9 @@
 {
 	"dependencies":
 	[
+		{ "name": "CoreUtil" },
 		{ "name": "SPI" },
-		{ "name": "SSD1351" }
+		{ "name": "SSD1351" },
+		{ "name": "InkyImpression" }
 	]
 }

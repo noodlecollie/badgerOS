@@ -82,58 +82,62 @@ namespace InkyImpressionSanityTest
 
 	void setup()
 	{
-		const PlatformConfig::ConfigInstance& configInstance = PlatformConfig::globalConfig();
-		const PlatformConfig::ConfigArgs& configArgs = configInstance.args();
-		const PlatformConfig::ConfigData& configData = configInstance.data();
+		using namespace PlatformConfig;
 
-		BGRS_ASSERT(configData.serialConfig, "Serial config is required.");
-		Serial.begin(configData.serialConfig->baudRate);
+		const PlatformConfigObject* configObject = globalConfig();
 
-		BGRS_ASSERT(configArgs.display == PlatformConfig::DisplayType::InkyImpression, "Inky Impression display must be used.");
-		BGRS_ASSERT(configInstance.inkyImpressionConfig(), "Inky Impression config is required.");
-		BGRS_ASSERT(configData.spiConfig, "SPI config is required.");
-		BGRS_ASSERT(configData.spiPinConfig, "SPI pin config is required.");
-		BGRS_ASSERT(configData.chipSelectConfig, "Chip select config is required.");
+		configObject->initialiseSubsystem<PlatformConfigObject::SerialConfig>([](const SerialConfig& config)
+		{
+			Serial.begin(config.baudRate);
+		});
+
+		BGRS_ASSERT(configObject->args().display == PlatformConfig::DisplayType::InkyImpression, "Inky Impression display must be used.");
+
+		const PlatformConfigObject::SPIConfig* spiConfig = configObject->getElement<PlatformConfigObject::SPIConfig>();
+		const PlatformConfigObject::SPIPinConfig* spiPinConfig = configObject->getElement<PlatformConfigObject::SPIPinConfig>();
+		const PlatformConfigObject::InkyImpressionConfig* inkyConfig = configObject->getElement<PlatformConfigObject::InkyImpressionConfig>();
+		const PlatformConfigObject::SerialConfig* serialConfig = configObject->getElement<PlatformConfigObject::SerialConfig>();
+		const PlatformConfigObject::ChipSelectConfig* chipSelectConfig = configObject->getElement<PlatformConfigObject::ChipSelectConfig>();
 
 		Serial.printf("Sanity test initialising...\r\n");
 		Serial.printf("Version %s\r\n", PlatformConfig::Versions::VERSION_STRING_FULL);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== Chip select configuration ===\r\n");
-		Serial.printf("           Display: %u\r\n", configData.chipSelectConfig->displayCSPin);
+		Serial.printf("           Display: %u\r\n", chipSelectConfig->displayCSPin);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== Serial configuration ===\r\n");
-		Serial.printf("         Baud rate: %u\r\n", configData.serialConfig->baudRate);
+		Serial.printf("         Baud rate: %u\r\n", serialConfig->baudRate);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== InkyImpression configuration ===\r\n");
-		Serial.printf("             Reset: %u\r\n", configInstance.inkyImpressionConfig()->resetPin);
-		Serial.printf("      Data/command: %u\r\n", configInstance.inkyImpressionConfig()->dataCommandPin);
-		Serial.printf("              Busy: %u\r\n", configInstance.inkyImpressionConfig()->busyPin);
+		Serial.printf("             Reset: %u\r\n", inkyConfig->resetPin);
+		Serial.printf("      Data/command: %u\r\n", inkyConfig->dataCommandPin);
+		Serial.printf("              Busy: %u\r\n", inkyConfig->busyPin);
 		Serial.printf("\r\n");
 
 		Serial.printf("=== SPI configuration ===\r\n");
-		Serial.printf("         Data mode: %u\r\n", configData.spiConfig->dataMode);
-		Serial.printf("         Bit order: %u\r\n", configData.spiConfig->bitOrder);
-		Serial.printf("        Clock mode: %s\r\n", configData.spiConfig->clockMode == PlatformConfig::SPIConfig::ClockRateMode::Divider ? "divider" : "frequency");
-		Serial.printf("       Clock value: %u\r\n", configData.spiConfig->clockValue);
-		Serial.printf("         Clock pin: %u\r\n", configData.spiPinConfig->clockPin);
-		Serial.printf("          MISO pin: %u\r\n", configData.spiPinConfig->misoPin);
-		Serial.printf("          MOSI pin: %u\r\n", configData.spiPinConfig->mosiPin);
-		Serial.printf(" Write protect pin: %u\r\n", configData.spiPinConfig->writeProtectPin);
-		Serial.printf("          Hold pin: %u\r\n", configData.spiPinConfig->holdPin);
+		Serial.printf("         Data mode: %u\r\n", spiConfig->dataMode);
+		Serial.printf("         Bit order: %u\r\n", spiConfig->bitOrder);
+		Serial.printf("        Clock mode: %s\r\n", spiConfig->clockMode == PlatformConfig::SPIConfig::ClockRateMode::Divider ? "divider" : "frequency");
+		Serial.printf("       Clock value: %u\r\n", spiConfig->clockValue);
+		Serial.printf("         Clock pin: %u\r\n", spiPinConfig->clockPin);
+		Serial.printf("          MISO pin: %u\r\n", spiPinConfig->misoPin);
+		Serial.printf("          MOSI pin: %u\r\n", spiPinConfig->mosiPin);
+		Serial.printf(" Write protect pin: %u\r\n", spiPinConfig->writeProtectPin);
+		Serial.printf("          Hold pin: %u\r\n", spiPinConfig->holdPin);
 		Serial.printf("\r\n");
 
-		PlatformConfig::chipSelectSetup(*configData.chipSelectConfig);
-		PlatformConfig::spiSetup(*configData.spiConfig);
+		PlatformConfig::chipSelectSetup(*chipSelectConfig);
+		PlatformConfig::spiSetup(*spiConfig);
 
-		SPI.begin(configData.spiPinConfig->clockPin,
-				  configData.spiPinConfig->misoPin,
-				  configData.spiPinConfig->mosiPin,
-				  configData.chipSelectConfig->displayCSPin);
+		SPI.begin(spiPinConfig->clockPin,
+				  spiPinConfig->misoPin,
+				  spiPinConfig->mosiPin,
+				  chipSelectConfig->displayCSPin);
 
-		InkyImpression::Driver.initialise(*configInstance.inkyImpressionConfig());
+		InkyImpression::Driver.initialise(*inkyConfig);
 
 		prepareTestImage();
 		InkyImpression::Driver.writeImagePixelwise(&displayPixelCallback);

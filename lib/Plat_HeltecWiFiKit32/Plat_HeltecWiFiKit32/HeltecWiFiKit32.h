@@ -1,8 +1,8 @@
 #pragma once
 
-#include <PlatformConfig/Platform.h>
+#include <PlatformConfig/PlatformConfigObject.h>
 
 namespace HeltecWiFiKit32
 {
-	void getConfig(const PlatformConfig::ConfigArgs& args, PlatformConfig::ConfigData& data);
+	PlatformConfig::PlatformConfigObject* getConfigObject();
 }
