@@ -39,6 +39,9 @@ namespace BadgerGL
 		uint8_t lineWidth() const;
 		void setLineWidth(uint8_t width);
 
+		uint8_t bitGradientType() const;
+		void setBitGradientType(uint8_t type);
+
 		const BitmapMaskFont* font() const;
 		void setFont(const BitmapMaskFont* fnt);
 
@@ -50,6 +53,7 @@ namespace BadgerGL
 		void resetDrawingOffset();
 
 		void draw(const Rect16& rect);
+		void drawPatterned(const Rect16& rect);
 
 		void fillWithPrimaryColour();
 		void fillWithSecondaryColour();
@@ -103,6 +107,7 @@ namespace BadgerGL
 		uint32_t m_PrimaryColour = 0xFFFFFFFF;
 		uint32_t m_SecondaryColour = 0x00000000;
 		uint8_t m_LineWidth = 1;
+		uint8_t m_BitGradientType = 4;
 		Point16 m_DrawingOffset;
 		const BitmapMaskFont* m_Font = nullptr;
 	};

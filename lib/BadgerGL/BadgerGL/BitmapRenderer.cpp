@@ -1,8 +1,9 @@
 #include <BadgerMath/Rect2DOperations.h>
-#include "BitmapRenderer.h"
-#include "BitmapBlitter.h"
-#include "BitmapMaskBlitter.h"
-#include "StringRenderer.h"
+#include <BadgerGL/Patterns.h>
+#include <BadgerGL/BitmapRenderer.h>
+#include <BadgerGL/BitmapBlitter.h>
+#include <BadgerGL/BitmapMaskBlitter.h>
+#include <BadgerGL/StringRenderer.h>
 
 namespace BadgerGL
 {
@@ -80,6 +81,21 @@ namespace BadgerGL
 		m_LineWidth = width;
 	}
 
+	uint8_t BitmapRenderer::bitGradientType() const
+	{
+		return m_BitGradientType;
+	}
+
+	void BitmapRenderer::setBitGradientType(uint8_t type)
+	{
+		if ( type > MAX_BIT_GRADIENT )
+		{
+			type = MAX_BIT_GRADIENT;
+		}
+
+		m_BitGradientType = type;
+	}
+
 	const BitmapMaskFont* BitmapRenderer::font() const
 	{
 		return m_Font;
@@ -123,6 +139,43 @@ namespace BadgerGL
 		if ( m_ShapeDrawStyle == ShapeDrawStyle::Filled || m_ShapeDrawStyle == ShapeDrawStyle::FilledOutline )
 		{
 			drawFilled(localRect, m_ShapeDrawStyle == ShapeDrawStyle::Filled ? m_PrimaryColour : m_SecondaryColour);
+		}
+	}
+
+	void BitmapRenderer::drawPatterned(const Rect16& rect)
+	{
+		if ( !m_Surface )
+		{
+			return;
+		}
+
+		Rect16 localRect(rect + m_DrawingOffset);
+
+		if ( m_ShapeDrawStyle == ShapeDrawStyle::Outline || m_ShapeDrawStyle == ShapeDrawStyle::FilledOutline )
+		{
+			drawOutline(localRect);
+			BadgerMath::shrink(localRect, m_LineWidth);
+		}
+
+		if ( m_ShapeDrawStyle == ShapeDrawStyle::Filled || m_ShapeDrawStyle == ShapeDrawStyle::FilledOutline )
+		{
+			// TODO: Support left-right gradients
+
+			drawFilled(localRect, m_SecondaryColour);
+
+			VerticalPatternBitmapData data(BIT_GRADIENT[m_BitGradientType]);
+			BitmapMask bitmapMask(4, 8, data.constData());
+
+			BitmapMaskBlitter blitter;
+			blitter.setSourceBitmap(&bitmapMask);
+			blitter.setDest(m_Surface, localRect);
+			blitter.setPrimaryColour(m_PrimaryColour);
+			blitter.setSecondaryColour(m_SecondaryColour);
+
+			if ( blitter.blit() )
+			{
+				addToDirtyArea(blitter);
+			}
 		}
 	}
 
