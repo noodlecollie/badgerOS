@@ -5,9 +5,17 @@
 
     <StackLayout>
         <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="BadgerCtl" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+            <!--<Label Text="BadgerCtl" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>-->
+            <Label HorizontalTextAlignment="Center" TextColor="White" FontSize="36">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="&#xf2c1;" FontFamily="{StaticResource FontAwesomeSolid}" FontSize="36"/>
+                        <Span Text=" BadgerCtl"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
         </Frame>
-        <Image x:Name="greetingImage" Source="MainPageGreeting.svg" Margin="60, 10, 60, 30"/>
+        <Image x:Name="greetingImage" Source="MainPageGreeting.svg" Margin="30, 30, 30, 30"/>
         <Label Text="Control paired badges via Bluetooth.&#10;Add a badge to get started!"
                FontSize="20"
                HorizontalOptions="Center"
@@ -20,8 +28,9 @@
                 HorizontalOptions="Center"
                 BackgroundColor="#2196F3"
                 TextColor="White"
-                Text="+"
-                FontSize="30"/>
+                Text="&#xf067;"
+                FontSize="26"
+                FontFamily="{StaticResource FontAwesomeSolid}"/>
     </StackLayout>
 
 </ContentPage>
