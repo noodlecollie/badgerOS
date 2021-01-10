@@ -102,6 +102,7 @@ namespace BadgerGL
 	public:
 		// One byte per row
 		static constexpr size_t NUM_ROWS = 8;
+		static constexpr size_t NUM_COLS = 4;
 
 		inline constexpr VerticalPatternBitmapData(uint32_t pattern = 0) :
 			m_Data
@@ -114,6 +115,72 @@ namespace BadgerGL
 				static_cast<uint8_t>((pattern >> 8) & 0x0F),
 				static_cast<uint8_t>((pattern >> 4) & 0x0F),
 				static_cast<uint8_t>((pattern >> 0) & 0x0F)
+			}
+		{
+		}
+
+		inline constexpr const uint8_t* constData() const
+		{
+			return m_Data;
+		}
+
+	private:
+		uint8_t m_Data[NUM_ROWS];
+	};
+
+	class HorizontalPatternBitmapData
+	{
+	public:
+		// One byte per row
+		static constexpr size_t NUM_ROWS = 4;
+		static constexpr size_t NUM_COLS = 8;
+
+		inline constexpr HorizontalPatternBitmapData(uint32_t pattern = 0) :
+			m_Data
+			{
+				static_cast<uint8_t>(
+					((pattern & 0x80000000) >> 24) |
+					((pattern & 0x08000000) >> 21) |
+					((pattern & 0x00800000) >> 18) |
+					((pattern & 0x00080000) >> 15) |
+					((pattern & 0x00008000) >> 12) |
+					((pattern & 0x00000800) >> 9) |
+					((pattern & 0x00000080) >> 6) |
+					((pattern & 0x00000008) >> 3)
+				),
+
+				static_cast<uint8_t>(
+					((pattern & 0x40000000) >> 23) |
+					((pattern & 0x04000000) >> 20) |
+					((pattern & 0x00400000) >> 17) |
+					((pattern & 0x00040000) >> 14) |
+					((pattern & 0x00004000) >> 11) |
+					((pattern & 0x00000400) >> 8) |
+					((pattern & 0x00000040) >> 5) |
+					((pattern & 0x00000004) >> 2)
+				),
+
+				static_cast<uint8_t>(
+					((pattern & 0x20000000) >> 22) |
+					((pattern & 0x02000000) >> 19) |
+					((pattern & 0x00200000) >> 16) |
+					((pattern & 0x00020000) >> 13) |
+					((pattern & 0x00002000) >> 10) |
+					((pattern & 0x00000200) >> 7) |
+					((pattern & 0x00000020) >> 4) |
+					((pattern & 0x00000002) >> 1)
+				),
+
+				static_cast<uint8_t>(
+					((pattern & 0x10000000) >> 21) |
+					((pattern & 0x01000000) >> 18) |
+					((pattern & 0x00100000) >> 15) |
+					((pattern & 0x00010000) >> 12) |
+					((pattern & 0x00001000) >> 9) |
+					((pattern & 0x00000100) >> 6) |
+					((pattern & 0x00000010) >> 3) |
+					((pattern & 0x00000001) >> 0)
+				)
 			}
 		{
 		}

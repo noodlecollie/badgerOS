@@ -164,7 +164,7 @@ namespace BadgerGL
 			drawFilled(localRect, m_SecondaryColour);
 
 			VerticalPatternBitmapData data(BIT_GRADIENT[m_BitGradientType]);
-			BitmapMask bitmapMask(4, 8, data.constData());
+			BitmapMask bitmapMask(VerticalPatternBitmapData::NUM_COLS, VerticalPatternBitmapData::NUM_ROWS, data.constData());
 
 			BitmapMaskBlitter blitter;
 			blitter.setSourceBitmap(&bitmapMask);
