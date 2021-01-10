@@ -5,20 +5,23 @@
 
     <StackLayout>
         <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+            <Label Text="BadgerCtl" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
         </Frame>
-        <Label Text="Start developing now" FontSize="Title" Padding="30,10,30,10"/>
-        <Label Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" FontSize="16" Padding="30,0,30,0"/>
-        <Label FontSize="16" Padding="30,24,30,0">
-            <Label.FormattedText>
-                <FormattedString>
-                    <FormattedString.Spans>
-                        <Span Text="Learn more at "/>
-                        <Span Text="https://aka.ms/xamarin-quickstart" FontAttributes="Bold"/>
-                    </FormattedString.Spans>
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
+        <Image x:Name="greetingImage" Source="MainPageGreeting.svg" Margin="60, 10, 60, 30"/>
+        <Label Text="Control paired badges via Bluetooth.&#10;Add a badge to get started!"
+               FontSize="20"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"
+               Margin="0, 0, 0, 20"/>
+        <Button x:Name="btnPairNewDevice"
+                CornerRadius="35"
+                HeightRequest="70"
+                WidthRequest="70"
+                HorizontalOptions="Center"
+                BackgroundColor="#2196F3"
+                TextColor="White"
+                Text="+"
+                FontSize="30"/>
     </StackLayout>
 
 </ContentPage>

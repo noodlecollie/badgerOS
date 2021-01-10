@@ -133,4 +133,7 @@
       <Name>BadgerApp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\drawable\MainPageGreeting.png" />
+  </ItemGroup>
 </Project>
