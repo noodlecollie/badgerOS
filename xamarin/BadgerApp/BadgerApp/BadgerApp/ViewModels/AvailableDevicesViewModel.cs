@@ -1,38 +1,30 @@
 ﻿using System;
-using System.ComponentModel;
-using Xamarin.Forms;
+using System.Collections.Generic;
 
 namespace BadgerApp.ViewModels
 {
 	class AvailableDevicesViewModel : ViewModelBase
     {
-        DateTime dateTime = DateTime.Now;
-
         public AvailableDevicesViewModel()
         {
-            Device.StartTimer(TimeSpan.FromMilliseconds(15), OnTimerTick);
+            SampleList = new List<string>();
+            SampleList.Add("Butts");
+            SampleList.Add("More Butts");
         }
 
-        bool OnTimerTick()
+        public List<string> SampleList
         {
-            DateTime = DateTime.Now;
-            return true;
-        }
+            get => m_SampleList;
 
-        public DateTime DateTime
-        {
-            private set
+            set
             {
-                if ( dateTime != value )
+                if ( value != m_SampleList )
                 {
-                    SetProperty(ref dateTime, value);
+                    SetProperty(ref m_SampleList, value);
                 }
             }
-
-            get
-            {
-                return dateTime;
-            }
         }
+
+        private List<string> m_SampleList;
     }
 }

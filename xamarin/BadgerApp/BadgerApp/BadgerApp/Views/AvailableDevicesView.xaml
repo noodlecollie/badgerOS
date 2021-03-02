@@ -14,7 +14,17 @@
     </ContentPage.BindingContext>
     <Frame>
         <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center">
-            <Label Text="{Binding DateTime}" />
+            <ListView ItemsSource="{Binding SampleList}" SelectionMode="None" ItemTapped="ListView_ItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label Text="{Binding .}"></Label>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </Frame>
 </ContentPage>
