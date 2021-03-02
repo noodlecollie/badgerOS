@@ -4,11 +4,9 @@ using Xamarin.Forms;
 
 namespace BadgerApp.ViewModels
 {
-	class AvailableDevicesViewModel : INotifyPropertyChanged
+	class AvailableDevicesViewModel : ViewModelBase
     {
         DateTime dateTime = DateTime.Now;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public AvailableDevicesViewModel()
         {
@@ -27,10 +25,7 @@ namespace BadgerApp.ViewModels
             {
                 if ( dateTime != value )
                 {
-                    dateTime = value;
-
-                    // Fire the event.
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DateTime"));
+                    SetProperty(ref dateTime, value);
                 }
             }
 
