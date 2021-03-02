@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using System.Diagnostics;
+using Xamarin.Forms;
 
 namespace BadgerApp.ViewModels
 {
@@ -7,12 +11,10 @@ namespace BadgerApp.ViewModels
     {
         public AvailableDevicesViewModel()
         {
-            SampleList = new List<string>();
-            SampleList.Add("Butts");
-            SampleList.Add("More Butts");
+            SampleList = new ObservableCollection<string>();
         }
 
-        public List<string> SampleList
+        public ObservableCollection<string> SampleList
         {
             get => m_SampleList;
 
@@ -25,6 +27,18 @@ namespace BadgerApp.ViewModels
             }
         }
 
-        private List<string> m_SampleList;
+        public bool IsEmpty
+        {
+            get => m_SampleList.Count < 1;
+        }
+
+        public ICommand AddItemCommand => new Command(() =>
+        {
+            m_SampleList.Add("New item " + m_SampleList.Count);
+            OnPropertyChanged("SampleList");
+            OnPropertyChanged("IsEmpty");
+        });
+
+        private ObservableCollection<string> m_SampleList;
     }
 }

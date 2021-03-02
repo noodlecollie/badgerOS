@@ -13,18 +13,21 @@
         <vm:AvailableDevicesViewModel/>
     </ContentPage.BindingContext>
     <Frame>
-        <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="Center" VerticalOptions="Center">
+        <StackLayout Orientation="Vertical" Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+            <Label Text="Available Devices" FontSize="20"/>
             <ListView ItemsSource="{Binding SampleList}" SelectionMode="None" ItemTapped="ListView_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-                                <Label Text="{Binding .}"></Label>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                <Label Text="{Binding .}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="TailTruncation"></Label>
+                                <Button Text="&#xf2ed;" FontFamily="{StaticResource FontAwesomeSolid}" FontSize="20" WidthRequest="40"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Button Command="{Binding AddItemCommand}" Text="New Device" IsVisible="{Binding Path=IsEmpty}"></Button>
         </StackLayout>
     </Frame>
 </ContentPage>
