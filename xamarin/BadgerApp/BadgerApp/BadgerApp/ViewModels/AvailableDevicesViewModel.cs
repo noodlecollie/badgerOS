@@ -39,6 +39,13 @@ namespace BadgerApp.ViewModels
             OnPropertyChanged("IsEmpty");
         });
 
+        public ICommand TestBluetoothPermissions => new Command(() =>
+        {
+            Trace.WriteLine("Scanning on Bluetooth");
+            var adapter = Plugin.BluetoothLE.CrossBleAdapter.Current;
+            adapter.Scan();
+        });
+
         private ObservableCollection<string> m_SampleList;
     }
 }

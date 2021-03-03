@@ -28,6 +28,7 @@
                 </ListView.ItemTemplate>
             </ListView>
             <Button Command="{Binding AddItemCommand}" Text="New Device" IsVisible="{Binding Path=IsEmpty}"></Button>
+            <Button Command="{Binding TestBluetoothPermissions}" Text="Bluetooth"></Button>
         </StackLayout>
     </Frame>
 </ContentPage>
