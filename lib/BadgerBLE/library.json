@@ -1,0 +1,10 @@
+{
+	"dependencies":
+	[
+		{
+			"owner": "h2zero",
+			"name": "NimBLE-Arduino",
+			"version": "^1.2.0"
+		}
+	]
+}

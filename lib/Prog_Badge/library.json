@@ -12,6 +12,7 @@
 		{ "name": "FS" },
 		{ "name": "BadgerUI" },
 		{ "name": "SerialConsole" },
-		{ "name": "Input" }
+		{ "name": "Input" },
+		{ "name": "BadgerBLE" }
 	]
 }
