@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:v="clr-namespace:BadgerApp.Views"
+                  x:Class="BadgerApp.MainPage"
+                  Title="BadgerCtl"
+                  MasterBehavior="Default">
+    
+    <MasterDetailPage.Master>
+        <v:AvailableDevicesView/>
+    </MasterDetailPage.Master>
+    
+    <MasterDetailPage.Detail>
+        <NavigationPage>
+            <x:Arguments>
+                <v:DeviceSettingsView/>
+            </x:Arguments>
+        </NavigationPage>
+    </MasterDetailPage.Detail>
+    
+</MasterDetailPage>

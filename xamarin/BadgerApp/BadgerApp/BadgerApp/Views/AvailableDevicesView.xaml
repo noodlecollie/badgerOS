@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BadgerApp.ViewModels"
+             x:Class="BadgerApp.Views.AvailableDevicesView"
+             x:Name="availableDevicesPage"
+             Title="Available Devices"
+             Padding="10">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0"/>
+    </ContentPage.Padding>
+    <ContentPage.BindingContext>
+        <vm:AvailableDevicesViewModel/>
+    </ContentPage.BindingContext>
+    <Frame>
+        <StackLayout Orientation="Vertical" Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+            <Label Text="Available Devices" FontSize="20"/>
+            <ListView ItemsSource="{Binding SampleList}" SelectionMode="None" ItemTapped="ListView_ItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                <Label Text="{Binding .}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" LineBreakMode="TailTruncation"></Label>
+                                <Button Text="&#xf2ed;" FontFamily="{StaticResource FontAwesomeSolid}" FontSize="20" WidthRequest="40"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Command="{Binding AddItemCommand}" Text="New Device" IsVisible="{Binding Path=IsEmpty}"></Button>
+            <Button Command="{Binding TestBluetoothPermissions}" Text="Bluetooth"></Button>
+        </StackLayout>
+    </Frame>
+</ContentPage>
