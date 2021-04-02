@@ -10,7 +10,7 @@ namespace Badge
 {
 	namespace CommandModule
 	{
-		const SerialConsole::CommandSwitcher::Command Commands[] =
+		static const SerialConsole::CommandSwitcher::Command Commands[] =
 		{
 			{ "echo", &Commands::echo },
 			{ "btn", &Commands::btn }
