@@ -10,7 +10,9 @@ namespace Badge
 		BadgeBLEServer();
 
 		void initialise();
-		void startAdvertising();
+
+		bool isAdvertisingEnabled() const;
+		void setAdvertisingEnabled(bool enabled);
 
 	private:
 		char m_Name[32];

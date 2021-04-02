@@ -3,8 +3,9 @@
 #include <SerialConsole/CommandSwitcher.h>
 #include "CommandModule.h"
 
-#include "Commands/Echo.h"
-#include "Commands/Btn.h"
+#include <Prog_Badge/Commands/Echo.h>
+#include <Prog_Badge/Commands/Btn.h>
+#include <Prog_Badge/Commands/BluetoothCtl.h>
 
 namespace Badge
 {
@@ -13,7 +14,8 @@ namespace Badge
 		static const SerialConsole::CommandSwitcher::Command Commands[] =
 		{
 			{ "echo", &Commands::echo },
-			{ "btn", &Commands::btn }
+			{ "btn", &Commands::btn },
+			{ "btctl", &Commands::bluetoothCtl }
 		};
 
 		static SerialConsole::StaticallyAllocatedInterpreter<128, 128> CommandInterpreter;

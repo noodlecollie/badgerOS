@@ -66,12 +66,29 @@ namespace Badge
 		m_EchoService = createService(BluetoothServices::SERVICESPEC_ECHO);
 	}
 
-	void BadgeBLEServer::startAdvertising()
+	bool BadgeBLEServer::isAdvertisingEnabled() const
 	{
-		NimBLEAdvertising* advertising = NimBLEDevice::getAdvertising();
-		advertising->setScanResponse(true);
-		advertising->setMinPreferred(0x12);
+		return NimBLEDevice::getAdvertising()->isAdvertising();
+	}
 
-		NimBLEDevice::startAdvertising();
+	void BadgeBLEServer::setAdvertisingEnabled(bool enabled)
+	{
+		if ( isAdvertisingEnabled() == enabled )
+		{
+			return;
+		}
+
+		NimBLEAdvertising* advertising = NimBLEDevice::getAdvertising();
+
+		if ( enabled )
+		{
+			advertising->setScanResponse(true);
+			advertising->setMinPreferred(0x12);
+			advertising->start();
+		}
+		else
+		{
+			advertising->stop();
+		}
 	}
 }
