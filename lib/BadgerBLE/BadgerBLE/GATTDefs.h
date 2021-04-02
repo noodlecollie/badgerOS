@@ -2,23 +2,20 @@
 
 #include <cstdint>
 
-namespace Badge
+namespace BadgerBLE
 {
-	namespace Bluetooth
+	// For generating UUIDs, use https://www.uuidgenerator.net/
+
+	struct ServiceDef
 	{
-		// For generating UUIDs, use https://www.uuidgenerator.net/
+		const char* name;
+		const char* uuid;
+	};
 
-		struct ServiceDef
-		{
-			const char* name;
-			const char* uuid;
-		};
-
-		struct CharacteristicDef
-		{
-			const char* name;
-			const char* uuid;
-			uint32_t attributes;
-		};
-	}
+	struct CharacteristicDef
+	{
+		const char* name;
+		const char* uuid;
+		uint32_t attributes;
+	};
 }
