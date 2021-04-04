@@ -19,6 +19,7 @@ namespace Badge
 
 		void loop()
 		{
+			Server.loop();
 		}
 	}
 }

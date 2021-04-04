@@ -6,48 +6,12 @@
 #include <Prog_Badge/Bluetooth/BadgeBLEServer.h>
 #include <StringLib/StringUtils.h>
 #include <PlatformConfig/Versions.h>
-#include <BadgerBLE/ServiceSpec.h>
-
-// Services:
-#include <Prog_Badge/Bluetooth/Services/Echo.h>
 
 namespace Badge
 {
-	static NimBLEService* createService(const BadgerBLE::ServiceSpec& spec)
-	{
-		BadgerBLE::ServiceDef serviceDef = spec.service();
-		NimBLEService* service =  NimBLEDevice::getServer()->createService(serviceDef.uuid);
-
-		if ( !service )
-		{
-			Serial.printf("Failed to create Bluetooth BLE service %s\r\n", serviceDef.name);
-			return nullptr;
-		}
-
-		bool allCharacteristicsSuccessful = true;
-
-		for ( size_t index = 0; index < spec.characteristicCount(); ++index )
-		{
-			if ( !service->createCharacteristic(spec[index].uuid, spec[index].attributes) )
-			{
-				Serial.printf("Failed to create characteristic %s for Bluetooth BLE service %s\r\n", spec[index].name, serviceDef.name);
-				allCharacteristicsSuccessful = false;
-			}
-		}
-
-		if ( allCharacteristicsSuccessful )
-		{
-			service->start();
-
-			NimBLEAdvertising* advertising = NimBLEDevice::getAdvertising();
-			advertising->addServiceUUID(serviceDef.uuid);
-		}
-
-		return service;
-	}
-
 	BadgeBLEServer::BadgeBLEServer()
 	{
+		// Default name:
 		StringLib::snprintf_safe(m_Name, sizeof(m_Name), "Badge-%s", PlatformConfig::Versions::VERSION_BUILD_HASH_STRING);
 	}
 
@@ -63,12 +27,25 @@ namespace Badge
 			return;
 		}
 
-		m_EchoService = createService(BluetoothServices::SERVICESPEC_ECHO);
+		setUpService(m_EchoService.initialise(*server));
+	}
+
+	void BadgeBLEServer::loop()
+	{
+		NimBLEServer* server = NimBLEDevice::getServer();
+
+		if ( !server )
+		{
+			return;
+		}
+
+		m_EchoService.loop(*server);
 	}
 
 	bool BadgeBLEServer::isAdvertisingEnabled() const
 	{
-		return NimBLEDevice::getAdvertising()->isAdvertising();
+		NimBLEAdvertising* advertising = NimBLEDevice::getAdvertising();
+		return advertising && advertising->isAdvertising();
 	}
 
 	void BadgeBLEServer::setAdvertisingEnabled(bool enabled)
@@ -80,6 +57,11 @@ namespace Badge
 
 		NimBLEAdvertising* advertising = NimBLEDevice::getAdvertising();
 
+		if ( !advertising )
+		{
+			return;
+		}
+
 		if ( enabled )
 		{
 			advertising->setScanResponse(true);
@@ -90,5 +72,18 @@ namespace Badge
 		{
 			advertising->stop();
 		}
+	}
+
+	void BadgeBLEServer::setUpService(NimBLEService* service)
+	{
+		if ( !service )
+		{
+			return;
+		}
+
+		service->start();
+
+		NimBLEAdvertising* advertising = NimBLEDevice::getAdvertising();
+		advertising->addServiceUUID(service->getUUID());
 	}
 }

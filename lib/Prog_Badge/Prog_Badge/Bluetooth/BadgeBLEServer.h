@@ -1,6 +1,8 @@
 #pragma once
 
-class NimBLEService;
+#include <Prog_Badge/Bluetooth/Services/EchoService.h>
+
+class BLEService;
 
 namespace Badge
 {
@@ -10,13 +12,16 @@ namespace Badge
 		BadgeBLEServer();
 
 		void initialise();
+		void loop();
 
 		bool isAdvertisingEnabled() const;
 		void setAdvertisingEnabled(bool enabled);
 
 	private:
+		void setUpService(NimBLEService* service);
+
 		char m_Name[32];
 
-		NimBLEService* m_EchoService = nullptr;
+		BLEServices::EchoService m_EchoService;
 	};
 }
