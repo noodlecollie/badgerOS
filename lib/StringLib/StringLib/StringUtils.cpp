@@ -134,7 +134,7 @@ namespace StringLib
 	{
 		va_list args;
 		va_start(args, format);
-		const int result = vsnprintf(buffer, bufferSize, format, args);
+		const int result = vsnprintf_safe(buffer, bufferSize, format, args);
 		va_end(args);
 
 		return result;
