@@ -4,11 +4,13 @@
 #include <SPIFFS.h>
 #include <CoreUtil/BgrsAssert.h>
 #include <CoreUtil/Blob.h>
+#include <CoreUtil/ArrayUtil.h>
 #include <PlatformConfig/Platform.h>
 #include <PlatformConfig/Versions.h>
 #include <SSD1351/OLEDDriver.h>
 #include <BadgerGL/BitmapSurface.h>
 #include <BadgerGL/BitmapRenderer.h>
+#include <BadgerGL/Patterns.h>
 #include <BadgerUI/ColourScheme.h>
 
 #include "SSD1351SanityTest.h"
@@ -42,7 +44,7 @@ namespace SSD1351SanityTest
 
 		renderer.setShapeDrawStyle(ShapeDrawStyle::Filled);
 		const size_t totalColumns = 128 - 16;	// Width - outer padding
-		const size_t totalHeight = 128 - 16 - 32 - 8;	// Height - outer padding - top shapes - spacing
+		const size_t totalHeight = 48;
 		const Point16 topLeft(8, 8 + 32 + 8);
 		const size_t rowHeight = totalHeight / 4;
 
@@ -65,6 +67,32 @@ namespace SSD1351SanityTest
 			renderer.setPrimaryColour(col24To16((colour << 16) | (colour << 8) | colour));
 			rect.translate(Point16(0, rowHeight));
 			renderer.draw(rect);
+		}
+
+		size_t patternBeginOffset[BadgerGL::MAX_BIT_GRADIENT + 1];
+
+		for ( uint32_t pattern = 0; pattern <= BadgerGL::MAX_BIT_GRADIENT; ++pattern )
+		{
+			patternBeginOffset[pattern] = pattern * (totalColumns / (BadgerGL::MAX_BIT_GRADIENT + 1));
+		}
+
+		renderer.setPrimaryColour(0x0000);
+		renderer.setSecondaryColour(0xFFFF);
+
+		for ( uint32_t pattern = 0; pattern <= BadgerGL::MAX_BIT_GRADIENT; ++pattern )
+		{
+			// Offset by 8 for outer padding
+			const size_t beginX = 8 + patternBeginOffset[pattern];
+			const size_t endX = 8 + (pattern < BadgerGL::MAX_BIT_GRADIENT ? patternBeginOffset[pattern + 1] : totalColumns);
+
+			const size_t beginY = 128 - 8 - 16; // Screen height - outer padding - height of row
+			const size_t endY = beginY + 16;
+
+			Rect16 rect(Point16(beginX, beginY), Point16(endX, endY));
+
+			renderer.setBitGradientDirection(pattern % 2 ? PatternDirection::Vertical : PatternDirection::Horizontal);
+			renderer.setBitGradientType(static_cast<uint8_t>(pattern));
+			renderer.drawPatterned(rect);
 		}
 	}
 

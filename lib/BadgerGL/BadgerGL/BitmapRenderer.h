@@ -5,6 +5,7 @@
 #include "BitmapMask.h"
 #include "Defs.h"
 #include "BitmapMaskFont.h"
+#include "Patterns.h"
 
 namespace BadgerGL
 {
@@ -41,6 +42,9 @@ namespace BadgerGL
 
 		uint8_t bitGradientType() const;
 		void setBitGradientType(uint8_t type);
+
+		PatternDirection bitGradientDirection() const;
+		void setBitGradientDirection(PatternDirection direction);
 
 		const BitmapMaskFont* font() const;
 		void setFont(const BitmapMaskFont* fnt);
@@ -107,6 +111,7 @@ namespace BadgerGL
 		uint32_t m_PrimaryColour = 0xFFFFFFFF;
 		uint32_t m_SecondaryColour = 0x00000000;
 		uint8_t m_LineWidth = 1;
+		PatternDirection m_PatternDirection = PatternDirection::Horizontal;
 		uint8_t m_BitGradientType = 4;
 		Point16 m_DrawingOffset;
 		const BitmapMaskFont* m_Font = nullptr;

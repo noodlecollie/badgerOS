@@ -106,7 +106,7 @@ This function calls through to the more generic `_spi_write()`.
 
 This function sends data to the display (the DC pin is high). It calls through to the more generic `_spi_write()`.
 
-### `_spi_write()`
+### _spi_write()
 
 This function actually deals with sending the bits over SPI. It performs the following steps:
 

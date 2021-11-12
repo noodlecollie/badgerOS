@@ -96,6 +96,16 @@ namespace BadgerGL
 		m_BitGradientType = type;
 	}
 
+	PatternDirection BitmapRenderer::bitGradientDirection() const
+	{
+		return m_PatternDirection;
+	}
+
+	void BitmapRenderer::setBitGradientDirection(PatternDirection direction)
+	{
+		m_PatternDirection = direction;
+	}
+
 	const BitmapMaskFont* BitmapRenderer::font() const
 	{
 		return m_Font;
@@ -159,13 +169,30 @@ namespace BadgerGL
 
 		if ( m_ShapeDrawStyle == ShapeDrawStyle::Filled || m_ShapeDrawStyle == ShapeDrawStyle::FilledOutline )
 		{
-			// TODO: Support left-right gradients
+			uint16_t bitmapWidth = 0;
+			uint16_t bitmapHeight = 0;
+			uint8_t bitmapBuffer[std::max(VerticalPatternBitmapData::TOTAL_BYTES, HorizontalPatternBitmapData::TOTAL_BYTES)];
+
+			if ( m_PatternDirection == PatternDirection::Vertical )
+			{
+				VerticalPatternBitmapData data(BIT_GRADIENT[m_BitGradientType]);
+
+				bitmapWidth = VerticalPatternBitmapData::NUM_COLS;
+				bitmapHeight = VerticalPatternBitmapData::NUM_ROWS;
+				std::memcpy(bitmapBuffer, data.constData(), VerticalPatternBitmapData::TOTAL_BYTES);
+			}
+			else
+			{
+				HorizontalPatternBitmapData data(BIT_GRADIENT[m_BitGradientType]);
+
+				bitmapWidth = HorizontalPatternBitmapData::NUM_COLS;
+				bitmapHeight = HorizontalPatternBitmapData::NUM_ROWS;
+				std::memcpy(bitmapBuffer, data.constData(), HorizontalPatternBitmapData::TOTAL_BYTES);
+			}
 
 			drawFilled(localRect, m_SecondaryColour);
 
-			VerticalPatternBitmapData data(BIT_GRADIENT[m_BitGradientType]);
-			BitmapMask bitmapMask(VerticalPatternBitmapData::NUM_COLS, VerticalPatternBitmapData::NUM_ROWS, data.constData());
-
+			BitmapMask bitmapMask(bitmapWidth, bitmapHeight, bitmapBuffer);
 			BitmapMaskBlitter blitter;
 			blitter.setSourceBitmap(&bitmapMask);
 			blitter.setDest(m_Surface, localRect);

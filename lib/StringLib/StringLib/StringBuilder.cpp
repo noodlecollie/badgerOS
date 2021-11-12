@@ -47,8 +47,6 @@ namespace StringLib
 			return true;
 		}
 
-		const size_t originalLength = strlenInternal();
-
 		while ( *string && m_Cursor < (m_Buffer + m_Size - 1) )
 		{
 			*(m_Cursor++) = *(string++);

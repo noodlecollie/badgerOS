@@ -6,6 +6,12 @@
 
 namespace BadgerGL
 {
+	enum class PatternDirection
+	{
+		Horizontal = 0,
+		Vertical
+	};
+
 	// Bit gradient values go from 0 to this number inclusive.
 	static constexpr size_t MAX_BIT_GRADIENT = 8;
 
@@ -103,6 +109,7 @@ namespace BadgerGL
 		// One byte per row
 		static constexpr size_t NUM_ROWS = 8;
 		static constexpr size_t NUM_COLS = 4;
+		static constexpr size_t TOTAL_BYTES = NUM_ROWS;
 
 		inline constexpr VerticalPatternBitmapData(uint32_t pattern = 0) :
 			m_Data
@@ -125,7 +132,7 @@ namespace BadgerGL
 		}
 
 	private:
-		uint8_t m_Data[NUM_ROWS];
+		uint8_t m_Data[TOTAL_BYTES];
 	};
 
 	class HorizontalPatternBitmapData
@@ -134,6 +141,7 @@ namespace BadgerGL
 		// One byte per row
 		static constexpr size_t NUM_ROWS = 4;
 		static constexpr size_t NUM_COLS = 8;
+		static constexpr size_t TOTAL_BYTES = NUM_ROWS;
 
 		inline constexpr HorizontalPatternBitmapData(uint32_t pattern = 0) :
 			m_Data
@@ -191,6 +199,6 @@ namespace BadgerGL
 		}
 
 	private:
-		uint8_t m_Data[NUM_ROWS];
+		uint8_t m_Data[TOTAL_BYTES];
 	};
 }
