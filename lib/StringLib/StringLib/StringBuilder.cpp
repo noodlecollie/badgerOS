@@ -55,7 +55,7 @@ namespace StringLib
 		}
 
 		*m_Cursor = '\0';
-		return strlenInternal() - originalLength;
+		return *string == '\0';
 	}
 
 	bool StringBuilder::strcpy(const char* string)
@@ -80,7 +80,7 @@ namespace StringLib
 		va_list args;
 
 		va_start(args, format);
-		size_t result = vsprintf(format, args);
+		bool result = vsprintf(format, args);
 		va_end(args);
 
 		return result;

@@ -2,9 +2,10 @@
 #include <PlatformConfig/Platform.h>
 #include <PlatformConfig/Versions.h>
 #include "Badge.h"
-#include "UIModule.h"
-#include "CommandModule.h"
-#include "InputModule.h"
+#include <Prog_Badge/UIModule.h>
+#include <Prog_Badge/CommandModule.h>
+#include <Prog_Badge/InputModule.h>
+#include <Prog_Badge/BluetoothModule.h>
 
 namespace Badge
 {
@@ -77,6 +78,7 @@ namespace Badge
 		});
 
 		initialiseSubsystem("UIModule", &UIModule::setup);
+		initialiseSubsystem("BluetoothModule", &BluetoothModule::setup);
 
 		const CoreUtil::TimevalMs initDuration = millis() - initStartTime;
 		Serial.printf("Initialisation complete. (%.2fs)\r\n", static_cast<float>(initDuration) / 1000.0f);
@@ -96,6 +98,7 @@ namespace Badge
 
 		InputModule::loop();
 		CommandModule::loop();
+		BluetoothModule::loop();
 		UIModule::loop(currentTime);
 
 		lastUpdate = currentTime;

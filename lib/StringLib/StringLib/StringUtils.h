@@ -9,6 +9,7 @@ namespace StringLib
 	// Safe versions of the C library functions, which will always terminate the target string.
 	int snprintf_safe(char* buffer, size_t bufferSize, const char* format, ...);
 	int vsnprintf_safe(char* buffer, size_t bufferSize, const char* format, va_list args);
+	char* strcpy_safe(char* buffer, size_t bufferSize, const char* source);
 	char* strncpy_safe(char* buffer, size_t bufferSize, const char* source, size_t maxSourceChars);
 
 	void condenseSpaces(char* str);

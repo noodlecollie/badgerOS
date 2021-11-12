@@ -134,7 +134,7 @@ namespace StringLib
 	{
 		va_list args;
 		va_start(args, format);
-		const int result = vsnprintf(buffer, bufferSize, format, args);
+		const int result = vsnprintf_safe(buffer, bufferSize, format, args);
 		va_end(args);
 
 		return result;
@@ -143,6 +143,26 @@ namespace StringLib
 	int vsnprintf_safe(char* buffer, size_t bufferSize, const char* format, va_list args)
 	{
 		return ensureVsnprintfTerminated(buffer, bufferSize, ::vsnprintf(buffer, bufferSize, format, args));
+	}
+
+	char* strcpy_safe(char* buffer, size_t bufferSize, const char* source)
+	{
+		if ( !buffer || bufferSize < 1 || !source )
+		{
+			return buffer;
+		}
+
+		while ( bufferSize-- > 1 && *source )
+		{
+			// We had more than one char left in the buffer, and there was another
+			// source char to copy, so copy it.
+			*(buffer++) = *(source++);
+		}
+
+		// ALWAYS ensure the buffer is terminated.
+		*buffer = '\0';
+
+		return buffer;
 	}
 
 	char* strncpy_safe(char* buffer, size_t bufferSize, const char* source, size_t maxSourceChars)
