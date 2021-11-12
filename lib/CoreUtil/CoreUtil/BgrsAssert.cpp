@@ -12,7 +12,7 @@
 #define SET_DEBUG_LED(...)
 #endif
 
-#ifdef DEBUG
+#ifdef BGRS_DEBUG
 // Flash indefinitely
 #define ASSERT_LED_FLASH_COND(iteration) true
 #else

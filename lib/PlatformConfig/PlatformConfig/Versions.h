@@ -3,7 +3,7 @@
 #include <cstdint>
 
 #ifndef VERSION_NUMBER_MAJOR
-#ifdef DEBUG
+#ifdef BGRS_DEBUG
 #define VERSION_NUMBER_MAJOR 0
 #else
 #error No major version number defined.
@@ -11,7 +11,7 @@
 #endif // VERSION_NUMBER_MAJOR
 
 #ifndef VERSION_NUMBER_MINOR
-#ifdef DEBUG
+#ifdef BGRS_DEBUG
 #define VERSION_NUMBER_MINOR 0
 #else
 #error No minor version number defined.
