@@ -1,0 +1,14 @@
+{
+	"dependencies":
+	[
+		{ "name": "PlatformConfig" },
+		{ "name": "Wire" },
+		{ "name": "WiFi" },
+
+		{
+			"owner": "heltecautomation",
+			"name": "Heltec ESP32 Dev-Boards",
+			"version": "1.1.0"
+		}
+	]
+}
