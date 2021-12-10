@@ -3,6 +3,8 @@
 #include <NimBLEDescriptor.h>
 #include <NimBLEServer.h>
 #include <Arduino.h>
+#include "Prog_Badge/UIModule.h"
+#include "Prog_Badge/UIModuleResources.h"
 
 namespace Badge
 {
@@ -65,6 +67,8 @@ namespace Badge
 			{
 				return;
 			}
+
+			Serial.printf("Setting %s value to \"%s\"\r\n", CH_RESPONSE.name, m_Request->getValue().c_str());
 
 			m_RequestChanged = false;
 			m_Response->setValue(m_Request->getValue());

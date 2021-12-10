@@ -55,6 +55,16 @@ namespace Badge
 		m_NextScreenID = id;
 	}
 
+	MainScreenLayout& UIModuleResources::getMainScreenLayout()
+	{
+		return m_MainScreen;
+	}
+
+	CharacterInfoScreenLayout& UIModuleResources::getCharacterInfoScreenLayout()
+	{
+		return m_CharInfoScreen;
+	}
+
 	void UIModuleResources::loop(CoreUtil::TimevalMs currentTime)
 	{
 		// If the target screen is not set, swap to it.

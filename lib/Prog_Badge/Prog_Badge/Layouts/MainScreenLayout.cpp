@@ -20,10 +20,10 @@ namespace Badge
 		StringLib::snprintf_safe(m_Message, sizeof(m_Message), "Testing");
 	}
 
-	void MainScreenLayout::SetMessage(const char* message)
+	void MainScreenLayout::setMessage(const char* message)
 	{
 		StringLib::strcpy_safe(m_Message, sizeof(m_Message), message ? message : "");
-		m_MessageLabel.setText(m_Message, true);
+		m_MessageLabel.setTextNeedsRefresh();
 	}
 
 	void MainScreenLayout::onSetup()

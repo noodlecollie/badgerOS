@@ -39,6 +39,9 @@ namespace Badge
 		ScreenID currentScreen() const;
 		void setNextScreen(ScreenID id);
 
+		MainScreenLayout& getMainScreenLayout();
+		CharacterInfoScreenLayout& getCharacterInfoScreenLayout();
+
 	private:
 		inline void setUpScreen(BadgerUI::BaseLayout& screen, ScreenID id)
 		{

@@ -7,7 +7,7 @@ namespace Badge
 {
 	namespace UIModule
 	{
-		const UIModuleResources& resourcesObject();
+		UIModuleResources& resourcesObject();
 
 		void setup();
 		void loop(CoreUtil::TimevalMs currentTime);

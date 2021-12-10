@@ -13,7 +13,7 @@ namespace Badge
 	public:
 		MainScreenLayout(uint16_t width, uint16_t height);
 
-		void SetMessage(const char* message);
+		void setMessage(const char* message);
 
 	protected:
 		virtual void onSetup() override;

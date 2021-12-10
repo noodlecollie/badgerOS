@@ -7,7 +7,7 @@ namespace Badge
 	{
 		static UIModuleResources StaticResourcesObject;
 
-		const UIModuleResources& resourcesObject()
+		UIModuleResources& resourcesObject()
 		{
 			return StaticResourcesObject;
 		}

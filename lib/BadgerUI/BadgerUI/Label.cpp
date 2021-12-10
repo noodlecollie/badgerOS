@@ -33,18 +33,20 @@ namespace BadgerUI
 		return m_Text;
 	}
 
-	void Label::setText(const char* txt, bool strCompare)
+	void Label::setText(const char* txt)
 	{
-		bool different = strCompare
-			? (!StringLib::equal(txt, m_Text))
-			: (txt != m_Text);
-
-		if ( different )
+		if ( txt != m_Text )
 		{
 			m_RecalculateStringWidth = true;
-			m_Text = txt;
-			setDirtyStateInternal(ItemDirty);
 		}
+
+		setPropertyIfDifferent(m_Text, txt);
+	}
+
+	void Label::setTextNeedsRefresh()
+	{
+		m_RecalculateStringWidth = true;
+		setDirtyStateInternal(ItemDirty);
 	}
 
 	const BadgerGL::BitmapMaskFont* Label::font() const
