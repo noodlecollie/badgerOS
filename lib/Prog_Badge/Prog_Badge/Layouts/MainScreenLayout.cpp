@@ -1,6 +1,7 @@
 #include <Resources/Images/PlaceholderChar.h>
 #include <Resources/Fonts/ArialStdFont.h>
 #include <BadgerUI/Fonts/ArialStdFont.h>
+#include <StringLib/StringUtils.h>
 #include "MainScreenLayout.h"
 #include "../UIModule.h"
 #include "../InputModule.h"
@@ -16,6 +17,13 @@ namespace Badge
 	MainScreenLayout::MainScreenLayout(uint16_t width, uint16_t height) :
 		BadgerUI::FixedDimensionLayout(width, height)
 	{
+		StringLib::snprintf_safe(m_Message, sizeof(m_Message), "Testing");
+	}
+
+	void MainScreenLayout::SetMessage(const char* message)
+	{
+		StringLib::strcpy_safe(m_Message, sizeof(m_Message), message ? message : "");
+		m_MessageLabel.setText(m_Message, true);
 	}
 
 	void MainScreenLayout::onSetup()
@@ -41,7 +49,7 @@ namespace Badge
 		m_MessageLabel.setRect(UIRect(UIPoint(0, layoutHeight() - TEXT_AREA_HEIGHT), layoutWidth(), TEXT_AREA_HEIGHT));
 		m_MessageLabel.setHorizontalAlignment(BadgerUI::HAlignment::Centre);
 		m_MessageLabel.setVerticalAlignment(BadgerUI::VAlignment::Centre);
-		m_MessageLabel.setText("Testing");
+		m_MessageLabel.setText(m_Message);
 		m_MessageLabel.setFont(&Fonts::ArialStd);
 		m_MessageLabel.setFillColour(ColourProperty(ColourScheme::Colour_Background));
 		m_MessageLabel.setDrawStyle(BadgerGL::ShapeDrawStyle::Filled);

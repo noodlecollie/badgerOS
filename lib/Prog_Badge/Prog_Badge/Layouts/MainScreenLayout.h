@@ -13,6 +13,8 @@ namespace Badge
 	public:
 		MainScreenLayout(uint16_t width, uint16_t height);
 
+		void SetMessage(const char* message);
+
 	protected:
 		virtual void onSetup() override;
 		virtual void onPreUpdate(const BadgerUI::UIUpdateContext& context) override;
@@ -24,5 +26,7 @@ namespace Badge
 
 		// Placeholders - to be replaced once we have the correct things up and running.
 		BadgerUI::Bitmap m_PlaceholderCharacterImage;
+
+		char m_Message[32];
 	};
 }

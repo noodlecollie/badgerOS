@@ -15,7 +15,7 @@ namespace BadgerUI
 		Label();
 
 		const char* text() const;
-		void setText(const char* txt);
+		void setText(const char* txt, bool strCompare = false);
 
 		const BadgerGL::BitmapMaskFont* font() const;
 		void setFont(const BadgerGL::BitmapMaskFont* fnt);

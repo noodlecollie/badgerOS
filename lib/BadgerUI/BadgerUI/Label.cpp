@@ -1,6 +1,7 @@
 #include <cmath>
 #include <Arduino.h>
 #include <BadgerGL/StringRenderer.h>
+#include <StringLib/StringUtils.h>
 #include "Label.h"
 
 namespace
@@ -32,14 +33,18 @@ namespace BadgerUI
 		return m_Text;
 	}
 
-	void Label::setText(const char* txt)
+	void Label::setText(const char* txt, bool strCompare)
 	{
-		if ( txt != m_Text )
+		bool different = strCompare
+			? (!StringLib::equal(txt, m_Text))
+			: (txt != m_Text);
+
+		if ( different )
 		{
 			m_RecalculateStringWidth = true;
+			m_Text = txt;
+			setDirtyStateInternal(ItemDirty);
 		}
-
-		setPropertyIfDifferent(m_Text, txt);
 	}
 
 	const BadgerGL::BitmapMaskFont* Label::font() const
