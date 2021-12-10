@@ -68,6 +68,7 @@ namespace Badge
 
 			m_RequestChanged = false;
 			m_Response->setValue(m_Request->getValue());
+			m_Response->notify();
 		}
 
 		void EchoService::onRead(NimBLECharacteristic* pCharacteristic)
