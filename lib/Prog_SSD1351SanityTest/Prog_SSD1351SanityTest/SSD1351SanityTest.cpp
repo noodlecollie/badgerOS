@@ -98,7 +98,11 @@ namespace SSD1351SanityTest
 
 	static void testFileSystem()
 	{
-		SPIFFS.begin();
+		if ( !SPIFFS.begin() )
+		{
+			Serial.printf("Could not initialise SPIFFS filesystem.\r\n");
+			return;
+		}
 
 		if ( !SPIFFS.exists("/hello.txt") )
 		{
